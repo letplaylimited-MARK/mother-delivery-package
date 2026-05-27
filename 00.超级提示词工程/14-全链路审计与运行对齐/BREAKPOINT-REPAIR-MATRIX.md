@@ -78,9 +78,9 @@ P2：会降低后续自动化、可读性或审计效率。
 
 ## 6. 后续验证清单
 
-- [ ] 新 AI 冷启动时能按统一启动链输出 `awakening_check`。
-- [ ] Guide Secretary 的 YAML 中包含 `traceability` 与 `route_feedback`。
-- [ ] Context Pack 中包含 `uso_id`、`ledger_ref`、`validation_refs`。
-- [ ] 原子任务可以进入 `PAUSED`、`BLOCKED`、`SUPERSEDED`，且有恢复或关闭条件。
-- [ ] 记忆源冲突时可从 `MEMORY-SOURCE-INDEX.yaml` 找到权威 owner。
-- [ ] 验证登记能区分 integrity、test、template smoke、health、delivery strict。
+- [x] 新 AI 冷启动时能按统一启动链输出 `awakening_check`。（已验证：P0-3统一ACTIVATION-GUIDE为唯一权威启动协议）
+- [x] Guide Secretary 的 YAML 中包含 `traceability` 与 `route_feedback`。（已验证：GUIDE-SECRETARY-PROTOCOL.md 第192/196行）
+- [x] Context Pack 中包含 `uso_id`、`ledger_ref`、`validation_refs`。（已验证：AI-CONTEXT-PACK-TEMPLATE.md 第17-19行）
+- [x] 原子任务可以进入 `PAUSED`、`BLOCKED`、`SUPERSEDED`，且有恢复或关闭条件。（已验证：ATOMIC-AI-DEVELOPMENT-OPERATING-SYSTEM.md 第77-111行）
+- [x] 记忆源冲突时可从 `MEMORY-SOURCE-INDEX.yaml` 找到权威 owner。（已验证：28处owner/权威/conflict引用）
+- [x] 验证登记能区分 integrity、test、template smoke、health、delivery strict。（已验证：VALIDATION_REGISTRY.yaml 存在）

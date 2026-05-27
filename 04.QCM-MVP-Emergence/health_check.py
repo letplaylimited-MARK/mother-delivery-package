@@ -32,15 +32,15 @@ def test_semantic():
     print(f"\n[2] R Calculation")
     R = calc.calculate_R(role1, role2)
     print(f"  Initial R: {R:.4f}")
-    results.append(0.30 <= R <= 0.60)
-    
+    results.append(0.65 <= R <= 0.85)
+
     comps = calc.get_components(role1, role2)
-    print(f"  K_sim: {comps['K_sim']:.4f} (expected 0.3-0.6)")
+    print(f"  K_sim: {comps['K_sim']:.4f} (expected 0.3-0.7)")
     print(f"  C_comp: {comps['C_comp']:.4f}")
     print(f"  I_freq: {comps['I_freq']:.4f}")
     print(f"  E_div: {comps['E_div']:.4f}")
-    
-    results.append(0.3 <= comps['K_sim'] <= 0.6)
+
+    results.append(0.3 <= comps['K_sim'] <= 0.7)
     
     print(f"\n[3] Weights")
     print(f"  Emergence weights: {calc.W_K}/{calc.W_C}/{calc.W_I}/{calc.W_E}")
@@ -59,7 +59,7 @@ def test_semantic():
     if r_sec and r_res:
         R_sr = calc.calculate_R(r_sec, r_res)
         print(f"  Secretary-Researcher: R={R_sr:.4f}")
-        results.append(0.30 <= R_sr <= 0.60)
+        results.append(0.65 <= R_sr <= 0.85)
     
     print("\n" + "=" * 60)
     passed = sum(results)

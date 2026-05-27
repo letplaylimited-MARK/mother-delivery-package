@@ -77,6 +77,8 @@ Set-Location $root
 
 **文件不存在?**: 如果上述任何文件/目录缺失，立即停止自举。输出缺失清单，等待人工确认目录结构后再继续。不要假设文件存在。
 
+**⚠️ 路径映射过时警告**: 本映射表中 `06-稳态边界` 实际目录名为 `06-原子化开发治理`，`11-原生协作与边界` 实际目录名为 `11-模型原生协作协议`。以下映射仅供历史参考，准确路径请查阅 v3.0 AWAKENING 或 `AI_PROJECT_CONTEXT.md`。
+
 **概念名 ↔ 实际目录名速查**: 00模块中你的概念名称和实际目录名称可能不同。遇到以下概念时路由到对应实际路径:
 
 | 你的概念名 | 实际路径 |
@@ -86,12 +88,12 @@ Set-Location $root
 | 变量控制/免疫系统/上下文包 | `00.超级提示词工程/03-上下文包模板/AI-CONTEXT-PACK-TEMPLATE.md` |
 | 认知周期/演进路线/协同工作流 | `00.超级提示词工程/04-协同工作流/CROSS-PROJECT-WORKFLOW.md` |
 | 融合协议/评估迭代 | `00.超级提示词工程/05-评估与迭代/PROMPT-EVALUATION-RUBRIC.md` |
-| 统一状态对象/USO/稳态边界 | `00.超级提示词工程/06-稳态边界/` |
+| 统一状态对象/USO/稳态边界 | `00.超级提示词工程/06-原子化开发治理/` *(映射原文: 06-稳态边界)* |
 | 防漂移协议/反混乱/认知架构 | `00.超级提示词工程/07-认知架构/ANTI-DRIFT-PROTOCOL.md` |
 | 角色沙盘/AI团队沙盘 | `00.超级提示词工程/08-AI角色团队沙盘/AI-ROLE-TEAM-SANDBOX.md` |
 | 交付门/集成蓝图/母包蓝图 | `00.超级提示词工程/09-母包集成蓝图/MOTHER-PACK-AI-COLLABORATION-BLUEPRINT.md` |
 | 协作生态/技能配置/能力卡片 | `00.超级提示词工程/10-通用AI协作生态/` |
-| 原生协作/模型边界 | `00.超级提示词工程/11-原生协作与边界/` |
+| 原生协作/模型边界 | `00.超级提示词工程/11-模型原生协作协议/` *(映射原文: 11-原生协作与边界)* |
 | 引导秘书/导航/5D雷达 | `00.超级提示词工程/12-引导秘书逻辑/` |
 | 源提示词/提示词演化 | `00.超级提示词工程/13-源提示词库/` |
 | 审计/验证/运行对齐 | `00.超级提示词工程/14-全链路审计与运行对齐/` |
@@ -108,7 +110,7 @@ Set-Location $root
 **Step 1**: 读取 `MISSION-MEMORY.md` — 使命和长期记忆
 **Step 2**: 读取 `AI_PROJECT_CONTEXT.md` — 项目上下文概览
 **Step 3**: 读取 `00.超级提示词工程/README.md` — 00模块导航 [TOKEN_WARN]
-**Step 4**: 读取 `00.超级提示词工程/11-原生协作与边界/MODEL-NATIVE-COLLABORATION.md` — 确认模型自身规则高于母包规则
+**Step 4**: 读取 `00.超级提示词工程/11-模型原生协作协议/MODEL-NATIVE-COLLABORATION-PROTOCOL.md` — 确认模型自身规则高于母包规则
 **Step 5**: 读取 `00.超级提示词工程/12-引导秘书逻辑/MISSION-MEMORY-AWAKENING-PROTOCOL.md` — 唤醒协议
 **Step 6**: 读取 `00.超级提示词工程/12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md` — 引导秘书协议(意图分析+5D雷达)
 **Step 7**: 读取 `00.超级提示词工程/02-路由矩阵/SUBSYSTEM-ROUTING-MATRIX.md` — 路由矩阵 [TOKEN_WARN]
@@ -167,13 +169,13 @@ loading_checkpoint:
 | 提示词/启动/上下文/跨项目协同 | `00.超级提示词工程` | README, MASTER-ORCHESTRATOR | doc review + task simulation |
 | 引导秘书/导航/分流/5D雷达 | `00/12-引导秘书逻辑` | GUIDE-SECRETARY-PROTOCOL, HANDOFF-TEMPLATE | handoff review + route simulation |
 | 超级提示词/源提示词/演化 | `00/13-源提示词吸收与演化` | SOURCE-PROMPT-INGESTION | scenario reconstruction + conflict review |
-| SpecForge/PRD/SPEC/验收标准 | `00/06-稳态边界` | SPECFORGE-GATE, ATOMIC-OS, TRACEABILITY | PRD/SPEC integrity + trace matrix |
+| SpecForge/PRD/SPEC/验收标准 | `00/06-原子化开发治理` | SPECFORGE-GATE, ATOMIC-OS, TRACEABILITY | PRD/SPEC integrity + trace matrix |
 | 需求漂移/PRD/SPEC/任务堆叠 | `00` + `05` + `03` | ATOMIC-OS, ANTI-DRIFT, BRAIN-PROTOCOL, AGENTS | trace matrix + subsystem verify |
 | 母包整体协同/沙盘/集成蓝图 | `00` | AI-ROLE-SANDBOX, SANDBOX-REPLAY, INTEGRATION-BLUEPRINT | doc review + sandbox replay |
 | 新模型/新智能体/新Skill/MCP/插件 | `00/10-通用AI协作生态` | ECOSYSTEM, INTEGRATION-CONTRACT | capability card review |
 | 技能配置/开源库选择/能力缺口 | `00/10-通用AI协作生态` | SKILL-CONFIG-GATE, INTEGRATION-CONTRACT | skill-need list + candidate matrix + capability card |
 | 使命/长期记忆/唤醒/身份逻辑 | Root + `00/12` + `00/13` | MISSION-MEMORY, AWAKENING-PROTOCOL, META-INTELLIGENCE-DECON | awakening_check + boundary review |
-| 其他AI接手/模型原生协作 | `00/11-原生协作与边界` | MODEL-NATIVE-COLLABORATION | instruction hierarchy + context pack review |
+| 其他AI接手/模型原生协作 | `00/11-模型原生协作协议` | MODEL-NATIVE-COLLABORATION | instruction hierarchy + context pack review |
 | 文件SOP/自动执行脚本 | `04` + `03` | scripts/auto_exec | script integration test |
 | 用户交付/发布/打包 | `协同通用AI大模型开发交付包` | README, VERIFY-DELIVERY.ps1 | run VERIFY-DELIVERY.ps1 |
 

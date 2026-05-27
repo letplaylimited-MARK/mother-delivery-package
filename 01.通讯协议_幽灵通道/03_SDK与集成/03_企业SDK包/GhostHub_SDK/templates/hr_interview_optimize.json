@@ -1,0 +1,95 @@
+{
+  "id": "tpl_hr_interview_optimize",
+  "name": "HR面试流程优化",
+  "description": "优化招聘面试流程，从简历筛选到最终决策，提升HR效率",
+  "domain": "hr",
+  "category": "recruitment",
+  "intent_pattern": "优化面试|改进招聘|面试自动化|招聘优化",
+  "sample_inputs": [
+    "帮我优化面试流程",
+    "改进招聘效率，减少HR工作量",
+    "自动化面试筛选",
+    "优化候选人评估流程"
+  ],
+  "intent_vector": {
+    "urgency": 0.5,
+    "complexity": 0.6,
+    "autonomy": 0.6,
+    "cooperation": 0.7,
+    "risk_tolerance": 0.3,
+    "domain": "hr"
+  },
+  "tasks": [
+    {
+      "id": "hr_task_1",
+      "name": "简历解析与评分",
+      "description": "自动解析简历，提取关键信息并进行初筛评分",
+      "sequence": 1,
+      "dependencies": [],
+      "estimated_time": "5-10分钟/份",
+      "success_criteria": ["评分准确率>85%", "关键信息无遗漏"],
+      "tools": ["resume_parser", "scoring_engine"],
+      "output": {"type": "scored_resume", "format": "json"}
+    },
+    {
+      "id": "hr_task_2",
+      "name": "候选人匹配度分析",
+      "description": "对比候选人能力与岗位要求，计算匹配度",
+      "sequence": 2,
+      "dependencies": ["hr_task_1"],
+      "estimated_time": "2-3分钟/份",
+      "success_criteria": ["匹配度误差<10%", "覆盖核心技能"],
+      "tools": ["match_engine", "skill_matcher"],
+      "output": {"type": "match_score", "format": "percentage"}
+    },
+    {
+      "id": "hr_task_3",
+      "name": "面试问题生成",
+      "description": "基于简历弱点和岗位要求，生成针对性面试问题",
+      "sequence": 3,
+      "dependencies": ["hr_task_2"],
+      "estimated_time": "1-2分钟/份",
+      "success_criteria": ["问题相关度>80%", "覆盖STAR法则"],
+      "tools": ["question_generator", "star_formatter"],
+      "output": {"type": "question_list", "format": "markdown"}
+    },
+    {
+      "id": "hr_task_4",
+      "name": "面试评估报告生成",
+      "description": "汇总面试反馈，生成结构化评估报告",
+      "sequence": 4,
+      "dependencies": ["hr_task_3"],
+      "estimated_time": "3-5分钟/份",
+      "success_criteria": ["报告完整性100%", "决策建议明确"],
+      "tools": ["report_generator", "decision_helper"],
+      "output": {"type": "evaluation_report", "format": "pdf"}
+    },
+    {
+      "id": "hr_task_5",
+      "name": "决策建议与候选人排序",
+      "description": "综合评估结果，给出录用建议和候选人排序",
+      "sequence": 5,
+      "dependencies": ["hr_task_4"],
+      "estimated_time": "2分钟",
+      "success_criteria": ["排序准确率>90%", "风险提示完整"],
+      "tools": ["ranking_engine", "risk_analyzer"],
+      "output": {"type": "ranking_result", "format": "json"}
+    }
+  ],
+  "business_metrics": {
+    "time_saved_per_hire": "2-3小时",
+    "cost_reduction": "30-50%",
+    "quality_improvement": "面试到岗匹配度提升20%",
+    "cycle_time_reduction": "招聘周期缩短1-2周"
+  },
+  "roi_estimate": {
+    "cost_saving": 50000,
+    "time_saving_hours": 200,
+    "efficiency_gain": "35%"
+  },
+  "tags": ["hr", "automation", "recruitment", "interview", "efficiency"],
+  "is_public": true,
+  "version": "1.0.0",
+  "author": "GhostHub",
+  "created_at": "2026-04-01"
+}

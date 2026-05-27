@@ -1,0 +1,175 @@
+schema_version: "0.1"
+generated_at: "2026-05-26"
+purpose: "Register mother-package subsystems and child-package boundary for future AI collaboration."
+path_convention:
+  mother_root: "<母交付包根目录>"
+  user_pack_root: "<用户交付包根目录>"
+status_legend:
+  active: "Current subsystem or entrypoint is usable as part of the mother package."
+  template: "Reusable skeleton; project-specific content must be filled later."
+  partial: "Usable but needs deeper audit or registry completion."
+  historical: "Reference or archive; do not treat as main runtime."
+
+projects:
+  - id: "ROOT"
+    path: "."
+    role: "母包全局入口"
+    status: "active"
+    entrypoints:
+      - "MISSION-MEMORY.md"
+      - "AI_PROJECT_CONTEXT.md"
+      - "开发者母交付包使用说明.md"
+    upstream: ["user_natural_language"]
+    downstream: ["P00_SUPER_PROMPT", "USER_PACK"]
+    memory_sources: ["MISSION-MEMORY.md", "AI_PROJECT_CONTEXT.md"]
+    validation:
+      - "path_hardcode_scan"
+      - "markdown_fence_check"
+    risks:
+      - "Root is not a git repository; global changes must be tracked through file inventory or separate VCS policy."
+
+  - id: "P00_SUPER_PROMPT"
+    path: "00.超级提示词工程"
+    role: "控制平面：唤醒、路由、阶段门、审计、交接"
+    status: "active"
+    entrypoints:
+      - "README.md"
+      - "01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md"
+      - "02-路由矩阵/SUBSYSTEM-ROUTING-MATRIX.md"
+      - "12-引导秘书逻辑/MISSION-MEMORY-AWAKENING-PROTOCOL.md"
+      - "12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md"
+      - "14-全链路审计与运行对齐/FULL-STACK-WORKFLOW-AUDIT-PROTOCOL.md"
+      - "14-全链路审计与运行对齐/WORKFLOW-AUDIT-ISSUE-LOG.md"
+      - "14-全链路审计与运行对齐/BREAKPOINT-REPAIR-MATRIX.md"
+      - "14-全链路审计与运行对齐/UNIFIED-STATUS-OBJECT-SPEC.md"
+      - "14-全链路审计与运行对齐/UNIFIED-STATUS-LEDGER.yaml"
+      - "14-全链路审计与运行对齐/MEMORY-SOURCE-INDEX.yaml"
+    upstream: ["ROOT"]
+    downstream: ["P01_GHOST_CHANNEL", "P03_WORKBUDDY_KB", "P04_QCM", "P05_QSPECTRUM", "USER_PACK"]
+    memory_sources:
+      - "MISSION-MEMORY.md"
+      - "AI_PROJECT_CONTEXT.md"
+      - "14-全链路审计与运行对齐/UNIFIED-STATUS-LEDGER.yaml"
+      - "14-全链路审计与运行对齐/MEMORY-SOURCE-INDEX.yaml"
+    validation:
+      - "markdown_fence_check"
+      - "routing_consistency_review"
+    risks:
+      - "Mostly protocol/documentation; must bind to real commands before claiming completion."
+
+  - id: "P01_GHOST_CHANNEL"
+    path: "01.通讯协议_幽灵通道"
+    role: "通讯、同步、审计、安全、SDK、部署"
+    status: "active"
+    entrypoints:
+      - "README.md"
+      - "INDEX.md"
+      - "00_总览/PROJECT_HANDOFF.md"
+      - "VERIFY.ps1"
+    upstream: ["P00_SUPER_PROMPT", "P05_QSPECTRUM"]
+    downstream: ["communication_protocol", "sdk_package", "enterprise_deployment"]
+    validation:
+      - "powershell -ExecutionPolicy Bypass -File .\\VERIFY.ps1"
+    risks:
+      - "Some SDK import examples may drift from actual package names."
+
+  - id: "P02_UNIVERSAL_KB"
+    path: "02.通用知识库框架_Universal-KB"
+    role: "轻量知识库模板"
+    status: "template"
+    entrypoints:
+      - "README.md"
+      - "05-agents/AGENTS.md"
+    upstream: ["P00_SUPER_PROMPT"]
+    downstream: ["USER_PACK", "P03_WORKBUDDY_KB"]
+    validation:
+      - "manual_template_review"
+    risks:
+      - "Must not be confused with the runnable V2 app in P03."
+
+  - id: "P03_WORKBUDDY_KB"
+    path: "03.数据库管理_文件夹整理AI应用"
+    role: "可运行知识库、文件整理、MemoryOS、MCP 工具层"
+    status: "active"
+    entrypoints:
+      - "README.md"
+      - "AGENTS.md"
+      - "app.py"
+      - "mcp_server.py"
+      - "verify_install.py"
+    upstream: ["P00_SUPER_PROMPT", "user_files", "documents"]
+    downstream: ["memoryos", "search_index", "mcp_tools", "USER_PACK"]
+    memory_sources:
+      - ".workbuddy/index/search_index.db"
+      - ".workbuddy/记忆层/memory_data/short_term/*.jsonl"
+    validation:
+      - "python verify_install.py"
+      - "pytest tests/ -v"
+    risks:
+      - "Independent git repo has pre-existing uncommitted changes."
+      - ".env missing affects advanced AI/API calls but not basic run."
+
+  - id: "P04_QCM"
+    path: "04.QCM-MVP-Emergence"
+    role: "QCM 公式、角色协作、沙盘、飞轮、涌现验证"
+    status: "active"
+    entrypoints:
+      - "README.md"
+      - "PROJECT_HANDOFF-QCM.md"
+      - "VERIFY-QCM.md"
+      - "qcm/main.py"
+    upstream: ["P00_SUPER_PROMPT", "complex_strategy_task"]
+    downstream: ["sandbox_assessment", "emergence_report", "validation_plan"]
+    validation:
+      - "python \"02-代码编写\\test_qcm_all.py\""
+      - "pytest test_roles/test_collaboration/test_sandbox/test_flywheel/test_summoning -q"
+    risks:
+      - "health_check.py may use stale semantic thresholds; do not merge with pass/fail tests without review."
+
+  - id: "P05_QSPECTRUM"
+    path: "05.超极智脑_Q-SpecTrum"
+    role: "主运行平台：角色、DB、API、MCP、BRAIN-KB、handoff"
+    status: "active"
+    entrypoints:
+      - "README.md"
+      - "INDEX.md"
+      - "AGENTS.md"
+      - "智腦協議-BRAIN-PROTOCOL.md"
+      - "run.py"
+      - "api_server.py"
+      - "qspectrum_mcp_server.py"
+      - "verify-integration.py"
+    upstream: ["P00_SUPER_PROMPT", "P03_WORKBUDDY_KB", "P04_QCM", "P01_GHOST_CHANNEL"]
+    downstream: ["web_api", "mcp", "project_memory", "BRAIN-KB", "USER_PACK"]
+    memory_sources:
+      - "BRAIN-KB"
+      - "_HANDOFF"
+      - "project_memory.db"
+      - "platform.db"
+    validation:
+      - "python verify-integration.py"
+      - "$env:PYTHONUTF8='1'; python run.py --status"
+    risks:
+      - "Independent git repo has pre-existing uncommitted changes."
+      - "requirements.txt and pyproject.toml dependency story needs unification."
+
+  - id: "USER_PACK"
+    path: "协同通用AI大模型开发交付包"
+    role: "最终用户交付包骨架：价值/功能/结构/运作四体系"
+    status: "template"
+    entrypoints:
+      - "README.md"
+      - "交付包组装规则.md"
+      - "VERIFY-DELIVERY.ps1"
+      - "01-价值体系/README.md"
+      - "02-功能体系/README.md"
+      - "03-结构体系/README.md"
+      - "04-运作体系/README.md"
+    upstream: ["ROOT", "P00_SUPER_PROMPT", "selected_project_outputs"]
+    downstream: ["final_user", "future_ai_handoff"]
+    validation:
+      - "powershell -ExecutionPolicy Bypass -File .\\VERIFY-DELIVERY.ps1"
+      - "powershell -ExecutionPolicy Bypass -File .\\VERIFY-DELIVERY.ps1 -Strict"
+      - "project_specific_verify_command"
+    risks:
+      - "Template mode passes with warnings; strict mode requires project-specific context, handoff, changelog, traceability, validation report, and verification entry."

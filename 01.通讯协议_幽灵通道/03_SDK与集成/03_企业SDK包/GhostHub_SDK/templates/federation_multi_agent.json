@@ -1,0 +1,94 @@
+{
+  "id": "tpl_agent_collab",
+  "name": "多智能体协作",
+  "description": "多个AI智能体协作完成复杂任务",
+  "domain": "federation",
+  "category": "multi_agent",
+  "intent_pattern": "多Agent协作|团队合作|分布式任务|协同工作|智能体网络",
+  "sample_inputs": [
+    "启动多Agent协作处理这个项目",
+    "协调多个AI完成任务",
+    "分布式数据处理",
+    "团队AI协作"
+  ],
+  "intent_vector": {
+    "urgency": 0.6,
+    "complexity": 0.9,
+    "autonomy": 0.5,
+    "cooperation": 0.95,
+    "risk_tolerance": 0.4,
+    "domain": "federation"
+  },
+  "tasks": [
+    {
+      "id": "fed_task_1",
+      "name": "任务分解",
+      "description": "将复杂任务分解为可并行的子任务",
+      "sequence": 1,
+      "dependencies": [],
+      "estimated_time": "<5秒",
+      "success_criteria": ["分解完整率>95%", "依赖关系准确"],
+      "tools": ["task_decomposer", "dag_builder"],
+      "output": {"type": "task_graph", "format": "json"}
+    },
+    {
+      "id": "fed_task_2",
+      "name": "智能体匹配",
+      "description": "根据子任务特点匹配最适合的智能体",
+      "sequence": 2,
+      "dependencies": ["fed_task_1"],
+      "estimated_time": "<3秒",
+      "success_criteria": ["匹配准确率>90%"],
+      "tools": ["agent_matcher", "capability_analyzer"],
+      "output": {"type": "agent_assignments", "format": "json"}
+    },
+    {
+      "id": "fed_task_3",
+      "name": "并行执行协调",
+      "description": "协调多个智能体并行执行任务",
+      "sequence": 3,
+      "dependencies": ["fed_task_2"],
+      "estimated_time": "任务相关",
+      "success_criteria": ["任务完成率>98%", "无冲突"],
+      "tools": ["execution_coordinator", "conflict_resolver"],
+      "output": {"type": "execution_status", "format": "json"}
+    },
+    {
+      "id": "fed_task_4",
+      "name": "结果聚合",
+      "description": "汇总各智能体执行结果",
+      "sequence": 4,
+      "dependencies": ["fed_task_3"],
+      "estimated_time": "<2秒",
+      "success_criteria": ["聚合完整率100%"],
+      "tools": ["result_aggregator", "data_merger"],
+      "output": {"type": "aggregated_result", "format": "json"}
+    },
+    {
+      "id": "fed_task_5",
+      "name": "质量验证与输出",
+      "description": "验证最终输出质量并交付",
+      "sequence": 5,
+      "dependencies": ["fed_task_4"],
+      "estimated_time": "<3秒",
+      "success_criteria": ["质量评分>4.0/5"],
+      "tools": ["quality_checker", "output_formatter"],
+      "output": {"type": "final_output", "format": "any"}
+    }
+  ],
+  "business_metrics": {
+    "parallel_speedup": "3-5倍",
+    "efficiency_gain": "60-80%",
+    "quality_consistency": "高"
+  },
+  "roi_estimate": {
+    "time_saving_percent": "75%",
+    "cost_reduction": "50%",
+    "quality_improvement": "30%"
+  },
+  "tags": ["federation", "multi_agent", "collaboration", "distributed", "coordination"],
+  "is_public": true,
+  "version": "1.0.0",
+  "author": "GhostHub",
+  "created_at": "2026-04-01"
+}

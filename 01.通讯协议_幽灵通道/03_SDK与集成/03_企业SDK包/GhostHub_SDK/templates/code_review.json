@@ -1,0 +1,77 @@
+{
+  "id": "tpl_code_review",
+  "name": "代码审查助手",
+  "description": "自动审查代码质量，发现问题和改进建议",
+  "domain": "code",
+  "category": "quality_assurance",
+  "intent_pattern": "审查|代码|review|检查|优化|重构|bug|漏洞",
+  "sample_inputs": [
+    "审查这段代码",
+    "检查有没有安全漏洞",
+    "优化这段代码性能",
+    "帮我review PR",
+    "重构建议"
+  ],
+  "intent_vector": {
+    "urgency": 0.6,
+    "complexity": 0.6,
+    "autonomy": 0.7,
+    "cooperation": 0.4,
+    "risk_tolerance": 0.4,
+    "domain": "code"
+  },
+  "tasks": [
+    {
+      "id": "code_task_1",
+      "name": "代码解析",
+      "description": "解析代码结构和语法",
+      "sequence": 1,
+      "dependencies": [],
+      "estimated_time": "<500ms",
+      "tools": ["code_parser"]
+    },
+    {
+      "id": "code_task_2",
+      "name": "质量检查",
+      "description": "检查代码质量和规范",
+      "sequence": 2,
+      "dependencies": ["code_task_1"],
+      "estimated_time": "<1s",
+      "tools": ["linter", "static_analyzer"],
+      "checks": ["style", "complexity", "duplication"]
+    },
+    {
+      "id": "code_task_3",
+      "name": "安全扫描",
+      "description": "扫描安全漏洞和风险",
+      "sequence": 3,
+      "dependencies": ["code_task_2"],
+      "estimated_time": "<2s",
+      "tools": ["security_scanner"],
+      "patterns": ["sql_injection", "xss", "auth_bypass"]
+    },
+    {
+      "id": "code_task_4",
+      "name": "建议生成",
+      "description": "生成改进建议和报告",
+      "sequence": 4,
+      "dependencies": ["code_task_3"],
+      "estimated_time": "<500ms",
+      "tools": ["suggestion_engine"],
+      "output": {"type": "review_report"}
+    }
+  ],
+  "business_metrics": {
+    "bug_detection_rate": "85%",
+    "false_positive_rate": "<10%",
+    "review_time_reduction": "60%"
+  },
+  "roi_estimate": {
+    "bug_reduction": "40%",
+    "review_time_saving": "60%",
+    "code_quality_score": "+30%"
+  },
+  "tags": ["code_review", "quality", "security", "optimization"],
+  "is_public": true,
+  "version": "1.0.0"
+}

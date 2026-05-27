@@ -1,0 +1,74 @@
+{
+  "id": "tpl_customer_service",
+  "name": "智能客服系统",
+  "description": "7x24小时智能客服，处理常见问题",
+  "domain": "service",
+  "category": "customer_support",
+  "intent_pattern": "问题|帮助|咨询|投诉|建议|反馈",
+  "sample_inputs": [
+    "这个功能怎么用",
+    "密码忘了怎么办",
+    "我要投诉",
+    "有什么优惠",
+    "转人工客服"
+  ],
+  "intent_vector": {
+    "urgency": 0.6,
+    "complexity": 0.4,
+    "autonomy": 0.8,
+    "cooperation": 0.5,
+    "risk_tolerance": 0.2,
+    "domain": "service"
+  },
+  "tasks": [
+    {
+      "id": "cs_task_1",
+      "name": "问题分类",
+      "description": "将用户问题分类到已知类别",
+      "sequence": 1,
+      "dependencies": [],
+      "estimated_time": "<50ms",
+      "categories": ["如何使用", "账号问题", "投诉建议", "业务咨询", "转人工"]
+    },
+    {
+      "id": "cs_task_2",
+      "name": "知识库检索",
+      "description": "从知识库检索答案",
+      "sequence": 2,
+      "dependencies": ["cs_task_1"],
+      "estimated_time": "<200ms",
+      "tools": ["knowledge_base"]
+    },
+    {
+      "id": "cs_task_3",
+      "name": "答案生成",
+      "description": "组装答案并生成回复",
+      "sequence": 3,
+      "dependencies": ["cs_task_2"],
+      "estimated_time": "<300ms",
+      "tools": ["response_generator"]
+    },
+    {
+      "id": "cs_task_4",
+      "name": "满意度跟踪",
+      "description": "跟踪用户满意度",
+      "sequence": 4,
+      "dependencies": ["cs_task_3"],
+      "estimated_time": "<100ms",
+      "tools": ["feedback_tracker"]
+    }
+  ],
+  "business_metrics": {
+    "auto_resolve_rate": "75%",
+    "avg_response_time": "<3秒",
+    "customer_satisfaction": "4.2/5"
+  },
+  "roi_estimate": {
+    "human_cs_cost_reduction": "60%",
+    "response_time_improvement": "80%",
+    "availability": "7x24"
+  },
+  "tags": ["customer_service", "chatbot", "support", "faq"],
+  "is_public": true,
+  "version": "1.0.0"
+}

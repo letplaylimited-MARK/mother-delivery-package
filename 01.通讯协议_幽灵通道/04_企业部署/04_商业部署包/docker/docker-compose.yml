@@ -1,0 +1,118 @@
+version: '3.8'
+
+services:
+  ghost-hub-sdk:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ghosthub/sdk:latest
+    container_name: ghost-hub-sdk
+    ports:
+      - "8080:8080"  # REST API
+      - "8883:8883"  # MQTT
+      - "5672:5672"  # AMQP
+    environment:
+      - GHOST_HUB_LOG_LEVEL=INFO
+      - GHOST_HUB_LICENSE_FILE=/app/license.json
+      - MQTT_BROKER=mqtt
+      - REDIS_HOST=redis
+    volumes:
+      - ./data:/app/data
+      - ./license.json:/app/license.json:ro
+    depends_on:
+      - redis
+      - mqtt
+    networks:
+      - ghost-hub-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import ghost_hub_sdk"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ghost-hub-sdk-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ghosthub/sdk:latest
+    container_name: ghost-hub-worker
+    command: ["python", "-m", "ghost_hub_sdk.worker"]
+    environment:
+      - GHOST_HUB_LOG_LEVEL=INFO
+      - GHOST_HUB_LICENSE_FILE=/app/license.json
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - ./data:/app/data
+      - ./license.json:/app/license.json:ro
+    depends_on:
+      - redis
+    networks:
+      - ghost-hub-net
+    deploy:
+      replicas: 2
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: ghost-hub-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - ghost-hub-net
+    restart: unless-stopped
+
+  mqtt:
+    image: eclipse-mosquitto:2
+    container_name: ghost-hub-mqtt
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mqtt-data:/mosquitto/data
+      - mqtt-logs:/mosquitto/log
+    networks:
+      - ghost-hub-net
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: ghost-hub-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - ghost-hub-net
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ghost-hub-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - ghost-hub-net
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+  mqtt-data:
+  mqtt-logs:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  ghost-hub-net:
+    driver: bridge

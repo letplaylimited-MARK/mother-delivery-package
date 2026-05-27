@@ -1,0 +1,15 @@
+{
+  "snapshot_id": "snap_20260405_0001",
+  "stream_id": "stream_20260405_0001",
+  "sequence_number": 42,
+  "state_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "merkle_root": "8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f",
+  "created_at": 1712345678.123,
+  "status": "active",
+  "state": {
+    "__version__": "v42"
+  },
+  "metadata": {
+    "reason": "periodic checkpoint"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "id": "tpl_ecommerce_order",
+  "name": "电商订单智能处理",
+  "description": "处理电商订单全流程，从下单到售后",
+  "domain": "ecommerce",
+  "category": "order_management",
+  "intent_pattern": "下单|订单|购买|退货|退款|物流|查询|状态",
+  "sample_inputs": [
+    "查询我的订单状态",
+    "申请退货退款",
+    "修改收货地址",
+    "催发货",
+    "确认收货"
+  ],
+  "intent_vector": {
+    "urgency": 0.7,
+    "complexity": 0.5,
+    "autonomy": 0.6,
+    "cooperation": 0.3,
+    "risk_tolerance": 0.3,
+    "domain": "ecommerce"
+  },
+  "tasks": [
+    {
+      "id": "eco_task_1",
+      "name": "订单识别",
+      "description": "识别用户订单意图类型",
+      "sequence": 1,
+      "dependencies": [],
+      "estimated_time": "<100ms",
+      "tools": ["intent_parser"],
+      "output": {"type": "order_intent"}
+    },
+    {
+      "id": "eco_task_2",
+      "name": "订单查询",
+      "description": "查询订单系统获取订单信息",
+      "sequence": 2,
+      "dependencies": ["eco_task_1"],
+      "estimated_time": "<500ms",
+      "tools": ["order_api"],
+      "output": {"type": "order_info"}
+    },
+    {
+      "id": "eco_task_3",
+      "name": "状态处理",
+      "description": "根据意图执行相应操作",
+      "sequence": 3,
+      "dependencies": ["eco_task_2"],
+      "estimated_time": "<1s",
+      "tools": ["order_processor"],
+      "operations": ["cancel", "refund", "modify_address", "ship"]
+    },
+    {
+      "id": "eco_task_4",
+      "name": "结果通知",
+      "description": "通知用户处理结果",
+      "sequence": 4,
+      "dependencies": ["eco_task_3"],
+      "estimated_time": "<200ms",
+      "tools": ["notification"]
+    }
+  ],
+  "business_metrics": {
+    "response_time": "<2秒",
+    "query_accuracy": "99%",
+    "cs_cost_reduction": "40%"
+  },
+  "roi_estimate": {
+    "cs_cost_saving_percent": "40%",
+    "order_processing_time_reduction": "60%",
+    "customer_satisfaction_improvement": "25%"
+  },
+  "tags": ["ecommerce", "order", "refund", "logistics"],
+  "is_public": true,
+  "version": "1.0.0"
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ghost-channel/schemas/ack-message.json",
+  "title": "AckMessage",
+  "type": "object",
+  "required": [
+    "protocol_version",
+    "schema_version",
+    "stream_id",
+    "sequence_number",
+    "ack_type",
+    "status",
+    "receiver_id",
+    "merkle_root_verified",
+    "applied",
+    "timestamp_ns"
+  ],
+  "properties": {
+    "protocol_version": {"type": "string"},
+    "schema_version": {"type": "string"},
+    "stream_id": {"type": "string"},
+    "sequence_number": {"type": "integer"},
+    "ack_type": {
+      "type": "string",
+      "enum": ["RECEIVED", "VERIFIED", "APPLIED", "ROLLED_BACK", "FAILED"]
+    },
+    "status": {"type": "string", "enum": ["ok", "error"]},
+    "receiver_id": {"type": "string"},
+    "merkle_root_verified": {"type": "boolean"},
+    "applied": {"type": "boolean"},
+    "extensions": {"type": "object"},
+    "error": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "./error-object.schema.json"}
+      ]
+    },
+    "timestamp_ns": {"type": "integer"}
+  },
+  "additionalProperties": false
+}

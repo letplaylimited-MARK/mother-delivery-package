@@ -1,0 +1,101 @@
+{
+  "id": "tpl_supply_chain",
+  "name": "供应链管理",
+  "description": "优化供应链运作，从采购到交付的全流程管理",
+  "domain": "supply_chain",
+  "category": "logistics",
+  "intent_pattern": "采购|库存|物流|配送|供应商|订单|预测|补货",
+  "sample_inputs": [
+    "检查库存状态",
+    "生成采购订单",
+    "跟踪物流进度",
+    "预测下周需求",
+    "优化配送路线"
+  ],
+  "intent_vector": {
+    "urgency": 0.6,
+    "complexity": 0.7,
+    "autonomy": 0.5,
+    "cooperation": 0.7,
+    "risk_tolerance": 0.4,
+    "domain": "supply_chain"
+  },
+  "tasks": [
+    {
+      "id": "sc_task_1",
+      "name": "需求预测",
+      "description": "预测未来需求",
+      "sequence": 1,
+      "dependencies": [],
+      "estimated_time": "1-2小时",
+      "tools": ["demand_forecaster", "ml_predictor"],
+      "output": {"type": "demand_forecast", "format": "time_series"}
+    },
+    {
+      "id": "sc_task_2",
+      "name": "库存分析",
+      "description": "分析当前库存状态",
+      "sequence": 2,
+      "dependencies": ["sc_task_1"],
+      "estimated_time": "30分钟",
+      "tools": ["inventory_analyzer", "reorder_point_calculator"],
+      "output": {"type": "inventory_report", "format": "dashboard"}
+    },
+    {
+      "id": "sc_task_3",
+      "name": "采购计划",
+      "description": "制定采购计划",
+      "sequence": 3,
+      "dependencies": ["sc_task_2"],
+      "estimated_time": "1-2小时",
+      "tools": ["po_generator", "supplier_matcher"],
+      "output": {"type": "purchase_order", "format": "document"}
+    },
+    {
+      "id": "sc_task_4",
+      "name": "物流调度",
+      "description": "优化物流配送",
+      "sequence": 4,
+      "dependencies": ["sc_task_3"],
+      "estimated_time": "30分钟-2小时",
+      "tools": ["route_optimizer", "carrier_selector"],
+      "output": {"type": "delivery_plan", "format": "route_map"}
+    },
+    {
+      "id": "sc_task_5",
+      "name": "实时跟踪",
+      "description": "跟踪物流状态",
+      "sequence": 5,
+      "dependencies": ["sc_task_4"],
+      "estimated_time": "实时",
+      "tools": ["tracking_system", "alert_manager"],
+      "output": {"type": "tracking_status", "format": "real_time_updates"}
+    },
+    {
+      "id": "sc_task_6",
+      "name": "绩效分析",
+      "description": "分析供应链绩效",
+      "sequence": 6,
+      "dependencies": ["sc_task_5"],
+      "estimated_time": "2-4小时",
+      "tools": ["kpi_dashboard", "cost_analyzer"],
+      "output": {"type": "performance_report", "format": "dashboard"}
+    }
+  ],
+  "business_metrics": {
+    "inventory_turnover": "8-12次/年",
+    "order_fulfillment_rate": "98%+",
+    "on_time_delivery_rate": "95%+",
+    "supply_chain_cost": "降低15-20%"
+  },
+  "roi_estimate": {
+    "inventory_cost_reduction": "30%",
+    "logistics_cost_reduction": "20%",
+    "stockout_reduction": "50%"
+  },
+  "tags": ["supply_chain", "logistics", "inventory", "procurement", "delivery"],
+  "is_public": true,
+  "version": "1.0.0",
+  "author": "GhostHub",
+  "created_at": "2026-04-15"
+}

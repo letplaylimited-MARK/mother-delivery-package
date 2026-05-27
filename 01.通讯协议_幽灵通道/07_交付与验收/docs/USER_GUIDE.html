@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Hub SDK 用户指南</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 1000px; margin: 0 auto; padding: 40px 20px; line-height: 1.8; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #34495e; margin-top: 40px; padding-top: 20px; }
+        h3 { color: #7f8c8d; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Consolas', monospace; }
+        pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        pre code { background: none; padding: 0; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #3498db; color: white; }
+        .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; }
+        .tip { background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 15px 0; }
+        .nav { background: #f8f9fa; padding: 15px; margin-bottom: 30px; border-radius: 5px; }
+        .nav a { margin-right: 20px; color: #3498db; text-decoration: none; }
+        .component { background: #e8f4f8; border-radius: 8px; padding: 20px; margin: 20px 0; }
+        .component h3 { margin-top: 0; }
+        footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #ddd; color: #7f8c8d; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="INDEX.html">首页</a>
+        <a href="INSTALL_GUIDE.html">安装指南</a>
+        <a href="QUICK_START.html">快速开始</a>
+        <a href="USER_GUIDE.html">用户指南</a>
+        <a href="SCENARIOS.html">使用场景</a>
+        <a href="API.html">API文档</a>
+    </nav>
+
+    <h1>📖 Ghost Hub SDK 用户指南</h1>
+
+    <h2 id="basics">📚 1. 基础概念</h2>
+
+    <div class="component">
+        <h3>核心组件</h3>
+        <table>
+            <tr><th>组件</th><th>功能</th><th>使用场景</th></tr>
+            <tr><td><strong>意图银行</strong></td><td>自然语言理解、模板匹配</td><td>HR、运营、分析</td></tr>
+            <tr><td><strong>IoT适配器</strong></td><td>设备控制、协议转换</td><td>智能家居、工业</td></tr>
+            <tr><td><strong>智能体联邦</strong></td><td>任务分发、多智能体协作</td><td>数据处理、内容生成</td></tr>
+        </table>
+    </div>
+
+    <h2 id="init">🚀 2. SDK初始化</h2>
+
+    <h3>最简初始化</h3>
+    <pre><code>from ghost_hub_sdk import GhostHubSDK
+
+sdk = GhostHubSDK()</code></pre>
+
+    <h3>自定义配置</h3>
+    <pre><code>from ghost_hub_sdk import GhostHubSDK, GhostHubConfig
+
+config = GhostHubConfig(
+    intention_bank_enabled=True,
+    no_ui_adapter_enabled=True,
+    agent_federation_enabled=True,
+    log_level="INFO"
+)
+
+sdk = GhostHubSDK(config)</code></pre>
+
+    <h2 id="intention">🎯 3. 意图银行</h2>
+
+    <h3>意图匹配</h3>
+    <pre><code># 基本匹配
+match = sdk.intention_bank.match_intent("帮我招聘工程师")
+
+print(f"模板: {match.template_id}")
+print(f"置信度: {match.confidence:.2f}")</code></pre>
+
+    <h3>领域过滤</h3>
+    <pre><code># 仅HR领域
+hr_match = sdk.intention_bank.match_intent(
+    "绩效考核",
+    domain="hr"
+)
+
+# 仅IoT领域
+iot_match = sdk.intention_bank.match_intent(
+    "开灯",
+    domain="iot"
+)</code></pre>
+
+    <div class="tip">
+        <strong>💡 提示：</strong>指定领域可以提高匹配准确度！
+    </div>
+
+    <h2 id="iot">🏠 4. IoT适配器</h2>
+
+    <h3>连接设备</h3>
+    <pre><code># MQTT连接
+sdk.no_ui_adapter.connect(protocol="mqtt", broker="mqtt://localhost:1883")
+
+# HTTP连接
+sdk.no_ui_adapter.connect(protocol="http", base_url="http://localhost:8080")</code></pre>
+
+    <h3>发送命令</h3>
+    <pre><code># 自然语言转命令
+command = sdk.no_ui_adapter.convert_intent_to_command(
+    intent="把客厅灯调暗",
+    device_type="light"
+)
+
+# 发送到设备
+result = sdk.no_ui_adapter.send_command(
+    command=command,
+    device_id="light_living_room"
+)</code></pre>
+
+    <h3>场景执行</h3>
+    <pre><code># 执行预定义场景
+results = sdk.no_ui_adapter.execute_scene("离家模式")
+print(f"执行了 {len(results)} 个设备命令")</code></pre>
+
+    <h2 id="agent">🤖 5. 智能体联邦</h2>
+
+    <h3>任务分发</h3>
+    <pre><code># 创建任务
+task = {
+    "name": "销售数据分析",
+    "description": "分析Q1销售数据",
+    "priority": "high"
+}
+
+# 分发任务
+result = sdk.agent_federation.distribute_task(
+    task=task,
+    strategy="capability_match"
+)
+
+print(f"分配给: {result['agent_id']}")</code></pre>
+
+    <h3>协作会话</h3>
+    <pre><code># 创建会话
+session = sdk.agent_federation.create_session(
+    session_id="project_alpha",
+    agents=["data_collector", "analyzer", "reporter"]
+)
+
+session.start()
+session.wait()
+final_result = session.get_result()</code></pre>
+
+    <h2 id="best-practices">⭐ 6. 最佳实践</h2>
+
+    <div class="warning">
+        <h3>⚠️ 错误处理</h3>
+        <pre><code>try:
+    result = sdk.execute_workflow("招聘流程")
+except GhostHubError as e:
+    print(f"SDK错误: {e}")
+finally:
+    sdk.disconnect()  # 始终清理</code></pre>
+    </div>
+
+    <div class="tip">
+        <h3>✅ 性能优化</h3>
+        <p>使用批量操作替代循环单个命令：</p>
+        <pre><code># ❌ 低效
+for device in devices:
+    sdk.no_ui_adapter.send_command(...)
+
+# ✅ 高效
+commands = [sdk.no_ui_adapter.convert_intent_to_command(...) for device in devices]
+results = sdk.no_ui_adapter.send_batch_commands(commands)</code></pre>
+    </div>
+
+    <footer>
+        <p>Ghost Hub SDK v1.0.0 | <a href="https://docs.ghosthub.dev">官方文档</a> | <a href="https://github.com/ghost-hub/sdk">GitHub</a></p>
+    </footer>
+</body>
+</html>

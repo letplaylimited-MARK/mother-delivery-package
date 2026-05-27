@@ -1,0 +1,74 @@
+{
+  "id": "tpl_security_monitor",
+  "name": "安全监控告警",
+  "description": "实时监控安全事件，自动响应处置",
+  "domain": "security",
+  "category": "monitoring",
+  "intent_pattern": "监控|告警|攻击|威胁|入侵|异常|安全",
+  "sample_inputs": [
+    "检查有没有异常登录",
+    "最近有哪些安全告警",
+    "有入侵检测吗",
+    "查看安全态势",
+    "封禁可疑IP"
+  ],
+  "intent_vector": {
+    "urgency": 0.9,
+    "complexity": 0.7,
+    "autonomy": 0.9,
+    "cooperation": 0.2,
+    "risk_tolerance": 0.1,
+    "domain": "security"
+  },
+  "tasks": [
+    {
+      "id": "sec_task_1",
+      "name": "事件采集",
+      "description": "从各数据源采集安全事件",
+      "sequence": 1,
+      "dependencies": [],
+      "estimated_time": "<100ms",
+      "sources": ["firewall", "ids", "logs", "auth"]
+    },
+    {
+      "id": "sec_task_2",
+      "name": "威胁检测",
+      "description": "使用规则和AI检测威胁",
+      "sequence": 2,
+      "dependencies": ["sec_task_1"],
+      "estimated_time": "<500ms",
+      "methods": ["rule_based", "ml_anomaly"]
+    },
+    {
+      "id": "sec_task_3",
+      "name": "风险评估",
+      "description": "评估威胁严重程度",
+      "sequence": 3,
+      "dependencies": ["sec_task_2"],
+      "estimated_time": "<200ms",
+      "levels": ["critical", "high", "medium", "low"]
+    },
+    {
+      "id": "sec_task_4",
+      "name": "自动响应",
+      "description": "执行预设的响应动作",
+      "sequence": 4,
+      "dependencies": ["sec_task_3"],
+      "estimated_time": "<1s",
+      "actions": ["block_ip", "disable_account", "notify", "escalate"]
+    }
+  ],
+  "business_metrics": {
+    "detection_rate": "99.5%",
+    "false_positive": "<5%",
+    "response_time": "<30秒"
+  },
+  "roi_estimate": {
+    "incident_reduction": "70%",
+    "mttd_improvement": "90%",
+    "security_score": "+40%"
+  },
+  "tags": ["security", "monitoring", "alert", "incident_response"],
+  "is_public": true,
+  "version": "1.0.0"
+}

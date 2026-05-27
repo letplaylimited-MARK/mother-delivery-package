@@ -1,0 +1,90 @@
+{
+  "id": "tpl_ai_project_management",
+  "name": "AI项目管理",
+  "description": "端到端AI项目管理，从需求到交付的全生命周期管理",
+  "domain": "project",
+  "category": "management",
+  "intent_pattern": "管理|项目|规划|跟踪|进度|里程碑|任务",
+  "sample_inputs": [
+    "创建新项目",
+    "查看项目进度",
+    "更新里程碑",
+    "分配任务给团队成员",
+    "生成项目报告"
+  ],
+  "intent_vector": {
+    "urgency": 0.5,
+    "complexity": 0.7,
+    "autonomy": 0.4,
+    "cooperation": 0.8,
+    "risk_tolerance": 0.3,
+    "domain": "project"
+  },
+  "tasks": [
+    {
+      "id": "pm_task_1",
+      "name": "需求收集",
+      "description": "收集和整理项目需求",
+      "sequence": 1,
+      "dependencies": [],
+      "estimated_time": "1-2天",
+      "tools": ["requirement_collector"],
+      "output": {"type": "requirements_doc", "format": "markdown"}
+    },
+    {
+      "id": "pm_task_2",
+      "name": "任务分解",
+      "description": "将需求分解为可执行的任务",
+      "sequence": 2,
+      "dependencies": ["pm_task_1"],
+      "estimated_time": "2-4小时",
+      "tools": ["task_decomposer", "wbs_builder"],
+      "output": {"type": "task_list", "format": "json"}
+    },
+    {
+      "id": "pm_task_3",
+      "name": "资源分配",
+      "description": "分配人员和资源到任务",
+      "sequence": 3,
+      "dependencies": ["pm_task_2"],
+      "estimated_time": "1-2小时",
+      "tools": ["resource_allocator"],
+      "output": {"type": "resource_plan", "format": "json"}
+    },
+    {
+      "id": "pm_task_4",
+      "name": "进度跟踪",
+      "description": "实时跟踪项目进度",
+      "sequence": 4,
+      "dependencies": ["pm_task_3"],
+      "estimated_time": "持续",
+      "tools": ["progress_tracker", "dashboard"],
+      "output": {"type": "progress_report", "format": "dashboard"}
+    },
+    {
+      "id": "pm_task_5",
+      "name": "风险预警",
+      "description": "识别和预警项目风险",
+      "sequence": 5,
+      "dependencies": ["pm_task_4"],
+      "estimated_time": "实时",
+      "tools": ["risk_analyzer", "alert_system"],
+      "output": {"type": "risk_report", "format": "json"}
+    }
+  ],
+  "business_metrics": {
+    "project_completion_rate": "90%+按时交付",
+    "resource_utilization": "85%资源利用率",
+    "risk_detection_rate": "提前3天发现风险"
+  },
+  "roi_estimate": {
+    "time_saving_percent": "40%",
+    "cost_reduction_percent": "25%",
+    "quality_improvement": "30%"
+  },
+  "tags": ["project", "management", "planning", "tracking", "agile"],
+  "is_public": true,
+  "version": "1.0.0",
+  "author": "GhostHub",
+  "created_at": "2026-04-15"
+}

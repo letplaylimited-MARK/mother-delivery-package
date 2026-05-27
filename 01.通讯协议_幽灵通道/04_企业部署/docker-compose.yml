@@ -1,0 +1,49 @@
+# Ghost Hub 一键部署包
+
+version: '3.8'
+
+services:
+  # Python SDK Demo
+  python-demo:
+    build:
+      context: ../03_SDK与集成/04_SDK工程包/ghost-channel-sdk
+      dockerfile: Dockerfile.python
+    container_name: ghost-hub-python-demo
+    working_dir: /app
+    command: python stress_test_100_concurrent.py
+    volumes:
+      - ../03_SDK与集成/04_SDK工程包/ghost-channel-sdk:/app
+    networks:
+      - ghost-hub-net
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  # TypeScript SDK Demo
+  ts-demo:
+    build:
+      context: ../03_SDK与集成/04_SDK工程包/ghost-channel-sdk/typescript
+      dockerfile: Dockerfile.typescript
+    container_name: ghost-hub-ts-demo
+    working_dir: /app
+    command: npm test
+    volumes:
+      - ../03_SDK与集成/04_SDK工程包/ghost-channel-sdk/typescript:/app
+    networks:
+      - ghost-hub-net
+
+  # Schema Validator
+  schema-validator:
+    build:
+      context: ../03_SDK与集成/04_SDK工程包/ghost-channel-sdk
+      dockerfile: Dockerfile.python
+    container_name: ghost-hub-schema-validator
+    working_dir: /app
+    command: python -c "from ghost_channel.schema_validator import validate_schema_directory; from pathlib import Path; r = validate_schema_directory(Path('schemas')); print('Valid' if r['valid'] else 'Invalid')"
+    volumes:
+      - ../03_SDK与集成/04_SDK工程包/ghost-channel-sdk:/app
+    networks:
+      - ghost-hub-net
+
+networks:
+  ghost-hub-net:
+    driver: bridge

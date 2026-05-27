@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ghost-channel/schemas/encrypted-stream.json",
+  "title": "EncryptedStream",
+  "type": "object",
+  "required": [
+    "protocol_version",
+    "schema_version",
+    "stream_id",
+    "source_role_id",
+    "destination_role_id",
+    "timestamp_ns",
+    "sequence_number",
+    "type",
+    "vector_clock",
+    "delta_hash",
+    "delta_payload",
+    "nonce",
+    "compression",
+    "encryption",
+    "auth_tag",
+    "merkle_root",
+    "audit_required"
+  ],
+  "properties": {
+    "protocol_version": {"type": "string"},
+    "schema_version": {"type": "string"},
+    "stream_id": {"type": "string"},
+    "source_role_id": {"type": "string"},
+    "destination_role_id": {"type": "string"},
+    "timestamp_ns": {"type": "integer"},
+    "sequence_number": {"type": "integer", "minimum": 0},
+    "delta_hash": {"type": "string"},
+    "nonce": {"type": "string"},
+    "vector_clock": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "KNOWLEDGE_UPDATE",
+        "QUERY_RESPONSE",
+        "DECISION_PROPOSAL",
+        "DEADLOCK_ALERT",
+        "META_COMMENTARY",
+        "WORKFLOW_SYNC",
+        "MEMORY_SYNC"
+      ]
+    },
+    "delta_payload": {"type": "string"},
+    "compression": {
+      "type": "object",
+      "required": ["algorithm"],
+      "properties": {
+        "algorithm": {"type": "string"},
+        "level": {"type": "integer"}
+      },
+      "additionalProperties": false
+    },
+    "encryption": {
+      "type": "object",
+      "required": ["algorithm"],
+      "properties": {
+        "algorithm": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "auth_tag": {"type": "string"},
+    "signature": {"type": ["string", "null"]},
+    "merkle_root": {"type": "string"},
+    "audit_required": {"type": "boolean"},
+    "extensions": {"type": "object"}
+  },
+  "additionalProperties": false
+}

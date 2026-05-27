@@ -1,0 +1,64 @@
+name: Bug Report
+description: Report a bug in the Ghost Channel Protocol SDK
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Bug Report
+        
+        Thanks for reporting a bug! Please fill out the form below.
+        
+  - type: input
+    id: sdk-version
+    attributes:
+      label: SDK Version
+      description: "Version of the SDK (e.g., 1.0.0)"
+      placeholder: "1.0.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: SDK Language
+      options:
+        - Python
+        - TypeScript
+        - Both
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: Clear description of the bug
+      placeholder: "What happened vs what should have happened"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: "1. Step 1\n2. Step 2\n3. Step 3"
+      placeholder: |
+        1. 
+        2. 
+        3. 
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: "OS, Node/Python version, etc."
+      placeholder: "Windows 11, Python 3.12, Node 20"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs
+      description: Error messages, stack traces, etc.

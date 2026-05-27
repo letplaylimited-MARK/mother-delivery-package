@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ghost Hub Protocol - Glossary">
+    <meta name="ai-task" content="glossary">
+    <title>术语表 - Ghost Hub</title>
+    <style>
+        :root { --primary: #0066cc; --primary-dark: #0052a3; --secondary: #6c757d; --success: #28a745; --light: #f8f9fa; --dark: #212529; --border: #dee2e6; --code-bg: #f5f5f5; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: var(--dark); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+        header { background: var(--primary); color: white; padding: 24px 0; }
+        header h1 { font-size: 1.75rem; }
+        nav { background: var(--light); border-bottom: 1px solid var(--border); position: sticky; top: 0; }
+        nav ul { list-style: none; display: flex; flex-wrap: wrap; }
+        nav a { display: block; padding: 16px 20px; color: var(--dark); text-decoration: none; font-weight: 500; border-bottom: 3px solid transparent; }
+        nav a:hover, nav a.active { color: var(--primary); border-bottom-color: var(--primary); }
+        main { padding: 32px 0; }
+        .term { border-bottom: 1px solid var(--border); padding: 16px 0; }
+        .term h3 { color: var(--primary); margin-bottom: 8px; }
+        .term p { margin: 0; color: var(--secondary); }
+        .term-code { font-family: monospace; background: var(--code-bg); padding: 2px 8px; border-radius: 4px; margin-left: 8px; }
+        .search-box { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 24px; }
+        .category { margin: 32px 0; }
+        .category h2 { font-size: 1.3rem; color: var(--primary-dark); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); }
+        footer { background: var(--dark); color: white; padding: 24px 0; margin-top: 48px; text-align: center; }
+        footer a { color: rgba(255,255,255,0.8); }
+    </style>
+</head>
+<body>
+<header><div class="container"><h1>术语表</h1></div></header>
+<nav><div class="container"><ul>
+    <li><a href="index.html">首页</a></li>
+    <li><a href="install.html">安装</a></li>
+    <li><a href="quickstart.html">快速开始</a></li>
+    <li><a href="userguide.html">使用指南</a></li>
+    <li><a href="apiref.html">API参考</a></li>
+    <li><a href="scenarios.html">场景</a></li>
+    <li><a href="troubleshooting.html">故障排查</a></li>
+    <li><a href="glossary.html" class="active">术语表</a></li>
+</ul></div></nav>
+<main class="container">
+    <input type="text" class="search-box" placeholder="搜索术语..." oninput="filterTerms(this.value)">
+
+    <div class="category">
+        <h2>核心概念</h2>
+        <div class="term" data-term="channel">
+            <h3>Channel <span class="term-code">频道</span></h3>
+            <p>消息传输的逻辑管道，支持广播、多播、单播三种模式</p>
+        </div>
+        <div class="term" data-term="message">
+            <h3>Message <span class="term-code">消息</span></h3>
+            <p>在频道中传输的数据单元，包含payload和元数据</p>
+        </div>
+        <div class="term" data-term="subscriber">
+            <h3>Subscriber <span class="term-code">订阅者</span></h3>
+            <p>订阅频道以接收消息的客户端</p>
+        </div>
+        <div class="term" data-term="publisher">
+            <h3>Publisher <span class="term-code">发布者</span></h3>
+            <p>向频道发送消息的客户端</p>
+        </div>
+    </div>
+
+    <div class="category">
+        <h2>协议术语</h2>
+        <div class="term" data-term="cursor">
+            <h3>Cursor <span class="term-code">游标</span></h3>
+            <p>用于分页查询的位置标记，支持双向遍历</p>
+        </div>
+        <div class="term" data-term="compression">
+            <h3>Compression <span class="term-code">压缩</span></h3>
+            <p>支持zstd、gzip、lz4算法，自动协商最佳压缩比</p>
+        </div>
+        <div class="term" data-term="retention">
+            <h3>Retention <span class="term-code">保留策略</span></h3>
+            <p>控制消息存储时长和最大数量</p>
+        </div>
+    </div>
+
+    <div class="category">
+        <h2>性能指标</h2>
+        <div class="term" data-term="p99-latency">
+            <h3>P99 Latency <span class="term-code">P99延迟</span></h3>
+            <p>99%请求的响应时间，目标值 &lt;10ms</p>
+        </div>
+        <div class="term" data-term="throughput">
+            <h3>Throughput <span class="term-code">吞吐量</span></h3>
+            <p>系统处理消息的速率，目标值 &gt;10,000 msg/s</p>
+        </div>
+        <div class="term" data-term="cache-hit-rate">
+            <h3>Cache Hit Rate <span class="term-code">缓存命中率</span></h3>
+            <p>Redis缓存命中比例，目标值 &gt;99%</p>
+        </div>
+    </div>
+
+    <div class="category">
+        <h2>部署相关</h2>
+        <div class="term" data-term="docker-compose">
+            <h3>Docker Compose <span class="term-code">Docker编排</span></h3>
+            <p>定义和运行多容器Docker应用的工具</p>
+        </div>
+        <div class="term" data-term="environment-variables">
+            <h3>Environment Variables <span class="term-code">环境变量</span></h3>
+            <p>配置服务行为的键值对，如GHOST_HUB_PORT、GHOST_HUB_REDIS_URL</p>
+        </div>
+    </div>
+
+    <script>
+    function filterTerms(query) {
+        const terms = document.querySelectorAll('.term');
+        terms.forEach(term => {
+            const text = term.textContent.toLowerCase();
+            term.style.display = text.includes(query.toLowerCase()) ? 'block' : 'none';
+        });
+    }
+    </script>
+</main>
+<footer><div class="container">
+    <p>&copy; 2026 Ghost Hub Protocol | <a href="index.html">文档首页</a></p>
+</div></footer>
+</body>
+</html>

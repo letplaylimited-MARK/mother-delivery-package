@@ -1,0 +1,23 @@
+# Ghost Channel Enterprise - Build Requirements
+# Ghost Channel 商业版 - 编译依赖
+
+# 核心编译依赖
+cython>=3.0.0
+
+# 可选: NumPy加速 (如果使用数值计算)
+# numpy>=1.26.0
+
+# 编译器要求:
+# - Linux: gcc 或 clang
+# - macOS: Xcode Command Line Tools (clang)
+# - Windows: Visual Studio Build Tools
+#
+# Windows安装Visual Studio后:
+#   1. 安装 "Desktop development with C++"
+#   2. 重启终端
+#   3. 运行: python setup.py build_ext --inplace
+#
+# Linux安装gcc:
+#   Ubuntu/Debian: apt install build-essential
+#   CentOS/RHEL: yum install gcc gcc-c++
+#   Arch: pacman -S base-devel

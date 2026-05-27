@@ -1,0 +1,101 @@
+{
+  "id": "tpl_customer_relationship",
+  "name": "客户关系管理",
+  "description": "完整的客户生命周期管理，从获客到复购的全流程支持",
+  "domain": "crm",
+  "category": "sales",
+  "intent_pattern": "客户|销售|跟进|回访|投诉|反馈|成交|商机",
+  "sample_inputs": [
+    "查看今日待跟进客户",
+    "创建新商机",
+    "记录客户拜访",
+    "处理客户投诉",
+    "生成销售报表"
+  ],
+  "intent_vector": {
+    "urgency": 0.7,
+    "complexity": 0.5,
+    "autonomy": 0.4,
+    "cooperation": 0.6,
+    "risk_tolerance": 0.4,
+    "domain": "crm"
+  },
+  "tasks": [
+    {
+      "id": "crm_task_1",
+      "name": "客户识别",
+      "description": "识别和录入潜在客户",
+      "sequence": 1,
+      "dependencies": [],
+      "estimated_time": "10-30分钟",
+      "tools": ["lead_catcher", "data_enricher"],
+      "output": {"type": "customer_profile", "format": "json"}
+    },
+    {
+      "id": "crm_task_2",
+      "name": "商机评估",
+      "description": "评估商机价值和优先级",
+      "sequence": 2,
+      "dependencies": ["crm_task_1"],
+      "estimated_time": "15-30分钟",
+      "tools": ["scoring_model", "prioritizer"],
+      "output": {"type": "opportunity_score", "format": "json"}
+    },
+    {
+      "id": "crm_task_3",
+      "name": "跟进计划",
+      "description": "制定客户跟进计划",
+      "sequence": 3,
+      "dependencies": ["crm_task_2"],
+      "estimated_time": "20-45分钟",
+      "tools": ["calendar_scheduler", "reminder_system"],
+      "output": {"type": "followup_plan", "format": "calendar_event"}
+    },
+    {
+      "id": "crm_task_4",
+      "name": "沟通记录",
+      "description": "记录客户沟通内容",
+      "sequence": 4,
+      "dependencies": ["crm_task_3"],
+      "estimated_time": "5-15分钟",
+      "tools": ["note_recorder", "transcription_tool"],
+      "output": {"type": "interaction_log", "format": "structured_text"}
+    },
+    {
+      "id": "crm_task_5",
+      "name": "成交转化",
+      "description": "推进商机到成交",
+      "sequence": 5,
+      "dependencies": ["crm_task_4"],
+      "estimated_time": "1-7天",
+      "tools": ["proposal_generator", "contract_maker"],
+      "output": {"type": "deal_closed", "format": "contract"}
+    },
+    {
+      "id": "crm_task_6",
+      "name": "复购分析",
+      "description": "分析复购机会",
+      "sequence": 6,
+      "dependencies": ["crm_task_5"],
+      "estimated_time": "1-2小时",
+      "tools": ["churn_predictor", "upsell_recommender"],
+      "output": {"type": "retention_plan", "format": "recommendations"}
+    }
+  ],
+  "business_metrics": {
+    "lead_conversion_rate": "25%+转化率",
+    "customer_retention_rate": "90%+客户留存",
+    "sales_cycle_time": "缩短30%销售周期",
+    "customer_satisfaction": "CSAT 4.5+/5"
+  },
+  "roi_estimate": {
+    "revenue_per_customer_increase": "35%",
+    "acquisition_cost_reduction": "40%",
+    "retention_improvement": "25%"
+  },
+  "tags": ["crm", "sales", "customer", "lead", "opportunity", "retention"],
+  "is_public": true,
+  "version": "1.0.0",
+  "author": "GhostHub",
+  "created_at": "2026-04-15"
+}

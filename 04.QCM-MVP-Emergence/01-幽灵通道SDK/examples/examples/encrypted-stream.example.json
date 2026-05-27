@@ -1,0 +1,30 @@
+{
+  "protocol_version": "1.1.0",
+  "schema_version": "ghost-channel.encrypted-stream/1.1",
+  "stream_id": "stream_20260405_0001",
+  "source_role_id": "secretary_v1",
+  "destination_role_id": "researcher_v1",
+  "timestamp_ns": 1712345678123456789,
+  "sequence_number": 42,
+  "type": "MEMORY_SYNC",
+  "vector_clock": {
+    "secretary_v1": 42,
+    "researcher_v1": 37,
+    "chief_architect_v1": 19
+  },
+  "delta_hash": "4f7c1d4f7c1d4f7c1d4f7c1d4f7c1d4f7c1d4f7c1d4f7c1d4f7c1d4f7c1d4f7c",
+  "delta_payload": "YmFzZTY0LWVuY29kZWQtY2lwaGVydGV4dA==",
+  "nonce": "c2ZuVXFCeCttaTEzRWErUQ==",
+  "compression": {
+    "algorithm": "zlib",
+    "level": 9
+  },
+  "encryption": {
+    "algorithm": "AES-256-GCM"
+  },
+  "auth_tag": "YWJjZGVmZ2hpamtsbW5vcA==",
+  "signature": null,
+  "merkle_root": "8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f",
+  "audit_required": true,
+  "extensions": {}
+}

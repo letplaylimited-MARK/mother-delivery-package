@@ -1,0 +1,70 @@
+{
+  "id": "tpl_it资产管理",
+  "name": "IT资产管理",
+  "description": "IT资产全生命周期管理，配置管理",
+  "domain": "it",
+  "category": "asset_management",
+  "intent_pattern": "资产|服务器|配置|运维|监控|故障|处理",
+  "sample_inputs": [
+    "查询服务器配置",
+    "资产盘点报告",
+    "处理故障工单",
+    "变更申请审批",
+    "运维知识库查询"
+  ],
+  "intent_vector": {
+    "urgency": 0.7,
+    "complexity": 0.5,
+    "autonomy": 0.7,
+    "cooperation": 0.4,
+    "risk_tolerance": 0.3,
+    "domain": "it"
+  },
+  "tasks": [
+    {
+      "id": "it_task_1",
+      "name": "资产识别",
+      "description": "识别和记录IT资产",
+      "sequence": 1,
+      "dependencies": [],
+      "tools": ["cmdb"]
+    },
+    {
+      "id": "it_task_2",
+      "name": "配置管理",
+      "description": "管理配置项关系",
+      "sequence": 2,
+      "dependencies": ["it_task_1"],
+      "tools": ["config_manager"]
+    },
+    {
+      "id": "it_task_3",
+      "name": "问题处理",
+      "description": "处理IT问题和建议",
+      "sequence": 3,
+      "dependencies": ["it_task_2"],
+      "tools": ["ticket_system"]
+    },
+    {
+      "id": "it_task_4",
+      "name": "报告生成",
+      "description": "生成运维报告",
+      "sequence": 4,
+      "dependencies": ["it_task_3"],
+      "tools": ["report_generator"]
+    }
+  ],
+  "business_metrics": {
+    "asset_accuracy": "99%",
+    "incident_resolution": "60%自动化",
+    "change_success": "98%"
+  },
+  "roi_estimate": {
+    "it_efficiency": "3x提升",
+    "downtime": "减少70%",
+    "cost": "降低40%"
+  },
+  "tags": ["it", "asset", "cmdb", "operations"],
+  "is_public": true,
+  "version": "1.0.0"
+}

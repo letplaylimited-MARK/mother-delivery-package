@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ghost Hub Protocol - User Scenarios">
+    <meta name="ai-task" content="user-scenarios">
+    <title>用户场景 - Ghost Hub</title>
+    <style>
+        :root {
+            --primary: #0066cc;
+            --primary-dark: #0052a3;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --border: #dee2e6;
+            --code-bg: #f5f5f5;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: var(--dark); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+        header { background: var(--primary); color: white; padding: 24px 0; }
+        header h1 { font-size: 1.75rem; }
+        nav { background: var(--light); border-bottom: 1px solid var(--border); position: sticky; top: 0; }
+        nav ul { list-style: none; display: flex; flex-wrap: wrap; }
+        nav a { display: block; padding: 16px 20px; color: var(--dark); text-decoration: none; font-weight: 500; border-bottom: 3px solid transparent; }
+        nav a:hover, nav a.active { color: var(--primary); border-bottom-color: var(--primary); }
+        main { padding: 32px 0; }
+        .section { margin: 32px 0; }
+        .section h2 { font-size: 1.5rem; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); }
+        .scenario-card { border: 1px solid var(--border); border-radius: 8px; margin: 24px 0; overflow: hidden; }
+        .scenario-header { background: var(--light); padding: 20px; border-bottom: 1px solid var(--border); }
+        .scenario-header h3 { color: var(--primary); margin-bottom: 8px; }
+        .scenario-body { padding: 20px; }
+        .scenario-body h4 { margin: 16px 0 8px; color: var(--dark); }
+        pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 16px; overflow-x: auto; font-size: 0.9rem; margin: 12px 0; }
+        code { font-family: 'SFMono-Regular', Consolas, monospace; background: var(--code-bg); padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+        pre code { background: none; padding: 0; }
+        .metric { display: inline-block; background: var(--success); color: white; padding: 4px 12px; border-radius: 16px; font-size: 0.85rem; margin-right: 8px; }
+        .role-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+        .role-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.85rem; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th, td { padding: 10px 12px; text-align: left; border: 1px solid var(--border); }
+        th { background: var(--light); font-weight: 600; }
+        footer { background: var(--dark); color: white; padding: 24px 0; margin-top: 48px; text-align: center; }
+        footer a { color: rgba(255,255,255,0.8); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>用户场景 - Ghost Hub 典型应用案例</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="install.html">安装指南</a></li>
+                <li><a href="quickstart.html">快速开始</a></li>
+                <li><a href="userguide.html">使用指南</a></li>
+                <li><a href="scenarios.html" class="active">用户场景</a></li>
+                <li><a href="apiref.html">API参考</a></li>
+                <li><a href="troubleshooting.html">故障排查</a></li>
+                <li><a href="glossary.html">术语表</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section class="section">
+            <h2>场景一：多智能体记忆同步</h2>
+            <div class="scenario-card">
+                <div class="scenario-header">
+                    <h3>企业级 AI 助手协作</h3>
+                    <p>多个 AI 助手共享用户偏好、项目上下文和决策历史</p>
+                    <div class="role-list">
+                        <span class="role-badge">秘书 Agent</span>
+                        <span class="role-badge">研究员 Agent</span>
+                        <span class="role-badge">分析师 Agent</span>
+                    </div>
+                </div>
+                <div class="scenario-body">
+                    <h4>问题痛点</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>每个 Agent 独立维护记忆，状态不一致</li>
+                        <li>同步全量数据浪费带宽（99%+冗余）</li>
+                        <li>冲突解决困难，难以追踪因果</li>
+                    </ul>
+                    
+                    <h4>Ghost Hub 解决方案</h4>
+                    <pre><code>"""
+多智能体记忆同步示例
+"""
+import asyncio
+from ghost_channel import GhostChannelSDK, GhostChannelConfig
+
+async def memory_sync_scenario():
+    sdk = GhostChannelSDK(GhostChannelConfig(
+        compression_level=9,
+        completion_mode="apply",
+    ))
+    
+    # 秘书 Agent 更新记忆
+    secretary_memory = {
+        "user": "张三",
+        "preferences": {"theme": "dark"},
+        "projects": ["项目A", "项目B"],
+        "decisions": []
+    }
+    
+    updated_memory = {
+        "user": "张三",
+        "preferences": {"theme": "dark"},
+        "projects": ["项目A", "项目B", "项目C"],
+        "decisions": [{"id": 1, "content": "选择方案X"}]
+    }
+    
+    # 同步到研究员 Agent
+    result = await sdk.sync_memory_delta(
+        source_role="secretary",
+        target_role="researcher",
+        old_state=secretary_memory,
+        new_state=updated_memory,
+        semantic_filter="decisions",
+    )
+    
+    # 仅传输变化部分，节省99%+带宽
+    print(f"带宽降低: {result.bandwidth_reduction:.1%}")
+    print(f"一致性: {result.consistency_verified}")
+
+asyncio.run(memory_sync_scenario())</code></pre>
+                    
+                    <h4>预期效果</h4>
+                    <span class="metric">带宽降低 99%+</span>
+                    <span class="metric">一致性 100%</span>
+                    <span class="metric">延迟 &lt;10ms</span>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>场景二：因果工作流引擎</h2>
+            <div class="scenario-card">
+                <div class="scenario-header">
+                    <h3>CI/CD 流水线自动化</h3>
+                    <p>协调代码获取、编译、测试、部署等多个步骤</p>
+                    <div class="role-list">
+                        <span class="role-badge">获取依赖</span>
+                        <span class="role-badge">编译</span>
+                        <span class="role-badge">测试</span>
+                        <span class="role-badge">部署</span>
+                    </div>
+                </div>
+                <div class="scenario-body">
+                    <h4>工作流程</h4>
+                    <pre><code>"""
+CI/CD 工作流同步示例
+"""
+import asyncio
+from ghost_channel import GhostChannelSDK, GhostChannelConfig
+
+async def cicd_workflow():
+    sdk = GhostChannelSDK(GhostChannelConfig())
+    
+    # 步骤1：获取依赖
+    r1 = await sdk.sync_workflow_state(
+        workflow_id="deploy_v2.1",
+        step_id="fetch_deps",
+        step_state={"status": "completed", "packages": 150},
+        dependencies=[]
+    )
+    
+    # 步骤2：编译 (依赖步骤1)
+    r2 = await sdk.sync_workflow_state(
+        workflow_id="deploy_v2.1",
+        step_id="compile",
+        step_state={"status": "completed", "artifacts": 42},
+        dependencies=["fetch_deps"]
+    )
+    
+    # 步骤3：测试 (依赖步骤2)
+    r3 = await sdk.sync_workflow_state(
+        workflow_id="deploy_v2.1",
+        step_id="test",
+        step_state={"status": "completed", "passed": 420, "failed": 0},
+        dependencies=["compile"]
+    )
+    
+    # 步骤4：部署 (依赖步骤3)
+    r4 = await sdk.sync_workflow_state(
+        workflow_id="deploy_v2.1",
+        step_id="deploy",
+        step_state={"status": "completed", "version": "v2.1"},
+        dependencies=["test"]
+    )
+    
+    print("工作流完成！")
+
+asyncio.run(cicd_workflow())</code></pre>
+                    
+                    <h4>失败恢复</h4>
+                    <pre><code># 步骤3失败后自动恢复
+recovered = await sdk.recover_from_failure(
+    step_id="test",
+    last_known_state={"status": "failed"}
+)
+print(f"恢复到: {recovered}")</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>场景三：IoT 设备状态同步</h2>
+            <div class="scenario-card">
+                <div class="scenario-header">
+                    <h3>智能家居控制</h3>
+                    <p>同步多个 IoT 设备的状态，确保一致性和实时性</p>
+                </div>
+                <div class="scenario-body">
+                    <h4>设备状态同步</h4>
+                    <pre><code>"""
+IoT 设备状态同步
+"""
+import asyncio
+from ghost_channel import GhostChannelSDK, GhostChannelConfig
+
+async def iot_sync():
+    sdk = GhostChannelSDK(GhostChannelConfig(completion_mode="verify"))
+    
+    # 传感器状态
+    old_state = {
+        "temperature": 25.5,
+        "humidity": 60,
+        "lights": "off"
+    }
+    
+    new_state = {
+        "temperature": 26.0,
+        "humidity": 58,
+        "lights": "on"  # 仅此项变化
+    }
+    
+    # 同步到中央控制器
+    result = await sdk.sync_memory_delta(
+        source_role="sensor_01",
+        target_role="central_controller",
+        old_state=old_state,
+        new_state=new_state,
+    )
+    
+    # 控制器自动更新灯光
+    print(f"灯光已{new_state['lights']}")
+
+asyncio.run(iot_sync())</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>场景四：电商订单处理</h2>
+            <div class="scenario-card">
+                <div class="scenario-header">
+                    <h3>多服务订单流水线</h3>
+                    <p>协调库存、支付、物流等多个服务</p>
+                </div>
+                <div class="scenario-body">
+                    <h4>订单处理流程</h4>
+                    <pre><code>"""
+电商订单处理工作流
+"""
+import asyncio
+from ghost_channel import GhostChannelSDK
+
+async def order_workflow():
+    sdk = GhostChannelSDK()
+    
+    # 1. 库存检查
+    await sdk.sync_workflow_state(
+        "order_12345", "check_inventory",
+        {"status": "completed", "reserved": True},
+        []
+    )
+    
+    # 2. 支付处理
+    await sdk.sync_workflow_state(
+        "order_12345", "process_payment",
+        {"status": "completed", "amount": 299.00},
+        ["check_inventory"]
+    )
+    
+    # 3. 物流安排
+    await sdk.sync_workflow_state(
+        "order_12345", "arrange_shipping",
+        {"status": "completed", "tracking": "SF123456"},
+        ["process_payment"]
+    )
+    
+    print("订单处理完成")
+
+asyncio.run(order_workflow())</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>场景对比表</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>场景</th>
+                        <th>Agent数量</th>
+                        <th>同步频率</th>
+                        <th>关键指标</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>AI助手协作</td>
+                        <td>3-10</td>
+                        <td>每分钟</td>
+                        <td>带宽降低 99%+, 一致性 100%</td>
+                    </tr>
+                    <tr>
+                        <td>CI/CD流水线</td>
+                        <td>4-8</td>
+                        <td>每次提交</td>
+                        <td>恢复时间 &lt;16ms</td>
+                    </tr>
+                    <tr>
+                        <td>IoT控制</td>
+                        <td>10-100</td>
+                        <td>每秒</td>
+                        <td>P99延迟 &lt;10ms</td>
+                    </tr>
+                    <tr>
+                        <td>电商订单</td>
+                        <td>3-5</td>
+                        <td>每订单</td>
+                        <td>因果一致性 100%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p><a href="index.html">Ghost Hub 文档首页</a> | <a href="https://github.com/ghost-channel">GitHub</a></p>
+            <p style="margin-top: 8px; opacity: 0.7;">v1.0.0 | 2026-04-15</p>
+        </div>
+    </footer>
+</body>
+</html>

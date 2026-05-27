@@ -1,0 +1,70 @@
+{
+  "id": "tpl_meeting_assistant",
+  "name": "会议智能助手",
+  "description": "自动安排会议、生成纪要、跟踪待办",
+  "domain": "office",
+  "category": "productivity",
+  "intent_pattern": "会议|安排|纪要|待办|日程|邀请|参会",
+  "sample_inputs": [
+    "安排下周一的周会",
+    "生成今天的会议纪要",
+    "跟踪会议待办事项",
+    "发送会议邀请",
+    "查看我的日程"
+  ],
+  "intent_vector": {
+    "urgency": 0.6,
+    "complexity": 0.5,
+    "autonomy": 0.7,
+    "cooperation": 0.8,
+    "risk_tolerance": 0.3,
+    "domain": "office"
+  },
+  "tasks": [
+    {
+      "id": "meet_task_1",
+      "name": "意图解析",
+      "description": "解析会议相关意图",
+      "sequence": 1,
+      "dependencies": [],
+      "tools": ["intent_parser"]
+    },
+    {
+      "id": "meet_task_2",
+      "name": "日历查询",
+      "description": "查询参与人日历找空档",
+      "sequence": 2,
+      "dependencies": ["meet_task_1"],
+      "tools": ["calendar_api"]
+    },
+    {
+      "id": "meet_task_3",
+      "name": "会议安排",
+      "description": "创建会议并发送邀请",
+      "sequence": 3,
+      "dependencies": ["meet_task_2"],
+      "tools": ["calendar_api", "mail_api"]
+    },
+    {
+      "id": "meet_task_4",
+      "name": "纪要生成",
+      "description": "录音转文字并生成纪要",
+      "sequence": 4,
+      "dependencies": [],
+      "tools": ["asr", "nlp_summary"]
+    }
+  ],
+  "business_metrics": {
+    "scheduling_time": "减少80%",
+    "attendance_rate": "95%",
+    "follow_up_completion": "90%"
+  },
+  "roi_estimate": {
+    "time_saving_per_meeting": "15分钟",
+    "efficiency_improvement": "40%",
+    "meeting_quality_score": "+25%"
+  },
+  "tags": ["meeting", "calendar", "productivity", "summary"],
+  "is_public": true,
+  "version": "1.0.0"
+}

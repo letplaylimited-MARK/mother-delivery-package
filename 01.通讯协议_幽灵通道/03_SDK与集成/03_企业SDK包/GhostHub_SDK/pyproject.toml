@@ -1,0 +1,83 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ghost-hub-sdk"
+version = "1.0.0"
+description = "Ghost Hub - Enterprise AI workflow orchestrator SDK"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Ghost Hub Team", email = "team@ghosthub.dev"}
+]
+keywords = ["ai", "workflow", "agent", "intention", "iot", "federation"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.10"
+
+dependencies = [
+    "fastapi>=0.100.0",
+    "pydantic>=2.0.0",
+    "uvicorn>=0.20.0",
+    "paho-mqtt>=1.6.0",
+    "websocket-client>=1.6.0",
+]
+
+[project.optional-dependencies]
+protocols = [
+    "paho-mqtt>=1.6.0",
+    "websocket-client>=1.6.0",
+]
+api = [
+    "fastapi>=0.100.0",
+    "pydantic>=2.0.0",
+    "uvicorn>=0.20.0",
+]
+test = [
+    "pytest>=7.0",
+    "requests>=2.28",
+]
+channels = [
+    "ghost-channel-sdk>=1.0.0",
+]
+all = [
+    "ghost-hub-sdk[protocols,api,test,channels]",
+]
+
+[project.urls]
+Homepage = "https://ghosthub.dev"
+Documentation = "https://docs.ghosthub.dev"
+Repository = "https://github.com/ghosthub/sdk"
+Issues = "https://github.com/ghosthub/sdk/issues"
+
+[tool.setuptools]
+packages = [
+    "ghost_hub_sdk",
+    "ghost_hub_sdk.components",
+    "ghost_hub_sdk.protocols",
+    "ghost_hub_sdk.api",
+    "ghost_hub_sdk.demos",
+]
+package-dir = {"ghost_hub_sdk" = "."}
+include-package-data = true
+
+[tool.setuptools.package-data]
+templates = ["*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

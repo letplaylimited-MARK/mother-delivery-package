@@ -1,0 +1,147 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Hub SDK 安装指南</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 900px; margin: 0 auto; padding: 40px 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #34495e; margin-top: 30px; }
+        h3 { color: #7f8c8d; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Consolas', monospace; }
+        pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        pre code { background: none; padding: 0; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #3498db; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; }
+        .success { background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 20px 0; }
+        .nav { background: #f8f9fa; padding: 15px; margin-bottom: 30px; border-radius: 5px; }
+        .nav a { margin-right: 20px; color: #3498db; text-decoration: none; }
+        .nav a:hover { text-decoration: underline; }
+        .toc { background: #e8f4f8; padding: 20px; border-radius: 5px; margin: 20px 0; }
+        .toc ul { list-style-type: none; padding-left: 20px; }
+        .toc li { margin: 8px 0; }
+        .toc a { color: #3498db; text-decoration: none; }
+        footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #ddd; color: #7f8c8d; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="INDEX.html">首页</a>
+        <a href="INSTALL_GUIDE.html">安装指南</a>
+        <a href="QUICK_START.html">快速开始</a>
+        <a href="USER_GUIDE.html">用户指南</a>
+        <a href="SCENARIOS.html">使用场景</a>
+        <a href="API.html">API文档</a>
+    </nav>
+
+    <h1>🎯 Ghost Hub SDK 安装指南</h1>
+    
+    <div class="success">
+        <strong>SDK版本</strong>: 1.0.0 | <strong>Python</strong>: 3.10+ | <strong>发布日期</strong>: 2026-04-15
+    </div>
+
+    <div class="toc">
+        <h2>📑 目录</h2>
+        <ul>
+            <li><a href="#requirements">1. 前置要求</a></li>
+            <li><a href="#install">2. 安装方式</a></li>
+            <li><a href="#verify">3. 验证安装</a></li>
+            <li><a href="#troubleshoot">4. 问题排查</a></li>
+            <li><a href="#docker">5. Docker安装</a></li>
+            <li><a href="#next">6. 后续步骤</a></li>
+        </ul>
+    </div>
+
+    <h2 id="requirements">📋 1. 前置要求</h2>
+    
+    <table>
+        <tr><th>组件</th><th>最低要求</th><th>推荐配置</th></tr>
+        <tr><td>Python</td><td>3.10</td><td>3.11 / 3.12</td></tr>
+        <tr><td>内存</td><td>2GB</td><td>4GB+</td></tr>
+        <tr><td>磁盘</td><td>1GB</td><td>5GB+</td></tr>
+        <tr><td>网络</td><td>必需</td><td>稳定网络</td></tr>
+    </table>
+
+    <h2 id="install">🚀 2. 安装方式</h2>
+
+    <h3>方式一：pip安装（推荐）</h3>
+    <pre><code># 安装稳定版
+pip install ghost-hub-sdk
+
+# 安装特定版本
+pip install ghost-hub-sdk==1.0.0
+
+# 升级到最新版本
+pip install --upgrade ghost-hub-sdk</code></pre>
+
+    <h3>方式二：从源码安装</h3>
+    <pre><code># 克隆仓库
+git clone https://github.com/ghost-hub/sdk.git
+cd sdk
+
+# 安装依赖
+pip install -e ".[all]"</code></pre>
+
+    <h3>方式三：Docker安装</h3>
+    <pre><code># 拉取镜像
+docker pull ghosthub/sdk:1.0.0
+
+# 运行容器
+docker run -p 8080:8080 ghosthub/sdk:1.0.0</code></pre>
+
+    <h2 id="verify">✅ 3. 验证安装</h2>
+    
+    <h3>Python验证</h3>
+    <pre><code>import ghost_hub_sdk
+print(ghost_hub_sdk.__version__)
+# 输出: 1.0.0</code></pre>
+
+    <h3>快速测试</h3>
+    <pre><code>from ghost_hub_sdk import GhostHubSDK
+
+sdk = GhostHubSDK()
+result = sdk.execute_workflow("测试")
+print(result)</code></pre>
+
+    <h2 id="troubleshoot">🔧 4. 问题排查</h2>
+
+    <div class="warning">
+        <strong>问题</strong>：Python版本不兼容<br>
+        <strong>解决</strong>：确保Python版本 >= 3.10
+    </div>
+
+    <div class="warning">
+        <strong>问题</strong>：pip安装失败<br>
+        <strong>解决</strong>：使用国内镜像<br>
+        <code>pip install ghost-hub-sdk -i https://pypi.tuna.tsinghua.edu.cn/simple</code>
+    </div>
+
+    <h2 id="docker">🐳 5. Docker安装</h2>
+
+    <pre><code># docker-compose.yml
+version: '3.8'
+services:
+  ghost-hub:
+    image: ghosthub/sdk:1.0.0
+    ports:
+      - "8080:8080"
+
+# 运行
+docker-compose up -d</code></pre>
+
+    <h2 id="next">📚 6. 后续步骤</h2>
+    <ul>
+        <li><a href="QUICK_START.html">快速开始指南</a></li>
+        <li><a href="USER_GUIDE.html">用户指南</a></li>
+        <li><a href="SCENARIOS.html">使用场景</a></li>
+    </ul>
+
+    <footer>
+        <p>Ghost Hub SDK v1.0.0 | <a href="https://docs.ghosthub.dev">官方文档</a> | <a href="https://github.com/ghost-hub/sdk">GitHub</a></p>
+    </footer>
+</body>
+</html>

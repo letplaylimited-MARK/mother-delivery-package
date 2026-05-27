@@ -1,0 +1,14 @@
+{
+  "transaction_id": "txn_20260405_0001",
+  "timestamp": 1712345678.123,
+  "source_role": "secretary_v1",
+  "destination_role": "researcher_v1",
+  "message_type": "MEMORY_SYNC",
+  "delta_hash": "4f7c1d4f7c1d4f7c1d4f7c1d4f7c1d4f7c1d4f7c1d4f7c1d4f7c1d4f7c1d4f7c",
+  "merkle_root_before": "1111111111111111111111111111111111111111111111111111111111111111",
+  "merkle_root_after": "8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f8c9d7d1f",
+  "bandwidth_saved_bytes": 10240,
+  "transmission_duration_ms": 3.1,
+  "signature_verified": true,
+  "tamper_detected": false
+}

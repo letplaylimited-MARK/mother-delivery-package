@@ -1,0 +1,35 @@
+{
+  "added": {
+    "decision_20260405_001": {
+      "topic": "protocol_scope",
+      "summary": "Ghost Channel shall manage semantic-aware delta sync only",
+      "confidence": 0.94
+    }
+  },
+  "modified": {
+    "memory_anchor_17": {
+      "weight": 0.88,
+      "last_updated": 1712345678.123
+    }
+  },
+  "removed": [],
+  "list_appends": {
+    "interaction_log": [
+      {
+        "role": "secretary_v1",
+        "type": "decision",
+        "content": "scope clarified",
+        "timestamp": 1712345678.123
+      }
+    ]
+  },
+  "changed_fields": {
+    "memory_anchor_17": [
+      "weight",
+      "last_updated"
+    ]
+  },
+  "version_from": "v41",
+  "version_to": "v42",
+  "timestamp": 1712345678.123
+}

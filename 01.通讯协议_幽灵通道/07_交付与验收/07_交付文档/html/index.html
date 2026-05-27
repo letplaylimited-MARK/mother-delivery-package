@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ghost Hub Protocol - AI Multi-Agent Collaboration Infrastructure">
+    <meta name="ai-task" content="protocol-documentation">
+    <meta name="ai-protocol" content="ghost-channel-rfc-0001">
+    <title>Ghost Hub - AI协作基础设施文档</title>
+    <style>
+        :root {
+            --primary: #0066cc;
+            --primary-dark: #0052a3;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --border: #dee2e6;
+            --code-bg: #f5f5f5;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: #fff;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 48px 0;
+        }
+        
+        header h1 { font-size: 2.5rem; margin-bottom: 8px; }
+        header p { font-size: 1.1rem; opacity: 0.9; }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        .badge-primary { background: rgba(255,255,255,0.2); color: white; }
+        .badge-success { background: var(--success); color: white; }
+        
+        nav {
+            background: var(--light);
+            border-bottom: 1px solid var(--border);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+        }
+        
+        nav li { flex: none; }
+        
+        nav a {
+            display: block;
+            padding: 16px 20px;
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        nav a:hover, nav a.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        main { padding: 48px 0; }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin: 32px 0;
+        }
+        
+        .card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            transition: all 0.2s;
+        }
+        
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0,102,204,0.1);
+        }
+        
+        .card h3 { 
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card p { color: var(--secondary); margin-bottom: 16px; }
+        
+        .card .card-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .card .card-link:hover { text-decoration: underline; }
+        
+        .section { margin: 48px 0; }
+        
+        .section h2 {
+            font-size: 1.75rem;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .audience-card {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 24px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .audience-card h4 { margin-bottom: 12px; color: var(--dark); }
+        .audience-card ul { list-style: none; }
+        .audience-card li { 
+            padding: 8px 0; 
+            border-bottom: 1px solid var(--border);
+        }
+        .audience-card li:last-child { border-bottom: none; }
+        .audience-card a { 
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .audience-card a:hover { text-decoration: underline; }
+        
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            margin: 16px 0;
+        }
+        
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            background: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        pre code { background: none; padding: 0; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid var(--border);
+        }
+        
+        th { background: var(--light); font-weight: 600; }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+        
+        .metric-card {
+            text-align: center;
+            padding: 24px;
+            background: var(--light);
+            border-radius: 8px;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+        
+        .metric-label {
+            color: var(--secondary);
+            margin-top: 4px;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 32px 0;
+            margin-top: 48px;
+        }
+        
+        footer a { color: rgba(255,255,255,0.8); }
+        footer a:hover { color: white; }
+        
+        .quick-start {
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f7ff 100%);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+        
+        .quick-start h3 {
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Ghost Hub</h1>
+            <p>AI多智能体协作基础设施 - 语义感知增量同步协议</p>
+            <div style="margin-top: 16px;">
+                <span class="badge badge-success">RFC 0001</span>
+                <span class="badge badge-primary">SDK v1.0.0</span>
+                <span class="badge badge-primary">MIT License</span>
+            </div>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html" class="active">首页</a></li>
+                <li><a href="install.html">安装指南</a></li>
+                <li><a href="quickstart.html">快速开始</a></li>
+                <li><a href="userguide.html">使用指南</a></li>
+                <li><a href="scenarios.html">用户场景</a></li>
+                <li><a href="apiref.html">API参考</a></li>
+                <li><a href="troubleshooting.html">故障排查</a></li>
+                <li><a href="glossary.html">术语表</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section class="section">
+            <h2>性能指标</h2>
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <div class="metric-value">&lt;10ms</div>
+                    <div class="metric-label">P99 延迟</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">99.5%</div>
+                    <div class="metric-label">带宽降低</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">100%</div>
+                    <div class="metric-label">一致性</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">100%</div>
+                    <div class="metric-label">成功率</div>
+                </div>
+            </div>
+            <p style="text-align: center; color: var(--secondary);">
+                基于100并发智能体、2500次同步操作的验证结果
+            </p>
+        </section>
+        
+        <section class="section">
+            <h2>快速开始</h2>
+            <div class="quick-start">
+                <h3>5分钟快速体验</h3>
+                <pre><code># Python SDK
+pip install ghost-channel-sdk
+
+# TypeScript SDK  
+npm install ghost-channel-sdk
+
+# 运行示例
+python -c "
+from ghost_channel import GhostChannelSDK, GhostChannelConfig
+import asyncio
+
+async def demo():
+    sdk = GhostChannelSDK(GhostChannelConfig())
+    result = await sdk.sync_memory_delta(
+        'agent_a', 'agent_b',
+        {'v': 'v1'}, {'v': 'v2'}
+    )
+    print(f'Bandwidth reduction: {result.bandwidth_reduction:.1%}')
+
+asyncio.run(demo())
+"</code></pre>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>文档导航</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>安装指南</h3>
+                    <p>Python和TypeScript SDK的完整安装说明，支持pip/npm/Docker</p>
+                    <a href="install.html" class="card-link">开始安装 &rarr;</a>
+                </div>
+                <div class="card">
+                    <h3>快速开始</h3>
+                    <p>5分钟快速体验Ghost Hub的核心功能</p>
+                    <a href="quickstart.html" class="card-link">快速上手 &rarr;</a>
+                </div>
+                <div class="card">
+                    <h3>使用指南</h3>
+                    <p>详细的API使用说明和最佳实践</p>
+                    <a href="userguide.html" class="card-link">深入学习 &rarr;</a>
+                </div>
+                <div class="card">
+                    <h3>用户场景</h3>
+                    <p>多智能体记忆同步、因果工作流等典型场景</p>
+                    <a href="scenarios.html" class="card-link">查看场景 &rarr;</a>
+                </div>
+                <div class="card">
+                    <h3>API参考</h3>
+                    <p>完整的OpenAPI规范和SDK API文档</p>
+                    <a href="apiref.html" class="card-link">查阅API &rarr;</a>
+                </div>
+                <div class="card">
+                    <h3>故障排查</h3>
+                    <p>常见问题与解决方案</p>
+                    <a href="troubleshooting.html" class="card-link">解决问题 &rarr;</a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>受众阅读路径</h2>
+            <div class="audience-grid">
+                <div class="audience-card">
+                    <h4>CTO / 技术决策者</h4>
+                    <ul>
+                        <li><a href="../../02-白皮书与高管沟通/幽灵通道协议白皮书_高管版_v1.0.pdf">高管版白皮书</a></li>
+                        <li><a href="scenarios.html">用户场景</a></li>
+                        <li><a href="apiref.html">API概览</a></li>
+                    </ul>
+                </div>
+                <div class="audience-card">
+                    <h4>开发者</h4>
+                    <ul>
+                        <li><a href="install.html">安装指南</a></li>
+                        <li><a href="quickstart.html">快速开始</a></li>
+                        <li><a href="apiref.html">API参考</a></li>
+                    </ul>
+                </div>
+                <div class="audience-card">
+                    <h4>研究者</h4>
+                    <ul>
+                        <li><a href="../../04-SDK工程包/ghost-channel-sdk/RFC_0001_GHOST_CHANNEL_PROTOCOL_v1.0.md">RFC 0001</a></li>
+                        <li><a href="scenarios.html">技术场景</a></li>
+                        <li><a href="glossary.html">术语表</a></li>
+                    </ul>
+                </div>
+                <div class="audience-card">
+                    <h4>贡献者</h4>
+                    <ul>
+                        <li><a href="../../04-SDK工程包/ghost-channel-sdk/CONTRIBUTING.md">贡献指南</a></li>
+                        <li><a href="userguide.html">使用指南</a></li>
+                        <li><a href="apiref.html">API参考</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>核心协议对象</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>对象</th>
+                        <th>描述</th>
+                        <th>位置</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>DeltaPayload</code></td>
+                        <td>状态间的最小变化集合</td>
+                        <td>sdk.py:_build_delta_payload()</td>
+                    </tr>
+                    <tr>
+                        <td><code>EncryptedStream</code></td>
+                        <td>协议主线传输对象</td>
+                        <td>EncryptedStream 类型</td>
+                    </tr>
+                    <tr>
+                        <td><code>AckMessage</code></td>
+                        <td>接收方确认消息</td>
+                        <td>receive_ack() 方法</td>
+                    </tr>
+                    <tr>
+                        <td><code>SyncResult</code></td>
+                        <td>同步操作结果</td>
+                        <td>sync_*() 方法返回值</td>
+                    </tr>
+                    <tr>
+                        <td><code>SnapshotRecord</code></td>
+                        <td>状态快照记录</td>
+                        <td>recover_from_failure()</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>
+                <strong>Ghost Hub Protocol</strong> - 基于 <a href="https://github.com/ghost-channel/ghost-hub">RFC 0001</a>
+            </p>
+            <p style="margin-top: 8px; opacity: 0.7;">
+                文档版本: v1.0.0 | 最后更新: 2026-04-15
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

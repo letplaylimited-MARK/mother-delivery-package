@@ -1,0 +1,70 @@
+{
+  "id": "tpl_recruitment",
+  "name": "智能招聘助手",
+  "description": "自动化招聘流程，从筛选到面试安排",
+  "domain": "hr",
+  "category": "recruitment",
+  "intent_pattern": "招聘|简历|面试|筛选|offer|入职",
+  "sample_inputs": [
+    "筛选前端工程师简历",
+    "安排技术面试",
+    "发送offer",
+    "跟进入职流程",
+    "招聘进度报告"
+  ],
+  "intent_vector": {
+    "urgency": 0.6,
+    "complexity": 0.6,
+    "autonomy": 0.6,
+    "cooperation": 0.5,
+    "risk_tolerance": 0.3,
+    "domain": "hr"
+  },
+  "tasks": [
+    {
+      "id": "rec_task_1",
+      "name": "简历解析",
+      "description": "提取简历关键信息",
+      "sequence": 1,
+      "dependencies": [],
+      "tools": ["resume_parser"]
+    },
+    {
+      "id": "rec_task_2",
+      "name": "匹配评分",
+      "description": "与职位要求匹配评分",
+      "sequence": 2,
+      "dependencies": ["rec_task_1"],
+      "tools": ["matching_engine"]
+    },
+    {
+      "id": "rec_task_3",
+      "name": "面试安排",
+      "description": "协调面试时间和面试官",
+      "sequence": 3,
+      "dependencies": ["rec_task_2"],
+      "tools": ["calendar_api", "mail_api"]
+    },
+    {
+      "id": "rec_task_4",
+      "name": "offer流程",
+      "description": "发送offer并跟踪回复",
+      "sequence": 4,
+      "dependencies": ["rec_task_3"],
+      "tools": ["document_generator", "tracking"]
+    }
+  ],
+  "business_metrics": {
+    "screening_time": "减少70%",
+    "interview_quality": "+30%",
+    "time_to_hire": "缩短50%"
+  },
+  "roi_estimate": {
+    "hr_efficiency": "3x提升",
+    "hiring_cost": "降低40%",
+    "candidate_quality": "+25%"
+  },
+  "tags": ["recruitment", "hiring", "resume", "interview"],
+  "is_public": true,
+  "version": "1.0.0"
+}

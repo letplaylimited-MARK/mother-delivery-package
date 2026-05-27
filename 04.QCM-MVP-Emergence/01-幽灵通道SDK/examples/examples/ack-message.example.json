@@ -1,0 +1,14 @@
+{
+  "protocol_version": "1.1.0",
+  "schema_version": "ghost-channel.ack/1.1",
+  "stream_id": "stream_20260405_0001",
+  "sequence_number": 42,
+  "ack_type": "APPLIED",
+  "status": "ok",
+  "receiver_id": "researcher_v1",
+  "merkle_root_verified": true,
+  "applied": true,
+  "extensions": {},
+  "error": null,
+  "timestamp_ns": 1712345679123456789
+}

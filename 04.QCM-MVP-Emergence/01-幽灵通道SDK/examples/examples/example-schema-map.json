@@ -1,0 +1,13 @@
+{
+  "mappings": [
+    {"example": "delta-payload.example.json", "schema": "delta-payload.schema.json"},
+    {"example": "encrypted-stream.example.json", "schema": "encrypted-stream.schema.json"},
+    {"example": "ack-message.example.json", "schema": "ack-message.schema.json"},
+    {"example": "sync-result.example.json", "schema": "sync-result.schema.json"},
+    {"example": "error-object.example.json", "schema": "error-object.schema.json"},
+    {"example": "vector-clock.example.json", "schema": "vector-clock.schema.json"},
+    {"example": "audit-entry.example.json", "schema": "audit-entry.schema.json"},
+    {"example": "workflow-step.example.json", "schema": "workflow-step.schema.json"},
+    {"example": "snapshot-record.example.json", "schema": "snapshot-record.schema.json"}
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "id": "tpl_financial_report",
+  "name": "财务报表生成",
+  "description": "自动生成各类财务报表和分析",
+  "domain": "finance",
+  "category": "accounting",
+  "intent_pattern": "报表|财务|利润|成本|预算|支出|收入",
+  "sample_inputs": [
+    "生成月度利润表",
+    "分析本月成本构成",
+    "预算执行报告",
+    "现金流分析",
+    "年度财务报表"
+  ],
+  "intent_vector": {
+    "urgency": 0.5,
+    "complexity": 0.8,
+    "autonomy": 0.6,
+    "cooperation": 0.2,
+    "risk_tolerance": 0.2,
+    "domain": "finance"
+  },
+  "tasks": [
+    {
+      "id": "fin_task_1",
+      "name": "数据采集",
+      "description": "从财务系统采集数据",
+      "sequence": 1,
+      "dependencies": [],
+      "tools": ["finance_api"]
+    },
+    {
+      "id": "fin_task_2",
+      "name": "数据核算",
+      "description": "执行财务核算",
+      "sequence": 2,
+      "dependencies": ["fin_task_1"],
+      "tools": ["accounting_engine"]
+    },
+    {
+      "id": "fin_task_3",
+      "name": "分析计算",
+      "description": "计算指标和分析",
+      "sequence": 3,
+      "dependencies": ["fin_task_2"],
+      "tools": ["analytics_engine"]
+    },
+    {
+      "id": "fin_task_4",
+      "name": "报表生成",
+      "description": "生成标准报表",
+      "sequence": 4,
+      "dependencies": ["fin_task_3"],
+      "tools": ["report_generator"],
+      "formats": ["excel", "pdf", "dashboard"]
+    }
+  ],
+  "business_metrics": {
+    "report_time": "从3天到3分钟",
+    "accuracy": "99.9%",
+    "coverage": "100%报表类型"
+  },
+  "roi_estimate": {
+    "finance_efficiency": "10x提升",
+    "cost_reduction": "60%",
+    "reporting_errors": "减少95%"
+  },
+  "tags": ["finance", "report", "accounting", "analytics"],
+  "is_public": true,
+  "version": "1.0.0"
+}

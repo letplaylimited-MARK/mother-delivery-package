@@ -1,0 +1,141 @@
+# Ghost Channel License Server - Kubernetes Deployment
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ghost-license
+  labels:
+    app: ghost-license
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ghost-license-config
+  namespace: ghost-license
+data:
+  APP_ENV: "production"
+  SERVER_PORT: "8001"
+  LOG_LEVEL: "INFO"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ghost-license-secrets
+  namespace: ghost-license
+type: Opaque
+stringData:
+  # 必填: 生产环境请替换为强密钥
+  SECRET_KEY: "CHANGE_ME_IN_PRODUCTION_USE_STRONG_SECRET_KEY"
+  # Redis密码 (可选)
+  REDIS_PASSWORD: ""
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ghost-license-server
+  namespace: ghost-license
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ghost-license-server
+  template:
+    metadata:
+      labels:
+        app: ghost-license-server
+    spec:
+      containers:
+      - name: license-server
+        image: ghcr.io/q-spectrum/ghost-license-server:1.0.0
+        ports:
+        - containerPort: 8001
+          name: http
+        env:
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: ghost-license-config
+              key: APP_ENV
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ghost-license-secrets
+              key: SECRET_KEY
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8001
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8001
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ghost-license-server
+  namespace: ghost-license
+spec:
+  selector:
+    app: ghost-license-server
+  ports:
+  - name: http
+    port: 8001
+    targetPort: 8001
+  type: ClusterIP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ghost-license-hpa
+  namespace: ghost-license
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ghost-license-server
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ghost-license-ingress
+  namespace: ghost-license
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - license.ghost-channel.io
+    secretName: ghost-license-tls
+  rules:
+  - host: license.ghost-channel.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ghost-license-server
+            port:
+              number: 8001

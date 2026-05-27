@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Hub SDK 文档中心</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif; max-width: 1200px; margin: 0 auto; padding: 40px 20px; line-height: 1.6; background: #f5f7fa; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 40px; border-radius: 16px; margin-bottom: 40px; text-align: center; }
+        .header h1 { font-size: 48px; margin: 0 0 20px 0; }
+        .header p { font-size: 20px; opacity: 0.9; margin: 0; }
+        .version { background: rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 20px; display: inline-block; margin-top: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+        .card h2 { color: #2c3e50; margin-top: 0; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .card-icon { font-size: 48px; margin-bottom: 15px; }
+        .card ul { list-style: none; padding: 0; margin: 0; }
+        .card li { padding: 10px 0; border-bottom: 1px solid #eee; }
+        .card li:last-child { border-bottom: none; }
+        .card a { color: #3498db; text-decoration: none; font-weight: 500; }
+        .card a:hover { text-decoration: underline; }
+        .quick-links { background: white; border-radius: 12px; padding: 30px; margin-bottom: 40px; }
+        .quick-links h2 { margin-top: 0; color: #2c3e50; }
+        .quick-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .quick-link { background: #e8f4f8; padding: 15px 20px; border-radius: 8px; text-align: center; }
+        .quick-link a { color: #2980b9; text-decoration: none; font-weight: 600; }
+        .quick-link a:hover { color: #1a5276; }
+        .footer { text-align: center; padding: 30px; color: #7f8c8d; border-top: 1px solid #ddd; margin-top: 40px; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; color: white; margin-left: 10px; }
+        .badge-new { background: #27ae60; }
+        .badge-essentials { background: #3498db; }
+        .badge-complete { background: #9b59b6; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🎯 Ghost Hub SDK</h1>
+    <p>企业级 AI 工作流编排框架</p>
+    <div class="version">v1.0.0 | Python 3.10+ | 2026-04-15</div>
+</div>
+
+<div class="quick-links">
+    <h2>⚡ 快速链接</h2>
+    <div class="quick-links-grid">
+        <div class="quick-link"><a href="html/QUICK_START.html">🚀 5分钟快速开始</a></div>
+        <div class="quick-link"><a href="html/INSTALL_GUIDE.html">⚙️ 安装指南</a></div>
+        <div class="quick-link"><a href="html/USER_GUIDE.html">📖 用户指南</a></div>
+        <div class="quick-link"><a href="html/SCENARIOS.html">💡 使用场景</a></div>
+        <div class="quick-link"><a href="html/QUICK_REFERENCE.html">📋 快速参考</a></div>
+    </div>
+</div>
+
+<div class="grid">
+    <div class="card">
+        <div class="card-icon">⚙️</div>
+        <h2>安装指南</h2>
+        <p>完整的安装说明，包含 pip、Docker、源码安装方式</p>
+        <ul>
+            <li><a href="html/INSTALL_GUIDE.html">安装指南 (HTML)</a></li>
+            <li><a href="INSTALL_GUIDE.md">安装指南 (Markdown)</a></li>
+            <li><a href="../03_企业SDK包/GhostHub_SDK/pyproject.toml">pyproject.toml</a></li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">🚀</div>
+        <h2>快速开始 <span class="badge badge-new">新</span></h2>
+        <p>5分钟快速体验 Ghost Hub SDK 的三大核心功能</p>
+        <ul>
+            <li><a href="html/QUICK_START.html">快速开始 (HTML)</a></li>
+            <li><a href="QUICK_START.md">快速开始 (Markdown)</a></li>
+            <li><a href="../03_企业SDK包/GhostHub_SDK/demos/demo_integration.py">完整示例代码</a></li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">📖</div>
+        <h2>用户指南 <span class="badge badge-essentials">核心</span></h2>
+        <p>详细的功能说明、API参考和最佳实践</p>
+        <ul>
+            <li><a href="html/USER_GUIDE.html">用户指南 (HTML)</a></li>
+            <li><a href="USER_GUIDE.md">用户指南 (Markdown)</a></li>
+            <li><a href="html/USER_GUIDE.html#best-practices">最佳实践</a></li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">💡</div>
+        <h2>使用场景 <span class="badge badge-complete">完整</span></h2>
+        <p>HR、IoT、智能体协作等真实场景完整案例</p>
+        <ul>
+            <li><a href="html/SCENARIOS.html">使用场景 (HTML)</a></li>
+            <li><a href="SCENARIOS.md">使用场景 (Markdown)</a></li>
+            <li><a href="../03_企业SDK包/GhostHub_SDK/templates/index.json">模板列表</a></li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">📋</div>
+        <h2>快速参考 <span class="badge badge-new">新</span></h2>
+        <p>一页面API速查卡，快速查找常用方法</p>
+        <ul>
+            <li><a href="html/QUICK_REFERENCE.html">快速参考 (HTML)</a></li>
+            <li><a href="QUICK_REFERENCE.md">快速参考 (Markdown)</a></li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">🔧</div>
+        <h2>SDK 源码</h2>
+        <p>Ghost Hub SDK v1.0.0 完整源代码</p>
+        <ul>
+            <li><a href="../03_企业SDK包/GhostHub_SDK/">SDK根目录</a></li>
+            <li><a href="../03_企业SDK包/GhostHub_SDK/core.py">核心类</a></li>
+            <li><a href="../03_企业SDK包/GhostHub_SDK/components/">组件目录</a></li>
+            <li><a href="../03_企业SDK包/GhostHub_SDK/tests/">测试代码</a></li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">🏢</div>
+        <h2>部署指南</h2>
+        <p>Docker、Kubernetes、企业级部署方案</p>
+        <ul>
+            <li><a href="../04_商业部署包/docker/DEPLOYMENT.md">Docker部署</a></li>
+            <li><a href="../04_商业部署包/docker/docker-compose.yml">docker-compose</a></li>
+            <li><a href="../04_商业部署包/monitoring/MONITORING.md">监控配置</a></li>
+            <li><a href="../04_商业部署包/license/GHOST_HUB_LICENSE.md">License系统</a></li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">💰</div>
+        <h2>商业化资料</h2>
+        <p>定价、销售、案例研究等商业文档</p>
+        <ul>
+            <li><a href="../05_商业化资料/pricing/PRICING.md">定价策略</a></li>
+            <li><a href="../05_商业化资料/sales/SALES_PLAYBOOK.md">销售手册</a></li>
+            <li><a href="../05_商业化资料/support/FAQ.md">常见问题</a></li>
+            <li><a href="../05_商业化资料/competitive/COMPETITIVE_COMPARISON.md">竞品对比</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="footer">
+    <p><strong>Ghost Hub SDK v1.0.0</strong> | 企业级 AI 工作流编排框架</p>
+    <p>文档更新时间: 2026-04-15 | <a href="https://docs.ghosthub.dev">官方文档</a> | <a href="https://github.com/ghost-hub/sdk">GitHub</a></p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ghost-channel/schemas/vector-clock.json",
+  "title": "VectorClock",
+  "type": "object",
+  "description": "Vector clock used for causal ordering across distributed nodes.",
+  "additionalProperties": {
+    "type": "integer",
+    "minimum": 0
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "id": "tpl_software_development",
+  "name": "软件开发生命周期",
+  "description": "端到端软件开发流程，从需求到部署的全流程支持",
+  "domain": "devops",
+  "category": "development",
+  "intent_pattern": "开发|代码|测试|部署|构建|发布|代码审查|重构",
+  "sample_inputs": [
+    "创建一个用户登录功能",
+    "运行单元测试",
+    "部署到生产环境",
+    "审查这段代码",
+    "重构订单模块"
+  ],
+  "intent_vector": {
+    "urgency": 0.6,
+    "complexity": 0.8,
+    "autonomy": 0.5,
+    "cooperation": 0.6,
+    "risk_tolerance": 0.4,
+    "domain": "devops"
+  },
+  "tasks": [
+    {
+      "id": "dev_task_1",
+      "name": "需求分析",
+      "description": "理解并分析开发需求",
+      "sequence": 1,
+      "dependencies": [],
+      "estimated_time": "1-4小时",
+      "tools": ["requirement_analyzer", "spec_generator"],
+      "output": {"type": "technical_spec", "format": "markdown"}
+    },
+    {
+      "id": "dev_task_2",
+      "name": "代码生成",
+      "description": "根据需求生成代码",
+      "sequence": 2,
+      "dependencies": ["dev_task_1"],
+      "estimated_time": "2-8小时",
+      "tools": ["code_generator", "template_engine"],
+      "output": {"type": "source_code", "format": "multiple_files"}
+    },
+    {
+      "id": "dev_task_3",
+      "name": "代码审查",
+      "description": "检查代码质量和安全性",
+      "sequence": 3,
+      "dependencies": ["dev_task_2"],
+      "estimated_time": "30分钟-2小时",
+      "tools": ["code_reviewer", "linter", "security_scanner"],
+      "output": {"type": "review_report", "format": "json"}
+    },
+    {
+      "id": "dev_task_4",
+      "name": "单元测试",
+      "description": "编写和运行单元测试",
+      "sequence": 4,
+      "dependencies": ["dev_task_3"],
+      "estimated_time": "1-4小时",
+      "tools": ["test_generator", "pytest", "coverage_tool"],
+      "output": {"type": "test_report", "format": "json"}
+    },
+    {
+      "id": "dev_task_5",
+      "name": "集成构建",
+      "description": "构建和集成到主分支",
+      "sequence": 5,
+      "dependencies": ["dev_task_4"],
+      "estimated_time": "10-30分钟",
+      "tools": ["ci_builder", "docker_builder"],
+      "output": {"type": "build_artifacts", "format": "docker_image"}
+    },
+    {
+      "id": "dev_task_6",
+      "name": "部署发布",
+      "description": "部署到目标环境",
+      "sequence": 6,
+      "dependencies": ["dev_task_5"],
+      "estimated_time": "15-45分钟",
+      "tools": ["deployment_tool", "rollback_handler"],
+      "output": {"type": "deployment_report", "format": "json"}
+    }
+  ],
+  "business_metrics": {
+    "code_quality": "A/B级代码质量",
+    "test_coverage": "80%+覆盖率",
+    "deployment_success_rate": "98%+部署成功率",
+    "mean_time_to_recovery": "<15分钟"
+  },
+  "roi_estimate": {
+    "development_speed_improvement": "50%",
+    "bug_reduction_percent": "60%",
+    "deployment_time_reduction": "70%"
+  },
+  "tags": ["development", "devops", "cicd", "testing", "deployment"],
+  "is_public": true,
+  "version": "1.0.0",
+  "author": "GhostHub",
+  "created_at": "2026-04-15"
+}

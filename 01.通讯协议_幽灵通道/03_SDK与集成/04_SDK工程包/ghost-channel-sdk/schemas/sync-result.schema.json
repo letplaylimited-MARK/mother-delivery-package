@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ghost-channel/schemas/sync-result.json",
+  "title": "SyncResult",
+  "type": "object",
+  "required": [
+    "success",
+    "bandwidth_reduction",
+    "latency_ms",
+    "consistency_verified",
+    "changes_applied",
+    "errors"
+  ],
+  "properties": {
+    "success": {"type": "boolean"},
+    "bandwidth_reduction": {"type": "number", "minimum": 0, "maximum": 1},
+    "latency_ms": {"type": "number", "minimum": 0},
+    "consistency_verified": {"type": "boolean"},
+    "changes_applied": {"type": "integer", "minimum": 0},
+    "errors": {
+      "type": "array",
+      "items": {"$ref": "./error-object.schema.json"}
+    }
+  },
+  "additionalProperties": false
+}

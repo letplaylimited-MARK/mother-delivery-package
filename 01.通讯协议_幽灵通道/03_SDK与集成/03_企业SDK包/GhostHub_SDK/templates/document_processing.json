@@ -1,0 +1,70 @@
+{
+  "id": "tpl_document_processing",
+  "name": "文档智能处理",
+  "description": "文档解析、翻译、摘要、对比",
+  "domain": "doc",
+  "category": "document",
+  "intent_pattern": "文档|合同|翻译|摘要|对比|提取|解析",
+  "sample_inputs": [
+    "翻译这份英文合同",
+    "提取文档关键条款",
+    "对比两份合同差异",
+    "生成文档摘要",
+    "审核合同风险"
+  ],
+  "intent_vector": {
+    "urgency": 0.5,
+    "complexity": 0.6,
+    "autonomy": 0.7,
+    "cooperation": 0.2,
+    "risk_tolerance": 0.4,
+    "domain": "doc"
+  },
+  "tasks": [
+    {
+      "id": "doc_task_1",
+      "name": "文档解析",
+      "description": "识别文档类型和结构",
+      "sequence": 1,
+      "dependencies": [],
+      "tools": ["doc_parser"]
+    },
+    {
+      "id": "doc_task_2",
+      "name": "内容提取",
+      "description": "提取关键信息和条款",
+      "sequence": 2,
+      "dependencies": ["doc_task_1"],
+      "tools": ["nlp_extractor"]
+    },
+    {
+      "id": "doc_task_3",
+      "name": "智能处理",
+      "description": "翻译/摘要/对比",
+      "sequence": 3,
+      "dependencies": ["doc_task_2"],
+      "tools": ["translator", "summarizer", "comparer"]
+    },
+    {
+      "id": "doc_task_4",
+      "name": "结果输出",
+      "description": "生成处理报告",
+      "sequence": 4,
+      "dependencies": ["doc_task_3"],
+      "tools": ["report_generator"]
+    }
+  ],
+  "business_metrics": {
+    "processing_time": "减少85%",
+    "accuracy": "95%",
+    "cost_reduction": "70%"
+  },
+  "roi_estimate": {
+    "efficiency": "5x提升",
+    "error_reduction": "60%",
+    "turnaround_time": "90%缩短"
+  },
+  "tags": ["document", "parsing", "translation", "summary"],
+  "is_public": true,
+  "version": "1.0.0"
+}

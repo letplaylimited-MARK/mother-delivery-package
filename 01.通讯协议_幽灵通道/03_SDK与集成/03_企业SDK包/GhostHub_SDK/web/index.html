@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Hub - AI工作流编排器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --bg-card: #15151f;
+            --accent-cyan: #00f5d4;
+            --accent-magenta: #ff006e;
+            --accent-blue: #3a86ff;
+            --accent-purple: #8338ec;
+            --accent-orange: #ff9500;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --border-color: rgba(255,255,255,0.08);
+            --glow-cyan: 0 0 20px rgba(0,245,212,0.3);
+            --glow-magenta: 0 0 20px rgba(255,0,110,0.3);
+            --glow-blue: 0 0 20px rgba(58,134,255,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 背景效果 */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0,245,212,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,245,212,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow-1 {
+            top: -200px;
+            right: -100px;
+            background: var(--accent-cyan);
+        }
+
+        .bg-glow-2 {
+            bottom: -200px;
+            left: -100px;
+            background: var(--accent-purple);
+        }
+
+        /* 布局 */
+        .app-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        /* 头部 */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            box-shadow: var(--glow-cyan);
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* 导航标签 */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-tab:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, rgba(0,245,212,0.1), rgba(58,134,255,0.1));
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .nav-tab.active::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        /* 主内容区 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+        }
+
+        /* 面板通用样式 */
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-title-icon {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            box-shadow: var(--glow-cyan);
+        }
+
+        .panel-badge {
+            padding: 4px 10px;
+            background: rgba(0,245,212,0.1);
+            border: 1px solid rgba(0,245,212,0.3);
+            border-radius: 20px;
+            font-size: 11px;
+            color: var(--accent-cyan);
+        }
+
+        /* 意图输入区 */
+        .intent-section {
+            grid-column: 1 / -1;
+        }
+
+        .intent-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .intent-input {
+            width: 100%;
+            padding: 20px 25px;
+            padding-left: 60px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .intent-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .intent-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .intent-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            opacity: 0.5;
+        }
+
+        .intent-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        /* 快捷意图 */
+        .quick-intents {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .quick-intent {
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-intent:hover {
+            background: rgba(0,245,212,0.1);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        /* 意图匹配结果 */
+        .intent-results {
+            margin-top: 25px;
+        }
+
+        .result-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .result-template {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .result-domain {
+            padding: 4px 12px;
+            background: rgba(58,134,255,0.1);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--accent-blue);
+        }
+
+        .result-score {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score-bar {
+            width: 80px;
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .score-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            color: var(--accent-cyan);
+        }
+
+        /* 任务图 */
+        .task-graph {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+        }
+
+        .task-graph-title {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-cyan);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .task-item:nth-child(2) { border-left-color: var(--accent-blue); }
+        .task-item:nth-child(3) { border-left-color: var(--accent-purple); }
+        .task-item:nth-child(4) { border-left-color: var(--accent-magenta); }
+        .task-item:nth-child(5) { border-left-color: var(--accent-orange); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .task-number {
+            width: 28px;
+            height: 28px;
+            background: var(--bg-tertiary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            color: var(--accent-cyan);
+        }
+
+        .task-info {
+            flex: 1;
+        }
+
+        .task-name {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .task-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .task-tools {
+            display: flex;
+            gap: 6px;
+        }
+
+        .task-tool {
+            padding: 3px 8px;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* 设备控制面板 */
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .device-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .device-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .device-card.active {
+            border-color: var(--accent-cyan);
+            background: rgba(0,245,212,0.05);
+        }
+
+        .device-icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .device-name {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .device-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .device-state {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .device-toggle {
+            width: 40px;
+            height: 22px;
+            background: var(--bg-tertiary);
+            border-radius: 11px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .device-toggle.on {
+            background: var(--accent-cyan);
+        }
+
+        .device-toggle::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .device-toggle.on::after {
+            left: 20px;
+        }
+
+        /* 场景卡片 */
+        .scene-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .scene-card:hover {
+            border-color: var(--accent-purple);
+            background: rgba(131,56,236,0.05);
+        }
+
+        .scene-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-magenta));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .scene-info {
+            flex: 1;
+        }
+
+        .scene-name {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .scene-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* 智能体面板 */
+        .agent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .agent-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .agent-card:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .agent-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .agent-info {
+            flex: 1;
+        }
+
+        .agent-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .agent-capabilities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .agent-cap {
+            padding: 3px 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .agent-status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .agent-status.online {
+            background: rgba(0,245,212,0.1);
+            color: var(--accent-cyan);
+        }
+
+        .agent-status.busy {
+            background: rgba(255,149,0,0.1);
+            color: var(--accent-orange);
+        }
+
+        .agent-status.idle {
+            background: rgba(160,160,176,0.1);
+            color: var(--text-secondary);
+        }
+
+        /* ROI指标 */
+        .roi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .roi-item {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .roi-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .roi-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* 侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 隐藏面板 */
+        .panel-content {
+            display: none;
+        }
+
+        .panel-content.active {
+            display: block;
+        }
+
+        /* 响应式 */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-stats {
+                display: none;
+            }
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .loading-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* 脉冲动画 */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <div class="app-container">
+        <!-- 头部 -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon">G</div>
+                <div>
+                    <div class="logo-text">Ghost Hub</div>
+                    <div class="logo-sub">AI Workflow Orchestrator</div>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-templates">5</div>
+                    <div class="stat-label">模板</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-devices">5</div>
+                    <div class="stat-label">设备</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-agents">4</div>
+                    <div class="stat-label">智能体</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 导航标签 -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="intent">意图银行</button>
+            <button class="nav-tab" data-tab="devices">设备控制</button>
+            <button class="nav-tab" data-tab="agents">智能体联邦</button>
+        </nav>
+
+        <!-- 意图银行面板 -->
+        <div class="panel-content active" id="panel-intent">
+            <div class="main-content">
+                <div class="panel intent-section">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <div class="panel-title-icon"></div>
+                            意图输入
+                        </div>
+                        <span class="panel-badge">实时匹配</span>
+                    </div>
+                    
+                    <div class="intent-input-wrapper">
+                        <span class="intent-icon">&#x2728;</span>
+                        <input type="text" class="intent-input" id="intent-input" 
+                               placeholder="输入您的需求，如：帮我优化面试流程、打开客厅灯...">
+                    </div>
+                    
+                    <div class="intent-actions">
+                        <button class="btn btn-primary" id="btn-execute">
+                            <span>&#x27A4;</span> 执行工作流
+                        </button>
+                        <button class="btn btn-secondary" id="btn-clear">清除</button>
+                    </div>
+
+                    <div class="quick-intents">
+                        <span class="quick-intent" data-intent="帮我优化面试流程">&#x1F4C4; HR面试优化</span>
+                        <span class="quick-intent" data-intent="打开客厅灯">&#x1F4F1; 打开客厅灯</span>
+                        <span class="quick-intent" data-intent="分析本月销售数据">&#x1F4CA; 数据分析</span>
+                        <span class="quick-intent" data-intent="处理IT工单">&#x1F4E7; 工单处理</span>
+                    </div>
+
+                    <div class="intent-results" id="intent-results"></div>
+                </div>
+
+                <!-- ROI指标 -->
+                <div class="sidebar">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <div class="panel-title-icon"></div>
+                                ROI 预估
+                            </div>
+                        </div>
+                        <div class="roi-grid">
+                            <div class="roi-item">
+                                <div class="roi-value" id="roi-time">35%</div>
+                                <div class="roi-label">效率提升</div>
+                            </div>
+                            <div class="roi-item">
+                                <div class="roi-value" id="roi-cost">50%</div>
+                                <div class="roi-label">成本节省</div>
+                            </div>
+                            <div class="roi-item">
+                                <div class="roi-value" id="roi-speed">3x</div>
+                                <div class="roi-label">处理速度</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设备控制面板 -->
+        <div class="panel-content" id="panel-devices">
+            <div class="main-content">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <div class="panel-title-icon"></div>
+                            设备列表
+                        </div>
+                        <span class="panel-badge" id="device-count">5 台设备</span>
+                    </div>
+                    
+                    <div class="device-grid" id="device-grid">
+                        <div class="device-card active" data-device="dev_001">
+                            <div class="device-icon">&#x1F4A1;</div>
+                            <div class="device-name">客厅灯</div>
+                            <div class="device-status">
+                                <span class="device-state">已开启</span>
+                                <div class="device-toggle on" onclick="toggleDevice(this)"></div>
+                            </div>
+                        </div>
+                        <div class="device-card" data-device="dev_002">
+                            <div class="device-icon">&#x1F4A1;</div>
+                            <div class="device-name">卧室灯</div>
+                            <div class="device-status">
+                                <span class="device-state">已关闭</span>
+                                <div class="device-toggle" onclick="toggleDevice(this)"></div>
+                            </div>
+                        </div>
+                        <div class="device-card active" data-device="dev_003">
+                            <div class="device-icon">&#x1F9EC;</div>
+                            <div class="device-name">空调</div>
+                            <div class="device-status">
+                                <span class="device-state">24°C</span>
+                                <div class="device-toggle on" onclick="toggleDevice(this)"></div>
+                            </div>
+                        </div>
+                        <div class="device-card" data-device="dev_004">
+                            <div class="device-icon">&#x1F510;</div>
+                            <div class="device-name">前门锁</div>
+                            <div class="device-status">
+                                <span class="device-state">已锁定</span>
+                                <div class="device-toggle on" onclick="toggleDevice(this)"></div>
+                            </div>
+                        </div>
+                        <div class="device-card" data-device="dev_005">
+                            <div class="device-icon">&#x1F4F7;</div>
+                            <div class="device-name">摄像头</div>
+                            <div class="device-status">
+                                <span class="device-state">离线</span>
+                                <div class="device-toggle" onclick="toggleDevice(this)"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <div class="panel-title-icon"></div>
+                                场景模式
+                            </div>
+                        </div>
+                        
+                        <div class="scene-card" onclick="executeScene('scene_morning')">
+                            <div class="scene-icon">&#x1F305;</div>
+                            <div class="scene-info">
+                                <div class="scene-name">早安模式</div>
+                                <div class="scene-desc">开灯、调空调、放音乐</div>
+                            </div>
+                        </div>
+                        
+                        <div class="scene-card" onclick="executeScene('scene_night')">
+                            <div class="scene-icon">&#x1F319;</div>
+                            <div class="scene-info">
+                                <div class="scene-name">晚安模式</div>
+                                <div class="scene-desc">关灯、调低空调、设防</div>
+                            </div>
+                        </div>
+                        
+                        <div class="scene-card" onclick="executeScene('scene_leave')">
+                            <div class="scene-icon">&#x1F697;</div>
+                            <div class="scene-info">
+                                <div class="scene-name">离家模式</div>
+                                <div class="scene-desc">关闭所有设备、安防设防</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 智能体联邦面板 -->
+        <div class="panel-content" id="panel-agents">
+            <div class="main-content">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <div class="panel-title-icon"></div>
+                            智能体列表
+                        </div>
+                        <span class="panel-badge">4 个在线</span>
+                    </div>
+                    
+                    <div class="agent-list" id="agent-list">
+                        <div class="agent-card">
+                            <div class="agent-avatar">&#x1F4CA;</div>
+                            <div class="agent-info">
+                                <div class="agent-name">数据分析Agent</div>
+                                <div class="agent-capabilities">
+                                    <span class="agent-cap">数据分析</span>
+                                    <span class="agent-cap">统计</span>
+                                    <span class="agent-cap">可视化</span>
+                                </div>
+                            </div>
+                            <div class="agent-status online">在线</div>
+                        </div>
+                        
+                        <div class="agent-card">
+                            <div class="agent-avatar">&#x1F4DD;</div>
+                            <div class="agent-info">
+                                <div class="agent-name">文档处理Agent</div>
+                                <div class="agent-capabilities">
+                                    <span class="agent-cap">文档处理</span>
+                                    <span class="agent-cap">摘要</span>
+                                    <span class="agent-cap">翻译</span>
+                                </div>
+                            </div>
+                            <div class="agent-status online">在线</div>
+                        </div>
+                        
+                        <div class="agent-card">
+                            <div class="agent-avatar">&#x1F4BB;</div>
+                            <div class="agent-info">
+                                <div class="agent-name">代码开发Agent</div>
+                                <div class="agent-capabilities">
+                                    <span class="agent-cap">代码生成</span>
+                                    <span class="agent-cap">审查</span>
+                                    <span class="agent-cap">测试</span>
+                                </div>
+                            </div>
+                            <div class="agent-status busy">忙碌</div>
+                        </div>
+                        
+                        <div class="agent-card">
+                            <div class="agent-avatar">&#x1F4DA;</div>
+                            <div class="agent-info">
+                                <div class="agent-name">研究Agent</div>
+                                <div class="agent-capabilities">
+                                    <span class="agent-cap">搜索</span>
+                                    <span class="agent-cap">调研</span>
+                                    <span class="agent-cap">学习</span>
+                                </div>
+                            </div>
+                            <div class="agent-status idle">空闲</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <div class="panel-title-icon"></div>
+                                路由策略
+                            </div>
+                        </div>
+                        
+                        <div class="scene-card" onclick="setStrategy('least_load')">
+                            <div class="scene-icon">&#x26A1;</div>
+                            <div class="scene-info">
+                                <div class="scene-name">最小负载</div>
+                                <div class="scene-desc">分配给负载最低的智能体</div>
+                            </div>
+                        </div>
+                        
+                        <div class="scene-card" onclick="setStrategy('intent_match')">
+                            <div class="scene-icon">&#x1F914;</div>
+                            <div class="scene-info">
+                                <div class="scene-name">意图匹配</div>
+                                <div class="scene-desc">根据意图关键词智能匹配</div>
+                            </div>
+                        </div>
+                        
+                        <div class="scene-card" onclick="setStrategy('round_robin')">
+                            <div class="scene-icon">&#x1F501;</div>
+                            <div class="scene-info">
+                                <div class="scene-name">轮询</div>
+                                <div class="scene-desc">依次分配给各智能体</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模板数据
+        const templates = {
+            'hr': {
+                name: 'HR面试流程优化',
+                domain: 'hr',
+                tasks: [
+                    { name: '简历解析', desc: '提取关键信息并评分', tools: ['resume_parser'] },
+                    { name: '匹配度分析', desc: '对比岗位要求', tools: ['match_engine'] },
+                    { name: '问题生成', desc: '生成针对性面试问题', tools: ['question_gen'] },
+                    { name: '评估报告', desc: '汇总面试反馈', tools: ['report_gen'] },
+                ],
+                roi: { time: '35%', cost: '50%', speed: '3x' }
+            },
+            'iot': {
+                name: '智能家居控制',
+                domain: 'iot',
+                tasks: [
+                    { name: '意图解析', desc: '确定目标设备和动作', tools: ['intent_parser'] },
+                    { name: '设备匹配', desc: '匹配目标设备', tools: ['device_matcher'] },
+                    { name: '指令下发', desc: '通过协议下发', tools: ['protocol_handler'] },
+                ],
+                roi: { time: '20%', cost: '18%', speed: '5x' }
+            },
+            'finance': {
+                name: '企业成本优化',
+                domain: 'finance',
+                tasks: [
+                    { name: '数据收集', desc: '收集成本数据', tools: ['data_collector'] },
+                    { name: '建模分析', desc: '识别成本驱动因素', tools: ['cost_modeler'] },
+                    { name: '优化识别', desc: '发现优化机会', tools: ['opportunity_finder'] },
+                ],
+                roi: { time: '40%', cost: '25%', speed: '4x' }
+            },
+            'ops': {
+                name: '工单智能处理',
+                domain: 'ops',
+                tasks: [
+                    { name: '工单分类', desc: '确定优先级', tools: ['classifier'] },
+                    { name: '智能路由', desc: '分配处理人员', tools: ['smart_router'] },
+                    { name: '状态跟踪', desc: '实时跟踪进度', tools: ['sla_tracker'] },
+                ],
+                roi: { time: '60%', cost: '40%', speed: '5x' }
+            },
+            'federation': {
+                name: '多智能体协作',
+                domain: 'federation',
+                tasks: [
+                    { name: '任务分解', desc: '分解为子任务', tools: ['decomposer'] },
+                    { name: '智能体匹配', desc: '匹配最适合的Agent', tools: ['agent_matcher'] },
+                    { name: '结果聚合', desc: '汇总执行结果', tools: ['aggregator'] },
+                ],
+                roi: { time: '75%', cost: '50%', speed: '4x' }
+            }
+        };
+
+        // 检测领域
+        function detectDomain(text) {
+            const keywords = {
+                'hr': ['面试', '招聘', '简历', '人才', '员工'],
+                'iot': ['灯', '空调', '控制', '家居', '设备', '打开', '关闭'],
+                'finance': ['成本', '财务', '预算', '费用', '报销'],
+                'ops': ['工单', '客服', '支持', '故障', '问题'],
+                'federation': ['协作', '团队', '多agent', '分布式']
+            };
+            
+            for (const [domain, words] of Object.entries(keywords)) {
+                if (words.some(w => text.includes(w))) {
+                    return domain;
+                }
+            }
+            return 'general';
+        }
+
+        // 计算相似度
+        function calculateSimilarity(text, domain) {
+            const keywords = {
+                'hr': ['面试', '招聘', '简历', '人才', '员工', '优化', '招聘'],
+                'iot': ['灯', '空调', '控制', '家居', '设备', '打开', '关闭', '调'],
+                'finance': ['成本', '财务', '预算', '费用', '报销', '分析'],
+                'ops': ['工单', '客服', '支持', '故障', '问题', '处理'],
+                'federation': ['协作', '团队', '多agent', '分布式', '合作', '智能体']
+            };
+            
+            const words = keywords[domain] || [];
+            const matches = words.filter(w => text.includes(w)).length;
+            return Math.min(0.95, 0.5 + matches * 0.15);
+        }
+
+        // 显示结果
+        function showResults(text) {
+            const domain = detectDomain(text);
+            const template = templates[domain];
+            if (!template) return;
+
+            const similarity = calculateSimilarity(text, domain);
+            
+            const resultsDiv = document.getElementById('intent-results');
+            resultsDiv.innerHTML = `
+                <div class="result-card">
+                    <div class="result-header">
+                        <span class="result-template">${template.name}</span>
+                        <span class="result-domain">${domain.toUpperCase()}</span>
+                    </div>
+                    <div class="result-score">
+                        <span>匹配度</span>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: ${similarity * 100}%"></div>
+                        </div>
+                        <span class="score-value">${(similarity * 100).toFixed(0)}%</span>
+                    </div>
+                    <div class="task-graph">
+                        <div class="task-graph-title">任务分解</div>
+                        <div class="task-list">
+                            ${template.tasks.map((task, i) => `
+                                <div class="task-item" style="animation-delay: ${i * 0.1}s">
+                                    <div class="task-number">${i + 1}</div>
+                                    <div class="task-info">
+                                        <div class="task-name">${task.name}</div>
+                                        <div class="task-desc">${task.desc}</div>
+                                    </div>
+                                    <div class="task-tools">
+                                        ${task.tools.map(t => `<span class="task-tool">${t}</span>`).join('')}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // 更新ROI
+            document.getElementById('roi-time').textContent = template.roi.time;
+            document.getElementById('roi-cost').textContent = template.roi.cost;
+            document.getElementById('roi-speed').textContent = template.roi.speed;
+        }
+
+        // 事件监听
+        document.getElementById('btn-execute').addEventListener('click', () => {
+            const input = document.getElementById('intent-input').value;
+            if (input.trim()) {
+                showResults(input);
+            }
+        });
+
+        document.getElementById('intent-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const input = e.target.value;
+                if (input.trim()) {
+                    showResults(input);
+                }
+            }
+        });
+
+        document.getElementById('btn-clear').addEventListener('click', () => {
+            document.getElementById('intent-input').value = '';
+            document.getElementById('intent-results').innerHTML = '';
+        });
+
+        document.querySelectorAll('.quick-intent').forEach(el => {
+            el.addEventListener('click', () => {
+                const intent = el.dataset.intent;
+                document.getElementById('intent-input').value = intent;
+                showResults(intent);
+            });
+        });
+
+        // 导航切换
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                document.querySelectorAll('.panel-content').forEach(p => p.classList.remove('active'));
+                document.getElementById(`panel-${tab.dataset.tab}`).classList.add('active');
+            });
+        });
+
+        // 设备切换
+        function toggleDevice(el) {
+            el.classList.toggle('on');
+            const card = el.closest('.device-card');
+            const stateEl = card.querySelector('.device-state');
+            
+            if (el.classList.contains('on')) {
+                card.classList.add('active');
+                stateEl.textContent = '已开启';
+            } else {
+                card.classList.remove('active');
+                stateEl.textContent = '已关闭';
+            }
+        }
+
+        // 场景执行
+        function executeScene(sceneId) {
+            const scenes = {
+                'scene_morning': ['dev_001', 'dev_003'],
+                'scene_night': ['dev_001', 'dev_002', 'dev_003', 'dev_004'],
+                'scene_leave': ['dev_001', 'dev_002', 'dev_003', 'dev_004', 'dev_005']
+            };
+            
+            const devices = scenes[sceneId] || [];
+            document.querySelectorAll('.device-card').forEach(card => {
+                const deviceId = card.dataset.device;
+                const toggle = card.querySelector('.device-toggle');
+                const stateEl = card.querySelector('.device-state');
+                
+                if (devices.includes(deviceId)) {
+                    toggle.classList.add('on');
+                    card.classList.add('active');
+                    stateEl.textContent = deviceId === 'dev_003' ? '24°C' : '已开启';
+                } else {
+                    toggle.classList.remove('on');
+                    card.classList.remove('active');
+                    stateEl.textContent = '已关闭';
+                }
+            });
+        }
+
+        // 路由策略
+        function setStrategy(strategy) {
+            document.querySelectorAll('#panel-agents .scene-card').forEach(card => {
+                card.style.borderColor = '';
+                card.style.background = '';
+            });
+            event.currentTarget.style.borderColor = 'var(--accent-cyan)';
+            event.currentTarget.style.background = 'rgba(0,245,212,0.05)';
+        }
+
+        // 初始化
+        console.log('Ghost Hub SDK Web Interface Loaded');
+    </script>
+</body>
+</html>

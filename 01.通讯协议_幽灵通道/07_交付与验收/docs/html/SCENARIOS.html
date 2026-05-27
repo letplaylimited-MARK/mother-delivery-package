@@ -1,0 +1,396 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Hub SDK 使用场景完整指南</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif; max-width: 1000px; margin: 0 auto; padding: 40px 20px; line-height: 1.8; background: #fafafa; color: #333; }
+        h1 { font-size: 2.2em; color: #1a1a2e; border-bottom: 4px solid #9b59b6; padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 1.5em; color: #2d3748; margin-top: 40px; padding-left: 10px; border-left: 4px solid #9b59b6; }
+        h3 { font-size: 1.2em; color: #4a5568; margin-top: 25px; }
+        p { margin: 15px 0; }
+        code { background: #2d3748; color: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9em; }
+        pre { background: #1a1a2e; color: #e2e8f0; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; }
+        pre code { background: none; padding: 0; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        th { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white; padding: 15px; text-align: left; }
+        td { padding: 12px 15px; border-bottom: 1px solid #eee; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #f7fafc; }
+        .nav { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .nav a { margin-right: 20px; color: #9b59b6; text-decoration: none; font-weight: 500; }
+        .nav a:hover { text-decoration: underline; }
+        .tip { background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+        .info { background: #e7f3ff; border-left: 4px solid #2196F3; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+        .scenario { background: white; border-radius: 12px; padding: 25px; margin: 25px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-left: 5px solid; }
+        .scenario-hr { border-left-color: #3498db; }
+        .scenario-iot { border-left-color: #27ae60; }
+        .scenario-agent { border-left-color: #e74c3c; }
+        .scenario-ops { border-left-color: #f39c12; }
+        ul, ol { margin: 15px 0 15px 30px; }
+        li { margin: 8px 0; }
+        .footer { margin-top: 50px; padding-top: 20px; border-top: 2px solid #eee; text-align: center; color: #718096; }
+        hr { border: none; border-top: 1px solid #eee; margin: 30px 0; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; color: white; margin-right: 8px; }
+        .badge-hr { background: #3498db; }
+        .badge-iot { background: #27ae60; }
+        .badge-agent { background: #e74c3c; }
+        .badge-ops { background: #f39c12; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="INDEX.html">📚 首页</a>
+        <a href="INSTALL_GUIDE.html">⚙️ 安装指南</a>
+        <a href="QUICK_START.html">🚀 快速开始</a>
+        <a href="USER_GUIDE.html">📖 用户指南</a>
+        <a href="SCENARIOS.html">💡 使用场景</a>
+        <a href="QUICK_REFERENCE.html">📋 快速参考</a>
+    </div>
+
+    <h1>💡 Ghost Hub SDK 使用场景完整指南</h1>
+    
+    <p><strong>文档版本:</strong> v1.0 | <strong>SDK版本:</strong> 1.0.0 | <strong>更新日期:</strong> 2026-04-15 | <strong>阅读时长:</strong> 20分钟</p>
+
+    <hr>
+
+    <h2>🎯 场景概览</h2>
+    
+    <table>
+        <tr><th>场景</th><th>行业</th><th>模板数</th><th>复杂度</th><th>推荐起点</th></tr>
+        <tr><td><span class="badge badge-hr">HR</span><a href="#hr">HR人力资源</a></td><td>企业</td><td>4</td><td>⭐⭐</td><td>HR经理</td></tr>
+        <tr><td><span class="badge badge-iot">IoT</span><a href="#iot">IoT物联网</a></td><td>制造/家居</td><td>2</td><td>⭐⭐⭐</td><td>IoT开发者</td></tr>
+        <tr><td><span class="badge badge-agent">AI</span><a href="#agent">智能体协作</a></td><td>科技/金融</td><td>1</td><td>⭐⭐⭐⭐</td><td>AI工程师</td></tr>
+        <tr><td><span class="badge badge-ops">Ops</span><a href="#ops">企业运营</a></td><td>通用</td><td>3</td><td>⭐⭐</td><td>运维团队</td></tr>
+    </table>
+
+    <hr>
+
+    <h2 id="hr">👔 HR人力资源</h2>
+    
+    <div class="scenario scenario-hr">
+        <h3>完整案例：科技公司招聘流程自动化</h3>
+        
+        <h4>场景背景</h4>
+        <p>某科技公司每月招聘10+工程师，HR团队手动处理简历筛选、面试安排，效率低下。</p>
+
+        <h4>解决方效</h4>
+        <p>使用Ghost Hub SDK自动化招聘流程，<strong>节省70%时间</strong>。</p>
+
+        <h4>代码实现</h4>
+        <pre><code>from ghost_hub_sdk import GhostHubSDK
+from datetime import datetime
+
+# 初始化SDK
+sdk = GhostHubSDK()
+
+def process_recruitment(intent_text: str) -> dict:
+    """处理招聘请求"""
+    print(f"📥 收到招聘请求: {intent_text}")
+    print(f"⏰ 时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+    # Step 1: 意图匹配
+    match_result = sdk.intention_bank.match_intent(intent_text)
+    
+    if not match_result.has_match:
+        return {"success": False, "error": "无法理解招聘意图"}
+
+    template = match_result.top_match.template
+    print(f"✅ 匹配模板: {template.name}")
+    print(f"📊 置信度: {match_result.top_match.confidence:.1%}")
+
+    # Step 2: 构建任务图
+    task_graph = sdk.intention_bank.build_task_graph(template)
+    tasks = list(task_graph.nodes.values())
+    
+    print(f"\n📋 任务分解 ({len(tasks)} 个任务):")
+    for i, node in enumerate(tasks, 1):
+        task = node.task
+        deps = f" → 依赖: {', '.join(node.parents)}" if node.parents else ""
+        print(f"   {i}. [{task.id}] {task.name}{deps}")
+
+    # Step 3: 执行工作流
+    workflow_result = sdk.execute_workflow(intent_text)
+    
+    if workflow_result["success"]:
+        print(f"\n🎉 工作流执行成功!")
+        print(f"   类型: {workflow_result['workflow_type']}")
+        print(f"   任务数: {workflow_result['task_graph']['task_count']}")
+        return {"success": True, "tasks": workflow_result["task_graph"]["tasks"]}
+    else:
+        print(f"\n❌ 工作流执行失败")
+        return {"success": False, "errors": workflow_result["errors"]}
+
+# 执行招聘流程
+result = process_recruitment("招聘3年经验Python后端工程师")
+sdk.disconnect()</code></pre>
+
+        <h4>输出示例</h4>
+        <pre><code>📥 收到招聘请求: 招聘3年经验Python后端工程师
+⏰ 时间: 2026-04-15 14:30:00
+✅ 匹配模板: HR招聘流程
+📊 置信度: 85.0%
+
+📋 任务分解 (5 个任务):
+   1. [t1] 职位描述生成 → 依赖: 
+   2. [t2] 简历筛选规则 → 依赖: t1
+   3. [t3] 简历解析 → 依赖: t2
+   4. [t4] 面试问题生成 → 依赖: t3
+   5. [t5] 面试官分配 → 依赖: t4
+
+🎉 工作流执行成功!
+   类型: hr_recruitment
+   任务数: 5</code></pre>
+
+        <h4>适用场景清单</h4>
+        <table>
+            <tr><th>输入示例</th><th>输出</th><th>自动化内容</th></tr>
+            <tr><td>"招聘Python工程师"</td><td>完整招聘流程</td><td>职位→简历→面试</td></tr>
+            <tr><td>"新员工入职流程"</td><td>入职清单+账号创建</td><td>账号→培训→设备</td></tr>
+            <tr><td>"年度绩效考核"</td><td>评估模板+流程</td><td>目标→评估→反馈</td></tr>
+            <tr><td>"团队人员优化"</td><td>优化方案</td><td>分析→建议→执行</td></tr>
+        </table>
+    </div>
+
+    <hr>
+
+    <h2 id="iot">🏠 IoT物联网</h2>
+    
+    <div class="scenario scenario-iot">
+        <h3>完整案例：智能家居控制系统</h3>
+        
+        <h4>场景背景</h4>
+        <p>用户希望用自然语言控制家中设备，无需学习复杂的设备指令。</p>
+
+        <h4>解决方效</h4>
+        <p>使用IoT适配器将自然语言转换为设备命令，实现语音控制。</p>
+
+        <h4>代码实现</h4>
+        <pre><code>from ghost_hub_sdk import GhostHubSDK
+
+# 初始化SDK
+sdk = GhostHubSDK()
+
+class SmartHomeController:
+    """智能家居控制器"""
+    
+    def __init__(self, sdk):
+        self.sdk = sdk
+    
+    def connect_gateway(self, protocol="mqtt"):
+        """连接IoT网关"""
+        print(f"🔌 连接网关: {protocol}")
+        return self.sdk.no_ui_adapter.connect(protocol=protocol)
+    
+    def process_command(self, voice_command: str) -> dict:
+        """处理语音命令"""
+        print(f"\n🎤 收到命令: {voice_command}")
+        
+        # 确定设备类型
+        device_type = self._detect_device_type(voice_command)
+        print(f"📱 识别设备: {device_type}")
+        
+        # 转换命令
+        command = self.sdk.no_ui_adapter.convert_intent_to_command(
+            intent=voice_command,
+            device_type=device_type
+        )
+        print(f"⚡ 设备命令: {command}")
+        
+        return {"command": command, "device_type": device_type}
+    
+    def _detect_device_type(self, command: str) -> str:
+        """检测设备类型"""
+        keywords = {
+            "light": ["灯", "灯光"],
+            "ac": ["空调", "温度"],
+            "lock": ["门锁", "门"],
+            "curtain": ["窗帘"]
+        }
+        for device, kws in keywords.items():
+            if any(kw in command for kw in kws):
+                return device
+        return "unknown"
+    
+    def execute_scene(self, scene_name: str):
+        """执行场景"""
+        print(f"\n🎬 执行场景: {scene_name}")
+        results = self.sdk.no_ui_adapter.execute_scene(scene_name)
+        for r in results:
+            status = "✅" if r.status == "success" else "❌"
+            print(f"   {status} {r.device_id}: {r.status}")
+
+# 使用示例
+controller = SmartHomeController(sdk)
+controller.connect_gateway(protocol="mock")
+controller.process_command("把客厅灯打开")
+controller.process_command("把空调调到26度")
+controller.execute_scene("离家模式")
+sdk.disconnect()</code></pre>
+
+        <h4>适用场景清单</h4>
+        <table>
+            <tr><th>输入示例</th><th>支持设备</th><th>自动化内容</th></tr>
+            <tr><td>"离家模式"</td><td>全屋</td><td>关灯/关空调/锁门</td></tr>
+            <tr><td>"回家模式"</td><td>全屋</td><td>开灯/开空调/撤防</td></tr>
+            <tr><td>"开灯"</td><td>灯</td><td>开关控制</td></tr>
+            <tr><td>"空调26度"</td><td>空调</td><td>温度调节</td></tr>
+        </table>
+    </div>
+
+    <hr>
+
+    <h2 id="agent">🤖 智能体协作</h2>
+    
+    <div class="scenario scenario-agent">
+        <h3>完整案例：销售数据分析流水线</h3>
+        
+        <h4>场景背景</h4>
+        <p>需要分析季度销售数据，涉及数据收集、处理、可视化，需要多个Agent协作。</p>
+
+        <h4>解决方效</h4>
+        <p>使用智能体联邦实现多Agent并行处理，<strong>提高分析效率200%</strong>。</p>
+
+        <h4>代码实现</h4>
+        <pre><code>from ghost_hub_sdk import GhostHubSDK
+from ghost_hub_sdk.components.agent_federation import Task
+
+sdk = GhostHubSDK()
+
+class DataAnalysisPipeline:
+    """数据分析流水线"""
+    
+    def __init__(self, sdk):
+        self.sdk = sdk
+        self.sdk.agent_federation.connect()
+    
+    def run_analysis(self, quarter):
+        """运行季度分析"""
+        print(f"\n📊 开始{quarter}数据分析")
+        
+        # 创建任务
+        tasks = [
+            Task(task_id=f"{quarter}_collect", description=f"收集{quarter}数据", priority=1),
+            Task(task_id=f"{quarter}_clean", description=f"清洗{quarter}数据", priority=2),
+            Task(task_id=f"{quarter}_analyze", description=f"分析{quarter}数据", priority=3),
+            Task(task_id=f"{quarter}_report", description=f"生成{quarter}报告", priority=4)
+        ]
+        
+        # 分发任务
+        print(f"\n📤 分发 {len(tasks)} 个任务...")
+        for task in tasks:
+            result = self.sdk.agent_federation.distribute_task(
+                task=task,
+                intent=task.description
+            )
+            status = "✅" if result.success else "❌"
+            print(f"   {status} {task.task_id} → {result.assigned_agent}")
+        
+        # 统计
+        stats = self.sdk.agent_federation.get_stats()
+        print(f"\n🤖 在线Agent: {stats['online_agents']}")
+
+# 使用
+pipeline = DataAnalysisPipeline(sdk)
+pipeline.run_analysis("Q1")
+sdk.disconnect()</code></pre>
+
+        <h4>适用场景清单</h4>
+        <table>
+            <tr><th>场景</th><th>任务类型</th><th>Agent角色</th><th>协作模式</th></tr>
+            <tr><td>数据分析</td><td>ETL、报表</td><td>data/analyzer/report</td><td>并行处理</td></tr>
+            <tr><td>内容生成</td><td>文案、设计</td><td>writer/designer</td><td>串行流水线</td></tr>
+            <tr><td>客户服务</td><td>FAQ、工单</td><td>router/processor</td><td>路由分发</td></tr>
+            <tr><td>代码审查</td><td>Review、测试</td><td>coder/reviewer</td><td>并行审查</td></tr>
+        </table>
+    </div>
+
+    <hr>
+
+    <h2 id="ops">⚙️ 企业运营</h2>
+    
+    <div class="scenario scenario-ops">
+        <h3>完整案例：IT工单自动处理</h3>
+        
+        <h4>场景背景</h4>
+        <p>IT部门每天处理50+工单，需要自动分类、分配、解决。</p>
+
+        <h4>解决方效</h4>
+        <p>使用工作流引擎自动化工单处理，<strong>响应时间减少60%</strong>。</p>
+
+        <h4>代码实现</h4>
+        <pre><code>from ghost_hub_sdk import GhostHubSDK
+
+sdk = GhostHubSDK()
+
+def process_ticket(ticket_description):
+    """处理IT工单"""
+    print(f"\n🎫 收到工单: {ticket_description}")
+    
+    result = sdk.execute_workflow(ticket_description)
+    
+    if result["success"]:
+        print(f"✅ 工单处理成功")
+        print(f"   类型: {result['workflow_type']}")
+        print(f"   任务: {result['task_graph']['task_count']} 个")
+        
+        for task in result["task_graph"]["tasks"]:
+            print(f"   - [{task.get('status', 'pending')}] {task['name']}")
+        return {"success": True}
+    else:
+        print(f"❌ 工单处理失败")
+        return {"success": False}
+
+# 测试
+tickets = [
+    "服务器磁盘满了",
+    "员工笔记本无法连接网络",
+    "申请开通新系统账号"
+]
+for ticket in tickets:
+    process_ticket(ticket)
+
+sdk.disconnect()</code></pre>
+
+        <h4>适用场景清单</h4>
+        <table>
+            <tr><th>工单类型</th><th>输入示例</th><th>自动化内容</th></tr>
+            <tr><td>系统故障</td><td>"服务器挂了"</td><td>检测→告警→自愈</td></tr>
+            <tr><td>网络问题</td><td>"上不了网"</td><td>诊断→解决→验证</td></tr>
+            <tr><td>账号问题</td><td>"账号被锁"</td><td>验证→解锁→通知</td></tr>
+            <tr><td>权限申请</td><td>"申请权限"</td><td>审批→授权→记录</td></tr>
+        </table>
+    </div>
+
+    <hr>
+
+    <h2>🎯 场景选择指南</h2>
+    
+    <h3>根据角色推荐</h3>
+    <table>
+        <tr><th>角色</th><th>推荐场景</th><th>起步模板</th><th>预期收益</th></tr>
+        <tr><td>HR经理</td><td>HR人力资源</td><td><code>hr_recruitment</code></td><td>招聘效率+70%</td></tr>
+        <tr><td>IoT开发者</td><td>IoT物联网</td><td><code>iot_smart_home</code></td><td>开发时间-50%</td></tr>
+        <tr><td>AI工程师</td><td>智能体协作</td><td><code>federation_multi_agent</code></td><td>并行效率+200%</td></tr>
+        <tr><td>运维团队</td><td>企业运营</td><td><code>ops_ticket_resolution</code></td><td>响应时间-60%</td></tr>
+    </table>
+
+    <hr>
+
+    <h2>📚 相关文档</h2>
+    <ul>
+        <li><a href="INSTALL_GUIDE.html">⚙️ 安装指南</a> - 完整安装手册</li>
+        <li><a href="USER_GUIDE.html">📖 用户指南</a> - API详细文档</li>
+        <li><a href="QUICK_START.html">🚀 快速开始</a> - 5分钟体验</li>
+    </ul>
+
+    <div class="footer">
+        <p><strong>Ghost Hub SDK v1.0.0</strong> | 企业级 AI 工作流编排框架</p>
+        <p>文档: <a href="https://docs.ghosthub.dev">docs.ghosthub.dev</a> | 
+           GitHub: <a href="https://github.com/ghost-hub/sdk">github.com/ghost-hub/sdk</a> | 
+           邮箱: support@ghosthub.dev</p>
+    </div>
+</body>
+</html>

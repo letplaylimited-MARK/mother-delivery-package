@@ -1,0 +1,95 @@
+{
+  "id": "tpl_ops_ticket_resolution",
+  "name": "工单智能处理",
+  "description": "自动化处理IT/客服工单，提高响应速度和解决率",
+  "domain": "ops",
+  "category": "ticket_management",
+  "intent_pattern": "处理工单|客服自动化|IT支持|问题解决|工单优化",
+  "sample_inputs": [
+    "帮我自动处理IT工单",
+    "优化客服响应流程",
+    "加快问题解决速度",
+    "减少工单积压"
+  ],
+  "intent_vector": {
+    "urgency": 0.8,
+    "complexity": 0.5,
+    "autonomy": 0.7,
+    "cooperation": 0.4,
+    "risk_tolerance": 0.3,
+    "domain": "ops"
+  },
+  "tasks": [
+    {
+      "id": "ops_task_1",
+      "name": "工单分类与优先级",
+      "description": "自动分类工单类型并确定处理优先级",
+      "sequence": 1,
+      "dependencies": [],
+      "estimated_time": "<1秒/工单",
+      "success_criteria": ["分类准确率>90%", "优先级准确率>85%"],
+      "tools": ["ticket_classifier", "priority_engine"],
+      "output": {"type": "classified_ticket", "format": "json"}
+    },
+    {
+      "id": "ops_task_2",
+      "name": "智能路由",
+      "description": "根据工单类型自动路由到合适的处理人员/团队",
+      "sequence": 2,
+      "dependencies": ["ops_task_1"],
+      "estimated_time": "<500ms/工单",
+      "success_criteria": ["路由准确率>92%"],
+      "tools": ["smart_router", "team_matcher"],
+      "output": {"type": "routing_decision", "format": "json"}
+    },
+    {
+      "id": "ops_task_3",
+      "name": "知识库匹配",
+      "description": "自动匹配知识库中的解决方案",
+      "sequence": 3,
+      "dependencies": ["ops_task_1"],
+      "estimated_time": "<2秒/工单",
+      "success_criteria": ["匹配成功率>70%"],
+      "tools": ["knowledge_matcher", "solution_finder"],
+      "output": {"type": "solution_suggestion", "format": "json"}
+    },
+    {
+      "id": "ops_task_4",
+      "name": "处理状态跟踪",
+      "description": "实时跟踪工单处理进度",
+      "sequence": 4,
+      "dependencies": ["ops_task_2"],
+      "estimated_time": "实时",
+      "success_criteria": ["SLA达成率>95%"],
+      "tools": ["sla_tracker", "progress_monitor"],
+      "output": {"type": "ticket_status", "format": "json"}
+    },
+    {
+      "id": "ops_task_5",
+      "name": "满意度分析与闭环",
+      "description": "处理完成后分析客户满意度，确保问题真正解决",
+      "sequence": 5,
+      "dependencies": ["ops_task_4"],
+      "estimated_time": "<1分钟/工单",
+      "success_criteria": ["满意度>4.0/5", "解决率>90%"],
+      "tools": ["feedback_analyzer", "closure_checker"],
+      "output": {"type": "satisfaction_report", "format": "json"}
+    }
+  ],
+  "business_metrics": {
+    "response_time_reduction": "60-70%",
+    "resolution_rate": ">90%",
+    "customer_satisfaction": ">4.0/5",
+    "sla_compliance": ">95%"
+  },
+  "roi_estimate": {
+    "cost_saving": 150000,
+    "time_saving_hours": 500,
+    "efficiency_gain": "65%"
+  },
+  "tags": ["ops", "ticket", "automation", "support", "sla"],
+  "is_public": true,
+  "version": "1.0.0",
+  "author": "GhostHub",
+  "created_at": "2026-04-01"
+}

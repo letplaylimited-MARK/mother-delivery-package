@@ -1,0 +1,298 @@
+schema_version: "0.1"
+generated_at: "2026-05-27"
+purpose: "Machine-readable ledger for mother/child package workflow audit state, breakpoint repair, and cross-folder traceability."
+authority_order:
+  - "current_file"
+  - "current_command_output"
+  - "current_database_query"
+  - "current_handoff"
+  - "current_readme_or_index"
+  - "historical_report"
+  - "conversation_context"
+
+status_objects:
+  - id: "GOAL-20260526-MOTHER-PACK-COLLABORATION"
+    type: "goal"
+    title: "让母交付包成为通用AI协同开发的谨慎超级辅助"
+    status: "active"
+    priority: "P0"
+    package_boundary: "mother_pack"
+    owner_layer: "ROOT"
+    source:
+      raw_user_input_ref: "用户反复强调不取代通用AI，而是形成可审计、可验证、可协同的母包/子包体系。"
+      source_files:
+        - path: "MISSION-MEMORY.md"
+          role: "authority"
+          locator: "母包使命、模型原生边界、母包/子包边界"
+        - path: "AI_PROJECT_CONTEXT.md"
+          role: "authority"
+          locator: "全局目录地图与未来AI协作流程"
+      source_type: "user"
+    routing:
+      guide_secretary_handoff_id: null
+      intent_id: "FULL_STACK_WORKFLOW_AUDIT"
+      route_decision: "DIRECT"
+      target_subsystems: ["ROOT", "00", "01", "02", "03", "04", "05", "USER_PACK"]
+      route_feedback:
+        selected_route: "00/14 full-stack workflow audit"
+        rejected_routes: []
+        confidence_after_routing: 0.95
+        feedback_to_guide: "keep"
+        blocked_reason: null
+    traceability:
+      goal_id: "GOAL-20260526-MOTHER-PACK-COLLABORATION"
+      parent_id: null
+      related_ids: ["CAP-FULL-STACK-AUDIT", "ART-00-AUDIT-ISSUE-LOG"]
+      atomic_ids: ["GOAL-mother-pack-collaboration", "AUD-full-stack-workflow"]
+    evidence:
+      level: "FACT"
+      items:
+        - kind: "file"
+          ref: "00.超级提示词工程/14-全链路审计与运行对齐/MOTHER-CHILD-WORKFLOW-MAP.md"
+          summary: "Documents current mother/child workflow gear map."
+    validation:
+      validation_refs: ["VAL-ROOT-FILE-COUNT", "VAL-ROOT-HARDCODE-PATH"]
+      required_before_close:
+        - "All P0 issues in WORKFLOW-AUDIT-ISSUE-LOG.md closed or downgraded with evidence."
+        - "A real sample flows from natural language to user package artifacts."
+      current_status: "verified_with_findings"
+    memory:
+      read_from: ["MISSION-MEMORY.md", "AI_PROJECT_CONTEXT.md", "00/14 registries"]
+      write_needed: false
+      write_target: null
+      write_gate: "none"
+    risks:
+      - id: "WAI-001"
+        summary: "Unified status object was not previously landed."
+        mitigation: "Created UNIFIED-STATUS-OBJECT-SPEC.md and this ledger."
+      - id: "WAI-002"
+        summary: "Registries need schedulable fields."
+        mitigation: "Use this ledger schema as the field model for registry upgrades."
+    next_action:
+      - "Create a guide_secretary dry-run object for the next real user request."
+      - "Add source locators, cwd, commands, permissions, and failure handling to registries."
+    timestamps:
+      created_at: "2026-05-26"
+      updated_at: "2026-05-27"
+
+  - id: "AUD-20260526-WORKFLOW-AUDIT-PHASE2"
+    type: "audit"
+    title: "全链路工作流审计第二阶段：统一状态对象落地"
+    status: "active"
+    priority: "P0"
+    package_boundary: "cross"
+    owner_layer: "00"
+    source:
+      raw_user_input_ref: "用户要求继续严谨审计每个文件夹的数据/业务/运行工作流，并调动智能体和工具。"
+      source_files:
+        - path: "00.超级提示词工程/14-全链路审计与运行对齐/WORKFLOW-AUDIT-ISSUE-LOG.md"
+          role: "authority"
+          locator: "WAI-001/WAI-002"
+        - path: "00.超级提示词工程/09-母包集成蓝图/MOTHER-PACK-AI-COLLABORATION-BLUEPRINT.md"
+          role: "context"
+          locator: "统一状态对象蓝图"
+      source_type: "user"
+    routing:
+      guide_secretary_handoff_id: null
+      intent_id: "FULL_STACK_WORKFLOW_AUDIT"
+      route_decision: "DIRECT"
+      target_subsystems: ["00", "03", "05", "01", "02", "04", "USER_PACK"]
+      route_feedback:
+        selected_route: "00/14 full-stack workflow audit"
+        rejected_routes:
+          - "Single subsystem routes rejected because user requested whole-package gear alignment."
+        confidence_after_routing: 0.94
+        feedback_to_guide: "keep"
+        blocked_reason: null
+    traceability:
+      goal_id: "GOAL-20260526-MOTHER-PACK-COLLABORATION"
+      parent_id: null
+      related_ids: ["WAI-001", "WAI-002", "VAL-ROOT-FILE-COUNT"]
+      atomic_ids: ["AUD-phase2-unified-status", "TASK-create-status-ledger"]
+    workflow:
+      trigger:
+        natural_language:
+          - "严谨审计每一个文件夹的数据工作流/业务工作流/运行工作流"
+          - "齿轮相互配合"
+          - "真正协同项目开发"
+        explicit_command: []
+      input_artifacts:
+        - "00/14 audit protocol and registries"
+        - "root context files"
+        - "subagent read-only audit findings"
+      process_steps:
+        - "Define unified status object schema."
+        - "Create initial ledger."
+        - "Update registries and entry documents."
+        - "Validate Markdown/YAML/path scan."
+      output_artifacts:
+        - "UNIFIED-STATUS-OBJECT-SPEC.md"
+        - "UNIFIED-STATUS-LEDGER.yaml"
+      downstream:
+        - "Registry field upgrade"
+        - "Guide Secretary dry-run router"
+        - "Traceability matrix sample"
+    execution:
+      cwd: "."
+      commands:
+        - command: "PowerShell stable file count"
+          writes_files: false
+          expected_result: "1118 files after adding breakpoint repair matrix and memory source index"
+          current_result: "Verified: total=1118, 00=39, 03=172, 04=146, 05=431, user=7."
+        - command: "YAML parse check for 00/14 registries and ledger"
+          writes_files: false
+          expected_result: "All YAML files parse"
+          current_result: "Verified: 6 YAML files parsed successfully."
+      permissions:
+        read: true
+        write_docs: true
+        write_code: false
+        execute: true
+      rollback:
+        strategy: "Revert only files changed in 00/14 and root entry docs if validation fails."
+    evidence:
+      level: "INFERENCE"
+      items:
+        - kind: "file"
+          ref: "UNIFIED-STATUS-OBJECT-SPEC.md"
+          summary: "Defines the common object schema."
+        - kind: "file"
+          ref: "UNIFIED-STATUS-LEDGER.yaml"
+          summary: "Initial machine-readable ledger."
+    validation:
+      validation_refs: ["VAL-ROOT-FILE-COUNT", "VAL-ROOT-HARDCODE-PATH", "VAL-ROOT-MARKDOWN-FENCES"]
+      required_before_close:
+        - "Rerun file count, Markdown fence check, YAML parse check, and path scan."
+      current_status: "verified_current"
+    memory:
+      read_from: ["MISSION-MEMORY.md", "AI_PROJECT_CONTEXT.md", "00/14 registries"]
+      write_needed: true
+      write_target: "00/14"
+      write_gate: "P1"
+    risks:
+      - id: "WAI-014"
+        summary: "Guide Secretary has no executable dry-run yet."
+        mitigation: "Use ledger as handoff target before automation."
+    next_action:
+      - "Validate this ledger."
+      - "Use it as the source model for registry upgrades."
+    timestamps:
+      created_at: "2026-05-26"
+      updated_at: "2026-05-27"
+
+  - id: "AUD-20260527-BREAKPOINT-REPAIR"
+    type: "audit"
+    title: "断裂点修复：路由反馈、暂停状态、记忆源索引和验证语义"
+    status: "active"
+    priority: "P0"
+    package_boundary: "cross"
+    owner_layer: "00"
+    source:
+      raw_user_input_ref: "用户指出文档中已有 6 个显式断裂点和 4 个隐蔽断裂点，并要求继续找出需要修复项，一并修复。"
+      source_files:
+        - path: "00.超级提示词工程/14-全链路审计与运行对齐/BREAKPOINT-REPAIR-MATRIX.md"
+          role: "authority"
+          locator: "6 explicit + 4 hidden breakpoint matrix"
+        - path: "00.超级提示词工程/14-全链路审计与运行对齐/MEMORY-SOURCE-INDEX.yaml"
+          role: "authority"
+          locator: "memory source priority and conflict index"
+      source_type: "user"
+    routing:
+      guide_secretary_handoff_id: null
+      intent_id: "FULL_STACK_WORKFLOW_AUDIT"
+      route_decision: "DIRECT"
+      target_subsystems: ["00", "03", "05", "USER_PACK"]
+      route_feedback:
+        selected_route: "00/14 breakpoint repair"
+        rejected_routes:
+          - "Only fixing first three breakpoints rejected because hidden breakpoints affect memory and validation."
+        confidence_after_routing: 0.96
+        feedback_to_guide: "keep"
+        blocked_reason: null
+    traceability:
+      goal_id: "GOAL-20260526-MOTHER-PACK-COLLABORATION"
+      parent_id: "AUD-20260526-WORKFLOW-AUDIT-PHASE2"
+      related_ids: ["WAI-013", "WAI-014", "WAI-015", "CAP-BREAKPOINT-REPAIR", "CAP-MEMORY-SOURCE-INDEX"]
+      atomic_ids: ["AUD-breakpoint-repair", "TASK-route-feedback", "TASK-paused-status", "TASK-memory-source-index"]
+    workflow:
+      trigger:
+        natural_language:
+          - "还有哪些是需要修复的?一并修复"
+          - "引导秘书→路由缺少反馈"
+          - "原子治理缺少暂停状态"
+        explicit_command: []
+      input_artifacts:
+        - "GUIDE-SECRETARY-PROTOCOL.md"
+        - "GUIDE-SECRETARY-HANDOFF-TEMPLATE.md"
+        - "SUBSYSTEM-ROUTING-MATRIX.md"
+        - "AI-CONTEXT-PACK-TEMPLATE.md"
+        - "ATOMIC-AI-DEVELOPMENT-OPERATING-SYSTEM.md"
+      process_steps:
+        - "Formalize explicit and hidden breakpoints."
+        - "Add route_feedback and traceability fields."
+        - "Add PAUSED/BLOCKED/SUPERSEDED handling."
+        - "Create memory source index."
+        - "Update registries and counts."
+      output_artifacts:
+        - "BREAKPOINT-REPAIR-MATRIX.md"
+        - "MEMORY-SOURCE-INDEX.yaml"
+        - "Updated Guide/Handoff/Context/Atomic/Routing/Cross Workflow docs"
+      downstream:
+        - "Guide Secretary dry-run router"
+        - "Memory source conflict simulation"
+        - "Traceability matrix instance"
+    execution:
+      cwd: "."
+      commands:
+        - command: "Stable file count"
+          writes_files: false
+          expected_result: "total=1118; 00=39"
+          current_result: "Verified: total=1118, 00=39."
+        - command: "Markdown fence check for touched docs"
+          writes_files: false
+          expected_result: "All touched Markdown files have even fence counts"
+          current_result: "Verified: touched Markdown fence counts are balanced."
+        - command: "YAML parse check for 00/14 YAML files"
+          writes_files: false
+          expected_result: "All YAML files parse"
+          current_result: "Verified: 6 YAML files parsed successfully."
+        - command: "Hardcoded local path scan"
+          writes_files: false
+          expected_result: "No matches for real local mother-root path, old project paths, or C:\\Users absolute paths"
+          current_result: "Verified: rg returned no matches."
+      permissions:
+        read: true
+        write_docs: true
+        write_code: false
+        execute: true
+      rollback:
+        strategy: "Revert only this repair pass files if validation fails."
+    evidence:
+      level: "VERIFIED"
+      items:
+        - kind: "file"
+          ref: "00.超级提示词工程/14-全链路审计与运行对齐/BREAKPOINT-REPAIR-MATRIX.md"
+          summary: "New repair matrix enumerates explicit and hidden breakpoints."
+        - kind: "file"
+          ref: "00.超级提示词工程/14-全链路审计与运行对齐/MEMORY-SOURCE-INDEX.yaml"
+          summary: "New machine-readable memory source index."
+    validation:
+      validation_refs: ["VAL-ROOT-FILE-COUNT", "VAL-ROOT-HARDCODE-PATH", "VAL-ROOT-MARKDOWN-FENCES", "VAL-ROOT-YAML-PARSE", "VAL-00-MEMORY-SOURCE-INDEX"]
+      required_before_close:
+        - "Rerun file count, Markdown fence check, YAML parse check, and path scan."
+      current_status: "verified_current"
+    memory:
+      read_from: ["MISSION-MEMORY.md", "AI_PROJECT_CONTEXT.md", "00/14 registries"]
+      write_needed: true
+      write_target: "00/14"
+      write_gate: "P1"
+    risks:
+      - id: "RISK-route-feedback-not-executable"
+        summary: "Route feedback is now documented but not yet generated by a script."
+        mitigation: "Build a dry-run router in the next implementation pass."
+    next_action:
+      - "Validate YAML/Markdown/file count/path scan."
+      - "Use a real user request to exercise route_feedback and PAUSED state."
+    timestamps:
+      created_at: "2026-05-27"
+      updated_at: "2026-05-27"

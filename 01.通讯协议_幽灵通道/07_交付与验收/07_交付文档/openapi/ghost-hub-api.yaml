@@ -1,0 +1,294 @@
+openapi: 3.0.3
+info:
+  title: Ghost Hub Protocol API
+  description: |
+    High-performance real-time message transmission protocol.
+    Designed for large-scale concurrent message streaming.
+  version: 1.0.0
+  contact:
+    name: Ghost Hub Team
+    url: https://github.com/ghost-hub/protocol
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8080
+    description: Local development
+  - url: https://api.ghost-hub.io/v1
+    description: Production
+
+tags:
+  - name: channels
+    description: Channel management
+  - name: messages
+    description: Message operations
+  - name: health
+    description: Health and stats
+
+paths:
+  /v1/health:
+    get:
+      summary: Health check
+      tags: [health]
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [healthy, degraded]
+                  version:
+                    type: string
+
+  /v1/stats:
+    get:
+      summary: Service statistics
+      tags: [health]
+      responses:
+        '200':
+          description: Statistics object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stats'
+
+  /v1/channels:
+    get:
+      summary: List all channels
+      tags: [channels]
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: cursor
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Channel list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelList'
+    post:
+      summary: Create a channel
+      tags: [channels]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelCreate'
+      responses:
+        '201':
+          description: Channel created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+
+  /v1/channels/{channel_id}:
+    get:
+      summary: Get channel details
+      tags: [channels]
+      parameters:
+        - $ref: '#/components/parameters/ChannelId'
+      responses:
+        '200':
+          description: Channel details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Delete channel
+      tags: [channels]
+      parameters:
+        - $ref: '#/components/parameters/ChannelId'
+      responses:
+        '204':
+          description: Channel deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/messages:
+    get:
+      summary: Pull messages (short polling)
+      tags: [messages]
+      parameters:
+        - name: channel_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: cursor
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: Message list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageList'
+    post:
+      summary: Publish message
+      tags: [messages]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessagePublish'
+      responses:
+        '201':
+          description: Message published
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageAck'
+
+components:
+  parameters:
+    ChannelId:
+      name: channel_id
+      in: path
+      required: true
+      schema:
+        type: string
+
+  schemas:
+    Stats:
+      type: object
+      properties:
+        channels:
+          type: integer
+        messages_per_second:
+          type: number
+        active_subscribers:
+          type: integer
+        cache_hit_rate:
+          type: number
+
+    ChannelType:
+      type: string
+      enum: [broadcast, multicast, unicast]
+
+    Retention:
+      type: object
+      properties:
+        max_messages:
+          type: integer
+        ttl_seconds:
+          type: integer
+
+    Channel:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/ChannelType'
+        retention:
+          $ref: '#/components/schemas/Retention'
+        created_at:
+          type: string
+          format: date-time
+
+    ChannelCreate:
+      type: object
+      required: [name, type]
+      properties:
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/ChannelType'
+        retention:
+          $ref: '#/components/schemas/Retention'
+
+    ChannelList:
+      type: object
+      properties:
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Channel'
+        next_cursor:
+          type: string
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+        channel_id:
+          type: string
+        payload:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+
+    MessagePublish:
+      type: object
+      required: [channel_id, payload]
+      properties:
+        channel_id:
+          type: string
+        payload:
+          type: object
+        compression:
+          type: string
+          enum: [zstd, gzip, lz4]
+
+    MessageAck:
+      type: object
+      properties:
+        id:
+          type: string
+        channel_id:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        size_bytes:
+          type: integer
+
+    MessageList:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        next_cursor:
+          type: string
+
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Channel not found

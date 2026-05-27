@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ghost Hub Protocol - Troubleshooting">
+    <meta name="ai-task" content="troubleshooting">
+    <title>故障排查 - Ghost Hub</title>
+    <style>
+        :root { --primary: #0066cc; --primary-dark: #0052a3; --secondary: #6c757d; --success: #28a745; --light: #f8f9fa; --dark: #212529; --border: #dee2e6; --code-bg: #f5f5f5; --danger: #dc3545; --warning: #ffc107; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: var(--dark); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+        header { background: var(--primary); color: white; padding: 24px 0; }
+        header h1 { font-size: 1.75rem; }
+        nav { background: var(--light); border-bottom: 1px solid var(--border); position: sticky; top: 0; }
+        nav ul { list-style: none; display: flex; flex-wrap: wrap; }
+        nav a { display: block; padding: 16px 20px; color: var(--dark); text-decoration: none; font-weight: 500; border-bottom: 3px solid transparent; }
+        nav a:hover, nav a.active { color: var(--primary); border-bottom-color: var(--primary); }
+        main { padding: 32px 0; }
+        .issue-card { border: 1px solid var(--border); border-radius: 8px; margin: 24px 0; overflow: hidden; }
+        .issue-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+        .issue-header h3 { color: var(--dark); }
+        .issue-body { padding: 20px; }
+        .symptoms { background: #fff3cd; border-left: 4px solid var(--warning); padding: 12px 16px; margin: 12px 0; }
+        .solution { background: #d4edda; border-left: 4px solid var(--success); padding: 12px 16px; margin: 12px 0; }
+        pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 16px; overflow-x: auto; font-size: 0.85rem; margin: 12px 0; }
+        code { font-family: 'SFMono-Regular', Consolas, monospace; background: var(--code-bg); padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+        pre code { background: none; padding: 0; }
+        footer { background: var(--dark); color: white; padding: 24px 0; margin-top: 48px; text-align: center; }
+        footer a { color: rgba(255,255,255,0.8); }
+    </style>
+</head>
+<body>
+<header><div class="container"><h1>故障排查指南</h1></div></header>
+<nav><div class="container"><ul>
+    <li><a href="index.html">首页</a></li>
+    <li><a href="install.html">安装</a></li>
+    <li><a href="quickstart.html">快速开始</a></li>
+    <li><a href="userguide.html">使用指南</a></li>
+    <li><a href="apiref.html">API参考</a></li>
+    <li><a href="scenarios.html">场景</a></li>
+    <li><a href="troubleshooting.html" class="active">故障排查</a></li>
+    <li><a href="glossary.html">术语表</a></li>
+</ul></div></nav>
+<main class="container">
+
+    <div class="issue-card">
+        <div class="issue-header">
+            <h3>连接被拒绝 (Connection Refused)</h3>
+        </div>
+        <div class="issue-body">
+            <div class="symptoms"><strong>症状：</strong>无法连接到Ghost Hub服务</div>
+            <div class="solution"><strong>解决方案：</strong></div>
+            <ol style="margin-left: 20px;">
+                <li>检查服务是否运行：<code>docker ps | grep ghost-hub</code></li>
+                <li>验证端口未被占用：<code>netstat -an | grep 8080</code></li>
+                <li>检查防火墙设置：允许8080端口入站</li>
+                <li>确认环境变量配置正确</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="issue-card">
+        <div class="issue-header">
+            <h3>消息丢失</h3>
+        </div>
+        <div class="issue-body">
+            <div class="symptoms"><strong>症状：</strong>发送的消息未被接收</div>
+            <div class="solution"><strong>解决方案：</strong></div>
+            <ol style="margin-left: 20px;">
+                <li>检查频道ID是否正确</li>
+                <li>验证订阅者数量：<code>GET /v1/channels/{id}/subscribers</code></li>
+                <li>确认消息大小未超过限制（默认1MB）</li>
+                <li>检查压缩格式是否兼容</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="issue-card">
+        <div class="issue-header">
+            <h3>性能下降</h3>
+        </div>
+        <div class="issue-body">
+            <div class="symptoms"><strong>症状：</strong>延迟增加，吞吐量下降</div>
+            <div class="solution"><strong>解决方案：</strong></div>
+            <ol style="margin-left: 20px;">
+                <li>检查Redis连接：<code>redis-cli ping</code></li>
+                <li>查看统计信息：<code>GET /v1/stats</code></li>
+                <li>考虑增加消息批量大小</li>
+                <li>检查网络带宽是否饱和</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="issue-card">
+        <div class="issue-header">
+            <h3>认证失败</h3>
+        </div>
+        <div class="issue-body">
+            <div class="symptoms"><strong>症状：</strong>API返回401 Unauthorized</div>
+            <div class="solution"><strong>解决方案：</strong></div>
+            <ol style="margin-left: 20px;">
+                <li>检查API Key是否设置：<code>echo $GHOST_HUB_API_KEY</code></li>
+                <li>确认API Key未过期</li>
+                <li>验证请求头格式：<code>Authorization: Bearer {key}</code></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="issue-card">
+        <div class="issue-header">
+            <h3>Docker启动失败</h3>
+        </div>
+        <div class="issue-body">
+            <div class="symptoms"><strong>症状：</strong>docker-compose up 报错</div>
+            <div class="solution"><strong>解决方案：</strong></div>
+            <ol style="margin-left: 20px;">
+                <li>清理旧容器：<code>docker-compose down -v</code></li>
+                <li>重新构建：<code>docker-compose build --no-cache</code></li>
+                <li>检查Docker版本：<code>docker --version</code> (需要20.10+)</li>
+                <li>查看日志：<code>docker-compose logs -f</code></li>
+            </ol>
+        </div>
+    </div>
+
+    <h2 style="margin-top: 32px;">诊断命令</h2>
+    <pre><code># 健康检查
+curl http://localhost:8080/v1/health
+
+# 服务统计
+curl http://localhost:8080/v1/stats
+
+# Redis连接测试
+docker exec -it ghost-hub-redis redis-cli ping
+
+# 查看容器日志
+docker-compose logs -f --tail=100</code></pre>
+
+</main>
+<footer><div class="container">
+    <p>&copy; 2026 Ghost Hub Protocol | <a href="index.html">文档首页</a></p>
+</div></footer>
+</body>
+</html>

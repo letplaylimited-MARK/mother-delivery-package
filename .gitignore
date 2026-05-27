@@ -1,0 +1,99 @@
+# ============================================================
+# Mother Delivery Package - Root .gitignore
+# Monorepo with submodules at:
+#   03.数据库管理_文件夹整理AI应用/
+#   05.超极智脑_Q-SpecTrum/
+# ============================================================
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+*.egg
+
+# Python virtual environments
+venv/
+.venv/
+env/
+
+# Database files (runtime data, not deliverables)
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+*.sqlite
+*.sqlite3
+*.faiss
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.obsidian/
+Thumbs.db
+desktop.ini
+
+# Build artifacts
+dist/
+build/
+.next/
+.out/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Logs
+*.log
+logs/
+
+# Archives (large files)
+*.tar.gz
+*.gz
+*.zip
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+.first_run_done
+.write_test*
+.ghost_channel_key
+.ghost_channel_state.json
+.runtime_write_test*
+.sqlite_write_test*
+
+# Session state (not for version control)
+_HANDOFF/
+
+# Local MCP config (machine-specific paths)
+.opencode/opencode.json
+
+# Large test artifacts
+test_size_*.txt
+test_write_*.txt
+
+# Debug output files
+api_err.txt
+api_out.txt
+pytest_*_debug.txt
+pytest_*_final.txt
+pytest_output_*.txt

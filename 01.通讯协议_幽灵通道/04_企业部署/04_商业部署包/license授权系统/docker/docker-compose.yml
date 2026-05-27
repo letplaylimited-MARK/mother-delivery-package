@@ -1,0 +1,86 @@
+# Ghost Channel License Server - Docker Compose Configuration
+version: '3.8'
+
+services:
+  # 授权服务器
+  license-server:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: ghost-license-server
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      # 服务器配置
+      - APP_ENV=production
+      - SERVER_PORT=8001
+      - LOG_LEVEL=INFO
+      
+      # 安全配置 (必填)
+      - SECRET_KEY=${SECRET_KEY}
+      
+      # Redis配置 (可选，用于分布式部署)
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      
+      # CORS配置
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+      
+      # 监控
+      - ENABLE_METRICS=true
+    volumes:
+      # 持久化数据
+      - license_data:/app/data
+      # 日志
+      - license_logs:/app/logs
+    networks:
+      - ghost-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Redis (可选，用于分布式部署)
+  redis:
+    image: redis:7-alpine
+    container_name: ghost-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ghost-network
+    command: redis-server --appendonly yes
+
+  # Nginx反向代理 (可选)
+  nginx:
+    image: nginx:alpine
+    container_name: ghost-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - license-server
+    networks:
+      - ghost-network
+
+volumes:
+  license_data:
+    driver: local
+  license_logs:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  ghost-network:
+    driver: bridge

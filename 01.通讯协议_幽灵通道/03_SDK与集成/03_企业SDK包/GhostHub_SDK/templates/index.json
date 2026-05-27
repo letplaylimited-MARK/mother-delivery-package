@@ -1,0 +1,161 @@
+{
+  "version": "2.0.0",
+  "templates_index": [
+    {
+      "id": "tpl_hr_interview_optimize",
+      "name": "HR面试流程优化",
+      "domain": "hr",
+      "category": "recruitment",
+      "file": "hr_interview_optimize.json"
+    },
+    {
+      "id": "tpl_iot_smart_home",
+      "name": "智能家居统一控制",
+      "domain": "iot",
+      "category": "home_automation",
+      "file": "iot_smart_home.json"
+    },
+    {
+      "id": "tpl_finance_cost_optimization",
+      "name": "企业成本优化分析",
+      "domain": "finance",
+      "category": "cost_management",
+      "file": "finance_cost_optimization.json"
+    },
+    {
+      "id": "tpl_ops_ticket_resolution",
+      "name": "工单智能处理",
+      "domain": "ops",
+      "category": "ticket_management",
+      "file": "ops_ticket_resolution.json"
+    },
+    {
+      "id": "tpl_agent_collab",
+      "name": "多智能体协作",
+      "domain": "federation",
+      "category": "multi_agent",
+      "file": "federation_multi_agent.json"
+    },
+    {
+      "id": "tpl_ecommerce_order",
+      "name": "电商订单智能处理",
+      "domain": "ecommerce",
+      "category": "order_management",
+      "file": "ecommerce_order.json"
+    },
+    {
+      "id": "tpl_customer_service",
+      "name": "智能客服系统",
+      "domain": "service",
+      "category": "customer_support",
+      "file": "customer_service.json"
+    },
+    {
+      "id": "tpl_data_analytics",
+      "name": "数据分析报表",
+      "domain": "data",
+      "category": "analytics",
+      "file": "data_analytics.json"
+    },
+    {
+      "id": "tpl_code_review",
+      "name": "代码审查助手",
+      "domain": "code",
+      "category": "quality_assurance",
+      "file": "code_review.json"
+    },
+    {
+      "id": "tpl_security_monitor",
+      "name": "安全监控告警",
+      "domain": "security",
+      "category": "monitoring",
+      "file": "security_monitor.json"
+    },
+    {
+      "id": "tpl_meeting_assistant",
+      "name": "会议智能助手",
+      "domain": "office",
+      "category": "productivity",
+      "file": "meeting_assistant.json"
+    },
+    {
+      "id": "tpl_recruitment",
+      "name": "智能招聘助手",
+      "domain": "hr",
+      "category": "recruitment",
+      "file": "recruitment.json"
+    },
+    {
+      "id": "tpl_document_processing",
+      "name": "文档智能处理",
+      "domain": "doc",
+      "category": "document",
+      "file": "document_processing.json"
+    },
+    {
+      "id": "tpl_inventory_management",
+      "name": "库存智能管理",
+      "domain": "inventory",
+      "category": "supply_chain",
+      "file": "inventory_management.json"
+    },
+    {
+      "id": "tpl_financial_report",
+      "name": "财务报表生成",
+      "domain": "finance",
+      "category": "accounting",
+      "file": "financial_report.json"
+    },
+    {
+      "id": "tpl_marketing_automation",
+      "name": "营销自动化",
+      "domain": "marketing",
+      "category": "automation",
+      "file": "marketing_automation.json"
+    },
+    {
+      "id": "tpl_it_asset",
+      "name": "IT资产管理",
+      "domain": "it",
+      "category": "asset_management",
+      "file": "it_asset_management.json"
+    },
+    {
+      "id": "tpl_ai_project_management",
+      "name": "AI项目管理",
+      "domain": "project",
+      "category": "management",
+      "file": "ai_project_management.json"
+    },
+    {
+      "id": "tpl_knowledge_management",
+      "name": "知识管理体系",
+      "domain": "knowledge",
+      "category": "information",
+      "file": "knowledge_management.json"
+    },
+    {
+      "id": "tpl_software_development",
+      "name": "软件开发生命周期",
+      "domain": "devops",
+      "category": "development",
+      "file": "software_development.json"
+    },
+    {
+      "id": "tpl_customer_relationship",
+      "name": "客户关系管理",
+      "domain": "crm",
+      "category": "sales",
+      "file": "customer_relationship.json"
+    },
+    {
+      "id": "tpl_supply_chain",
+      "name": "供应链管理",
+      "domain": "supply_chain",
+      "category": "logistics",
+      "file": "supply_chain.json"
+    }
+  ],
+  "domains": ["hr", "iot", "finance", "ops", "federation", "ecommerce", "service", "data", "code", "security", "office", "doc", "inventory", "marketing", "it", "project", "knowledge", "devops", "crm", "supply_chain"],
+  "total_templates": 22
+}

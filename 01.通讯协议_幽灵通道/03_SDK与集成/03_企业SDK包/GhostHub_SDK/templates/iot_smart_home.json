@@ -1,0 +1,85 @@
+{
+  "id": "tpl_iot_smart_home",
+  "name": "智能家居统一控制",
+  "description": "统一控制家中智能设备，实现自动化场景",
+  "domain": "iot",
+  "category": "home_automation",
+  "intent_pattern": "打开|关闭|调节|控制|设置|开关",
+  "sample_inputs": [
+    "打开客厅灯",
+    "把空调调到25度",
+    "关闭所有电器",
+    "设置早安模式",
+    "回家场景执行"
+  ],
+  "intent_vector": {
+    "urgency": 0.6,
+    "complexity": 0.2,
+    "autonomy": 0.9,
+    "cooperation": 0.1,
+    "risk_tolerance": 0.4,
+    "domain": "iot"
+  },
+  "tasks": [
+    {
+      "id": "iot_task_1",
+      "name": "意图解析",
+      "description": "解析用户指令，确定目标设备和动作",
+      "sequence": 1,
+      "dependencies": [],
+      "estimated_time": "<100ms",
+      "success_criteria": ["解析准确率>95%", "意图无歧义"],
+      "tools": ["intent_parser"],
+      "output": {"type": "device_command", "format": "json"}
+    },
+    {
+      "id": "iot_task_2",
+      "name": "设备匹配",
+      "description": "在设备列表中匹配目标设备",
+      "sequence": 2,
+      "dependencies": ["iot_task_1"],
+      "estimated_time": "<50ms",
+      "success_criteria": ["匹配成功率>98%"],
+      "tools": ["device_matcher"],
+      "output": {"type": "device_info", "format": "json"}
+    },
+    {
+      "id": "iot_task_3",
+      "name": "指令下发",
+      "description": "通过相应协议下发控制指令",
+      "sequence": 3,
+      "dependencies": ["iot_task_2"],
+      "estimated_time": "<500ms",
+      "success_criteria": ["指令送达率>99%"],
+      "tools": ["protocol_handler"],
+      "protocols": ["http", "mqtt", "zigbee"],
+      "output": {"type": "execution_status", "format": "json"}
+    },
+    {
+      "id": "iot_task_4",
+      "name": "状态反馈",
+      "description": "确认设备执行结果，反馈给用户",
+      "sequence": 4,
+      "dependencies": ["iot_task_3"],
+      "estimated_time": "<200ms",
+      "success_criteria": ["反馈及时性100%"],
+      "tools": ["state_notifier"],
+      "output": {"type": "feedback", "format": "voice|text"}
+    }
+  ],
+  "business_metrics": {
+    "response_time": "<1秒端到端",
+    "reliability": "99.5%指令执行成功率",
+    "energy_saving": "智能节能模式节省15-20%电费"
+  },
+  "roi_estimate": {
+    "energy_saving_percent": "18%",
+    "time_saving_hours_per_month": 5,
+    "convenience_score": "4.5/5"
+  },
+  "tags": ["iot", "smart_home", "automation", "control", "scenes"],
+  "is_public": true,
+  "version": "1.0.0",
+  "author": "GhostHub",
+  "created_at": "2026-04-01"
+}

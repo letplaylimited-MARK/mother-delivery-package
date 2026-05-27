@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ghost-channel/schemas/audit-entry.json",
+  "title": "AuditEntry",
+  "type": "object",
+  "required": [
+    "transaction_id",
+    "timestamp",
+    "source_role",
+    "destination_role",
+    "message_type",
+    "delta_hash",
+    "merkle_root_before",
+    "merkle_root_after",
+    "bandwidth_saved_bytes",
+    "transmission_duration_ms",
+    "signature_verified",
+    "tamper_detected"
+  ],
+  "properties": {
+    "transaction_id": {"type": "string"},
+    "timestamp": {"type": "number"},
+    "source_role": {"type": "string"},
+    "destination_role": {"type": "string"},
+    "message_type": {"type": "string"},
+    "delta_hash": {"type": "string"},
+    "merkle_root_before": {"type": "string"},
+    "merkle_root_after": {"type": "string"},
+    "bandwidth_saved_bytes": {"type": "integer", "minimum": 0},
+    "transmission_duration_ms": {"type": "number", "minimum": 0},
+    "signature_verified": {"type": "boolean"},
+    "tamper_detected": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}

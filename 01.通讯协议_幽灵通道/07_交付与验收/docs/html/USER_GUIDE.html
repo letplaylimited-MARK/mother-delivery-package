@@ -1,0 +1,371 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Hub SDK 完整用户指南</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif; max-width: 1000px; margin: 0 auto; padding: 40px 20px; line-height: 1.8; background: #fafafa; color: #333; }
+        h1 { font-size: 2.2em; color: #1a1a2e; border-bottom: 4px solid #3498db; padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 1.5em; color: #2d3748; margin-top: 40px; padding-left: 10px; border-left: 4px solid #3498db; }
+        h3 { font-size: 1.2em; color: #4a5568; margin-top: 25px; }
+        p { margin: 15px 0; }
+        code { background: #2d3748; color: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9em; }
+        pre { background: #1a1a2e; color: #e2e8f0; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; }
+        pre code { background: none; padding: 0; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        th { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 15px; text-align: left; }
+        td { padding: 12px 15px; border-bottom: 1px solid #eee; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #f7fafc; }
+        .nav { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .nav a { margin-right: 20px; color: #3498db; text-decoration: none; font-weight: 500; }
+        .nav a:hover { text-decoration: underline; }
+        .tip { background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+        .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+        .info { background: #e7f3ff; border-left: 4px solid #2196F3; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+        ul, ol { margin: 15px 0 15px 30px; }
+        li { margin: 8px 0; }
+        .footer { margin-top: 50px; padding-top: 20px; border-top: 2px solid #eee; text-align: center; color: #718096; }
+        hr { border: none; border-top: 1px solid #eee; margin: 30px 0; }
+        .architecture-box { background: #1a1a2e; color: #e2e8f0; padding: 20px; border-radius: 8px; font-family: monospace; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="INDEX.html">📚 首页</a>
+        <a href="INSTALL_GUIDE.html">⚙️ 安装指南</a>
+        <a href="QUICK_START.html">🚀 快速开始</a>
+        <a href="USER_GUIDE.html">📖 用户指南</a>
+        <a href="SCENARIOS.html">💡 使用场景</a>
+        <a href="QUICK_REFERENCE.html">📋 快速参考</a>
+    </div>
+
+    <h1>📖 Ghost Hub SDK 完整用户指南</h1>
+    
+    <p><strong>文档版本:</strong> v1.1 | <strong>SDK版本:</strong> 1.0.0 | <strong>更新日期:</strong> 2026-04-15 | <strong>阅读时长:</strong> 30分钟</p>
+
+    <div class="warning">
+        <strong>⚠️ 重要提示:</strong> 当前版本意图银行主要支持<strong>中文</strong>输入。英文输入可能在模板匹配时返回无匹配结果。建议使用中文以获得最佳体验。
+    </div>
+
+    <hr>
+
+    <h2>🎯 概述</h2>
+    
+    <h3>产品定位</h3>
+    <p>Ghost Hub SDK 是<strong>企业级AI工作流编排框架</strong>，通过三大核心能力实现智能化业务流程：</p>
+    
+    <table>
+        <tr><th>能力</th><th>功能</th><th>典型场景</th></tr>
+        <tr><td>🏦 <strong>意图银行</strong></td><td>自然语言理解、模板匹配、任务分解</td><td>HR招聘、客服问答</td></tr>
+        <tr><td>🔌 <strong>IoT适配器</strong></td><td>设备控制、协议转换、场景联动</td><td>智能家居、工业控制</td></tr>
+        <tr><td>🤖 <strong>智能体联邦</strong></td><td>多Agent协作、任务分发、结果聚合</td><td>数据分析、内容生成</td></tr>
+    </table>
+
+    <div class="tip">
+        <strong>核心优势:</strong> 零配置启动 | 模块化设计 | 23+预置模板 | 多协议支持 | 企业级安全
+    </div>
+
+    <hr>
+
+    <h2>🏗️ 架构设计</h2>
+    
+    <h3>系统架构</h3>
+    <div class="architecture-box">
+┌─────────────────────────────────────────────────────┐
+│                     Ghost Hub SDK                   │
+├─────────────────────────────────────────────────────┤
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
+│  │  意图银行   │  │  IoT适配器  │  │ 智能体联邦  │ │
+│  │ Intention  │  │  No-UI     │  │   Agent     │ │
+│  │   Bank     │  │  Adapter   │  │ Federation  │ │
+│  └─────────────┘  └─────────────┘  └─────────────┘ │
+│         │                │                │         │
+│         └────────────────┼────────────────┘         │
+│                          ▼                          │
+│               ┌─────────────────┐                   │
+│               │   工作流引擎    │                   │
+│               │ Workflow Engine │                   │
+│               └─────────────────┘                   │
+└─────────────────────────────────────────────────────┘
+    </div>
+
+    <hr>
+
+    <h2>🚀 快速开始</h2>
+    
+    <h3>3步完成集成</h3>
+    
+    <h4>Step 1: 安装</h4>
+    <pre><code>pip install ghost-hub-sdk</code></pre>
+
+    <h4>Step 2: 初始化</h4>
+    <pre><code>from ghost_hub_sdk import GhostHubSDK
+
+# 最简初始化
+sdk = GhostHubSDK()
+
+# 完整配置
+from ghost_hub_sdk import GhostHubConfig
+
+config = GhostHubConfig(
+    intention_bank_enabled=True,
+    no_ui_adapter_enabled=True,
+    agent_federation_enabled=True,
+    log_level="INFO"
+)
+sdk = GhostHubSDK(config)</code></pre>
+
+    <h4>Step 3: 使用</h4>
+    <pre><code># 意图匹配
+result = sdk.intention_bank.match_intent("招聘Python工程师")
+if result.has_match:
+    print(f"匹配模板: {result.top_match.template.name}")
+
+# 工作流执行
+result = sdk.execute_workflow("优化招聘流程")
+if result["success"]:
+    print(f"任务数: {len(result['task_graph']['tasks'])}")
+
+# IoT控制
+command = sdk.no_ui_adapter.convert_intent_to_command("开灯", "light")
+print(f"命令: {command}")
+
+# 任务分发
+from ghost_hub_sdk.components.agent_federation import Task
+task = Task(task_id="t1", description="数据分析", priority=1)
+result = sdk.agent_federation.distribute_task(task=task, intent="分析")
+
+# 清理
+sdk.disconnect()</code></pre>
+
+    <hr>
+
+    <h2>🔧 核心功能</h2>
+    
+    <h3>1. 意图银行 (Intention Bank)</h3>
+    
+    <p>意图银行是SDK的核心模块，负责理解用户意图并匹配业务模板。</p>
+    
+    <table>
+        <tr><th>功能</th><th>说明</th><th>API</th></tr>
+        <tr><td>意图解析</td><td>自然语言转结构化意图</td><td><code>match_intent()</code></td></tr>
+        <tr><td>模板匹配</td><td>语义相似度计算</td><td><code>match_multi_intent()</code></td></tr>
+        <tr><td>任务分解</td><td>意图转任务依赖图</td><td><code>build_task_graph()</code></td></tr>
+        <tr><td>领域过滤</td><td>按领域筛选模板</td><td><code>list_templates(domain=)</code></td></tr>
+    </table>
+
+    <pre><code># 基础意图匹配
+result = sdk.intention_bank.match_intent("帮我招聘前端工程师")
+
+if result.has_match:
+    top = result.top_match
+    print(f"模板: {top.template.name}")
+    print(f"置信度: {top.confidence:.2f}")
+    print(f"相似度: {top.similarity:.2f}")
+
+# 领域过滤
+hr_templates = sdk.intention_bank.list_templates(domain="hr")
+print(f"HR模板数: {len(hr_templates)}")
+
+# 构建任务图
+template = result.top_match.template
+task_graph = sdk.intention_bank.build_task_graph(template)
+print(f"任务节点: {len(task_graph.nodes)}")</code></pre>
+
+    <h3>2. IoT适配器 (No-UI Adapter)</h3>
+    
+    <p>IoT适配器提供设备控制能力，支持MQTT/HTTP协议。</p>
+    
+    <pre><code># 连接设备
+sdk.no_ui_adapter.connect(protocol="mqtt", broker="mqtt://localhost:1883")
+
+# 自然语言转命令
+command = sdk.no_ui_adapter.convert_intent_to_command(
+    intent="把客厅灯调暗到50%",
+    device_type="light"
+)
+print(f"命令: {command}")  # 输出: light_dim_50
+
+# 列出设备
+devices = sdk.no_ui_adapter.list_devices()
+for device in devices:
+    print(f"{device.name} ({device.type}): {device.status}")
+
+# 执行场景
+results = sdk.no_ui_adapter.execute_scene("离家模式")
+for r in results:
+    print(f"{r.device_id}: {r.status}")</code></pre>
+
+    <h3>3. 智能体联邦 (Agent Federation)</h3>
+    
+    <p>智能体联邦支持多Agent协作，实现分布式任务处理。</p>
+    
+    <pre><code>from ghost_hub_sdk.components.agent_federation import Task
+
+# 连接联邦
+sdk.agent_federation.connect()
+
+# 创建并分发任务
+task = Task(
+    task_id="sales_analysis_001",
+    description="分析Q1销售数据",
+    priority=1,
+    dependencies=[]
+)
+result = sdk.agent_federation.distribute_task(
+    task=task,
+    intent="数据分析"
+)
+print(f"分配给: {result.assigned_agent}")
+
+# 列出Agent
+agents = sdk.agent_federation.list_agents()
+for agent in agents:
+    print(f"{agent.name}: {agent.status.value}")
+
+# 获取统计
+stats = sdk.agent_federation.get_stats()
+print(f"在线Agent: {stats['online_agents']}")</code></pre>
+
+    <table>
+        <tr><th>策略</th><th>说明</th><th>选择场景</th></tr>
+        <tr><td><code>least_load</code></td><td>选择负载最低</td><td>负载均衡</td></tr>
+        <tr><td><code>round_robin</code></td><td>轮询选择</td><td>公平分发</td></tr>
+        <tr><td><code>intent_match</code></td><td>意图匹配</td><td>技能匹配</td></tr>
+        <tr><td><code>random</code></td><td>随机选择</td><td>测试环境</td></tr>
+    </table>
+
+    <hr>
+
+    <h2>📖 API参考</h2>
+    
+    <h3>GhostHubSDK 类</h3>
+    <pre><code>class GhostHubSDK:
+    """Ghost Hub SDK 统一入口"""
+
+    def __init__(self, config: Optional[GhostHubConfig] = None):
+        """初始化SDK"""
+        pass
+
+    # 属性
+    @property
+    def intention_bank(self) -> Optional[IntentionBankComponent]:
+        """意图银行组件"""
+        pass
+
+    @property
+    def no_ui_adapter(self) -> Optional[NoUIAdapterComponent]:
+        """IoT适配器组件"""
+        pass
+
+    @property
+    def agent_federation(self) -> Optional[AgentFederationComponent]:
+        """智能体联邦组件"""
+        pass
+
+    # 方法
+    def connect(self) -> Dict[str, bool]:
+        """连接所有启用的组件"""
+        pass
+
+    def disconnect(self):
+        """断开所有连接"""
+        pass
+
+    def execute_workflow(self, intent_text: str, workflow_type: str = "default") -> Dict[str, Any]:
+        """执行完整工作流"""
+        pass</code></pre>
+
+    <h3>返回值结构 - 工作流返回</h3>
+    <pre><code>{
+    "intent_text": str,           # 输入意图
+    "workflow_type": str,         # 工作流类型
+    "success": bool,             # 是否成功
+    "intent_match": {            # 匹配结果
+        "template_name": str,
+        "template_id": str,
+        "domain": str,
+        "similarity": float,
+        "confidence": float
+    },
+    "task_graph": {              # 任务图
+        "tasks": [...],
+        "task_count": int
+    },
+    "errors": list               # 错误列表
+}</code></pre>
+
+    <hr>
+
+    <h2>💡 最佳实践</h2>
+    
+    <h3>错误处理</h3>
+    <pre><code>from ghost_hub_sdk import GhostHubSDK, GhostHubError
+
+sdk = GhostHubSDK()
+
+try:
+    result = sdk.execute_workflow("招聘流程")
+
+    if not result["success"]:
+        for error in result["errors"]:
+            print(f"错误: {error}")
+        return
+
+    print(f"任务数: {result['task_graph']['task_count']}")
+
+except GhostHubError as e:
+    print(f"SDK错误: {e.code} - {e.message}")
+except Exception as e:
+    print(f"未知错误: {type(e).__name__}: {e}")
+finally:
+    sdk.disconnect()  # 始终清理</code></pre>
+
+    <h3>意图匹配最佳实践</h3>
+    <pre><code># 1. 总是检查 has_match
+result = sdk.intention_bank.match_intent(user_input)
+if not result.has_match:
+    return {"error": "无法理解意图，请重新描述"}
+
+# 2. 检查置信度阈值
+if result.top_match.confidence < 0.5:
+    return {"error": "置信度太低，请提供更多信息"}
+
+# 3. 展示多个选项
+for i, match in enumerate(result.matches[:3]):
+    print(f"{i+1}. {match.template.name} ({match.confidence:.0%})")</code></pre>
+
+    <h3>连接复用</h3>
+    <div class="tip">
+        <strong>推荐:</strong> 复用SDK实例，避免频繁创建和销毁连接。
+    </div>
+    <pre><code># 推荐：复用SDK实例
+sdk = GhostHubSDK()
+sdk.connect()
+
+for query in user_queries:
+    result = sdk.execute_workflow(query)
+
+sdk.disconnect()</code></pre>
+
+    <hr>
+
+    <h2>📚 相关文档</h2>
+    <ul>
+        <li><a href="INSTALL_GUIDE.html">⚙️ 安装指南</a> - 完整安装手册</li>
+        <li><a href="QUICK_START.html">🚀 快速开始</a> - 5分钟体验</li>
+        <li><a href="SCENARIOS.html">💡 使用场景</a> - 真实案例</li>
+        <li><a href="QUICK_REFERENCE.html">📋 快速参考</a> - API速查</li>
+    </ul>
+
+    <div class="footer">
+        <p><strong>Ghost Hub SDK v1.0.0</strong> | 企业级 AI 工作流编排框架</p>
+        <p>文档: <a href="https://docs.ghosthub.dev">docs.ghosthub.dev</a> | 
+           GitHub: <a href="https://github.com/ghost-hub/sdk">github.com/ghost-hub/sdk</a> | 
+           邮箱: support@ghosthub.dev</p>
+    </div>
+</body>
+</html>

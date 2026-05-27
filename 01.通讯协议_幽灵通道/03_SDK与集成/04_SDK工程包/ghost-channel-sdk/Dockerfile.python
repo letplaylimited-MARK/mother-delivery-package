@@ -1,0 +1,15 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY python/requirements.txt* /tmp/
+RUN pip install --no-cache-dir -r /tmp/requirements.txt 2>/dev/null || true
+
+COPY python/ /app/python/
+COPY schemas/ /app/schemas/
+COPY examples/ /app/examples/
+COPY stress_test_100_concurrent.py /app/
+
+ENV PYTHONUNBUFFERED=1
+
+ENTRYPOINT ["python", "-u"]

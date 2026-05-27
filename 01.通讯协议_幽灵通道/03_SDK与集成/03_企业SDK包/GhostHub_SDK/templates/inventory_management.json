@@ -1,0 +1,70 @@
+{
+  "id": "tpl_inventory_management",
+  "name": "库存智能管理",
+  "description": "实时库存监控、智能补货、预警",
+  "domain": "inventory",
+  "category": "supply_chain",
+  "intent_pattern": "库存|补货|盘点|预警|采购|入库|出库",
+  "sample_inputs": [
+    "当前库存多少",
+    "哪些商品需要补货",
+    "生成采购计划",
+    "库存预警设置",
+    "月度盘点报告"
+  ],
+  "intent_vector": {
+    "urgency": 0.7,
+    "complexity": 0.6,
+    "autonomy": 0.8,
+    "cooperation": 0.3,
+    "risk_tolerance": 0.3,
+    "domain": "inventory"
+  },
+  "tasks": [
+    {
+      "id": "inv_task_1",
+      "name": "库存查询",
+      "description": "查询各商品库存状态",
+      "sequence": 1,
+      "dependencies": [],
+      "tools": ["inventory_db"]
+    },
+    {
+      "id": "inv_task_2",
+      "name": "分析预测",
+      "description": "分析消耗速度预测需求",
+      "sequence": 2,
+      "dependencies": ["inv_task_1"],
+      "tools": ["prediction_engine"]
+    },
+    {
+      "id": "inv_task_3",
+      "name": "补货建议",
+      "description": "生成智能补货计划",
+      "sequence": 3,
+      "dependencies": ["inv_task_2"],
+      "tools": ["replenishment_engine"]
+    },
+    {
+      "id": "inv_task_4",
+      "name": "预警通知",
+      "description": "发送库存预警",
+      "sequence": 4,
+      "dependencies": ["inv_task_2"],
+      "tools": ["notification"]
+    }
+  ],
+  "business_metrics": {
+    "stockout_rate": "减少80%",
+    "overstock": "减少50%",
+    "inventory_turnover": "+30%"
+  },
+  "roi_estimate": {
+    "inventory_cost": "降低25%",
+    "stockout_loss": "减少90%",
+    "efficiency": "+40%"
+  },
+  "tags": ["inventory", "supply_chain", "replenishment", "prediction"],
+  "is_public": true,
+  "version": "1.0.0"
+}

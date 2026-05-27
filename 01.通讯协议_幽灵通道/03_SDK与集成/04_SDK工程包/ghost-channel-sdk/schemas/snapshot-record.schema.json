@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ghost-channel/schemas/snapshot-record.json",
+  "title": "SnapshotRecord",
+  "type": "object",
+  "required": [
+    "snapshot_id",
+    "stream_id",
+    "sequence_number",
+    "state_hash",
+    "merkle_root",
+    "created_at",
+    "status"
+  ],
+  "properties": {
+    "snapshot_id": {"type": "string"},
+    "stream_id": {"type": "string"},
+    "sequence_number": {"type": "integer", "minimum": 0},
+    "state_hash": {"type": "string"},
+    "merkle_root": {"type": "string"},
+    "created_at": {"type": "number"},
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "archived",
+        "rollback_candidate",
+        "corrupted"
+      ]
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

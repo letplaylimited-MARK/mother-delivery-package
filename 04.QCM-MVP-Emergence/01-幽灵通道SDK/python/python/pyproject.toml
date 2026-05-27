@@ -1,0 +1,10 @@
+[project]
+name = "ghost-channel-sdk"
+version = "0.1.0"
+description = "Ghost Channel Protocol Python SDK MVP"
+requires-python = ">=3.10"
+dependencies = []
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"

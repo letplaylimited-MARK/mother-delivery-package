@@ -1,0 +1,16 @@
+{
+  "step_id": "step_03_semantic_filter",
+  "name": "Semantic Filter",
+  "dependencies": [
+    "step_01_delta_calc",
+    "step_02_vector_clock"
+  ],
+  "status": "completed",
+  "start_time": 1712345678.0,
+  "end_time": 1712345680.0,
+  "error": null,
+  "state": {
+    "matches": 17,
+    "latency_ms": 4.2
+  }
+}

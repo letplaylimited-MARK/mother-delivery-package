@@ -1,0 +1,42 @@
+# Universal-KB MemoryOS Configuration
+
+capacity:
+  short_term: 7
+  mid_term: 1000
+  long_term_knowledge: 100
+  retrieval_queue: 7
+
+heat:
+  mid_term_threshold: 5.0
+  similarity_threshold: 0.7
+  decay_factor: 0.95
+  min_heat_to_keep: 1.0
+
+memory_types:
+  episodic:
+    description: "情景记忆 - 项目执行过程"
+    folder: "episodic"
+  semantic:
+    description: "语义记忆 - 通用知识概念"
+    folder: "semantic"
+  procedural:
+    description: "程序记忆 - 工作流和技能"
+    folder: "procedural"
+  emotional:
+    description: "情感记忆 - 决策偏好"
+    folder: "emotional"
+
+storage:
+  base_path: "./04-memory"
+  use_chromadb: false
+
+retrieval:
+  default_top_k: 5
+  weights:
+    short_term: 0.3
+    mid_term: 0.4
+    long_term: 0.3
+
+cleanup:
+  enabled: true
+  short_term_days: 7

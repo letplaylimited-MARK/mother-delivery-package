@@ -1,0 +1,90 @@
+{
+  "id": "tpl_knowledge_management",
+  "name": "知识管理体系",
+  "description": "构建和维护企业知识库，实现知识的获取、存储、共享和应用",
+  "domain": "knowledge",
+  "category": "information",
+  "intent_pattern": "知识|文档|整理|搜索|分享|培训|学习",
+  "sample_inputs": [
+    "搜索相关的技术文档",
+    "整理项目知识库",
+    "生成分享材料",
+    "创建培训文档",
+    "查找最佳实践"
+  ],
+  "intent_vector": {
+    "urgency": 0.4,
+    "complexity": 0.6,
+    "autonomy": 0.5,
+    "cooperation": 0.7,
+    "risk_tolerance": 0.3,
+    "domain": "knowledge"
+  },
+  "tasks": [
+    {
+      "id": "km_task_1",
+      "name": "知识获取",
+      "description": "从多种来源获取知识",
+      "sequence": 1,
+      "dependencies": [],
+      "estimated_time": "30分钟-2小时",
+      "tools": ["web_scraper", "doc_parser", "api_collector"],
+      "output": {"type": "raw_knowledge", "format": "json"}
+    },
+    {
+      "id": "km_task_2",
+      "name": "知识分类",
+      "description": "对知识进行分类和标签",
+      "sequence": 2,
+      "dependencies": ["km_task_1"],
+      "estimated_time": "15-30分钟",
+      "tools": ["auto_tagger", "category_classifier"],
+      "output": {"type": "structured_knowledge", "format": "json"}
+    },
+    {
+      "id": "km_task_3",
+      "name": "知识存储",
+      "description": "存储到知识库",
+      "sequence": 3,
+      "dependencies": ["km_task_2"],
+      "estimated_time": "5-10分钟",
+      "tools": ["knowledge_base", "vector_store"],
+      "output": {"type": "stored_knowledge", "format": "reference"}
+    },
+    {
+      "id": "km_task_4",
+      "name": "知识检索",
+      "description": "提供智能检索能力",
+      "sequence": 4,
+      "dependencies": ["km_task_3"],
+      "estimated_time": "<1秒",
+      "tools": ["semantic_search", "vector_search"],
+      "output": {"type": "search_results", "format": "ranked_list"}
+    },
+    {
+      "id": "km_task_5",
+      "name": "知识推荐",
+      "description": "基于上下文推荐相关知识",
+      "sequence": 5,
+      "dependencies": ["km_task_4"],
+      "estimated_time": "<1秒",
+      "tools": ["recommender", "context_analyzer"],
+      "output": {"type": "recommendations", "format": "personalized_list"}
+    }
+  ],
+  "business_metrics": {
+    "knowledge_coverage": "95%关键知识覆盖",
+    "retrieval_accuracy": "90%+检索准确率",
+    "sharing_rate": "知识复用率提升50%"
+  },
+  "roi_estimate": {
+    "time_saving_hours_per_month": 20,
+    "productivity_improvement": "25%",
+    "knowledge_loss_prevention": "80%"
+  },
+  "tags": ["knowledge", "documentation", "search", "sharing", "collaboration"],
+  "is_public": true,
+  "version": "1.0.0",
+  "author": "GhostHub",
+  "created_at": "2026-04-15"
+}

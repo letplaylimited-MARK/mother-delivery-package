@@ -1,0 +1,76 @@
+{
+  "id": "tpl_data_analytics",
+  "name": "数据分析报表",
+  "description": "自动生成数据分析报表和可视化",
+  "domain": "data",
+  "category": "analytics",
+  "intent_pattern": "分析|报表|统计|趋势|对比|数据|销售额|用户",
+  "sample_inputs": [
+    "分析本月销售数据",
+    "生成用户增长报表",
+    "对比上周转化率",
+    "本周活跃用户趋势",
+    "制作数据大屏"
+  ],
+  "intent_vector": {
+    "urgency": 0.5,
+    "complexity": 0.7,
+    "autonomy": 0.5,
+    "cooperation": 0.2,
+    "risk_tolerance": 0.3,
+    "domain": "data"
+  },
+  "tasks": [
+    {
+      "id": "data_task_1",
+      "name": "数据提取",
+      "description": "从数据源提取相关数据",
+      "sequence": 1,
+      "dependencies": [],
+      "estimated_time": "<2s",
+      "tools": ["data_extractor"]
+    },
+    {
+      "id": "data_task_2",
+      "name": "数据处理",
+      "description": "清洗、转换、聚合数据",
+      "sequence": 2,
+      "dependencies": ["data_task_1"],
+      "estimated_time": "<3s",
+      "tools": ["data_processor"]
+    },
+    {
+      "id": "data_task_3",
+      "name": "分析计算",
+      "description": "执行统计分析和计算",
+      "sequence": 3,
+      "dependencies": ["data_task_2"],
+      "estimated_time": "<2s",
+      "tools": ["analytics_engine"],
+      "metrics": ["sum", "avg", "trend", "comparison"]
+    },
+    {
+      "id": "data_task_4",
+      "name": "报表生成",
+      "description": "生成数据报表和可视化",
+      "sequence": 4,
+      "dependencies": ["data_task_3"],
+      "estimated_time": "<1s",
+      "tools": ["report_generator"],
+      "formats": ["table", "chart", "dashboard"]
+    }
+  ],
+  "business_metrics": {
+    "report_generation_time": "<10秒",
+    "data_accuracy": "99.5%",
+    "coverage": "100%报表自动化"
+  },
+  "roi_estimate": {
+    "report_time_reduction": "90%",
+    "analyst_efficiency": "3x提升",
+    "decision_speed": "50%加快"
+  },
+  "tags": ["data", "analytics", "report", "visualization"],
+  "is_public": true,
+  "version": "1.0.0"
+}

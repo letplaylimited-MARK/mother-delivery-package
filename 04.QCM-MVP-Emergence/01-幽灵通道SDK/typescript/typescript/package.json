@@ -1,0 +1,19 @@
+{
+  "name": "ghost-channel-sdk",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Ghost Channel Protocol - Semantic-aware synchronization for distributed AI systems",
+  "keywords": ["ai", "multi-agent", "synchronization", "delta-sync", "ghost-channel"],
+  "license": "MIT",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ghost-channel/typescript-sdk"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

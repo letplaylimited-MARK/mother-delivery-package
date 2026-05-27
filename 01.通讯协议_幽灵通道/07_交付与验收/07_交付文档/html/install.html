@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ghost Hub Protocol - Installation Guide">
+    <meta name="ai-task" content="installation-guide">
+    <title>安装指南 - Ghost Hub</title>
+    <style>
+        :root {
+            --primary: #0066cc;
+            --primary-dark: #0052a3;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --border: #dee2e6;
+            --code-bg: #f5f5f5;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: var(--dark); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+        header { background: var(--primary); color: white; padding: 24px 0; }
+        header h1 { font-size: 1.75rem; }
+        nav { background: var(--light); border-bottom: 1px solid var(--border); padding: 0; position: sticky; top: 0; }
+        nav ul { list-style: none; display: flex; flex-wrap: wrap; }
+        nav li { flex: none; }
+        nav a { display: block; padding: 16px 20px; color: var(--dark); text-decoration: none; font-weight: 500; border-bottom: 3px solid transparent; }
+        nav a:hover, nav a.active { color: var(--primary); border-bottom-color: var(--primary); }
+        main { padding: 32px 0; }
+        .section { margin: 32px 0; }
+        .section h2 { font-size: 1.5rem; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); }
+        .section h3 { font-size: 1.2rem; margin: 24px 0 12px; color: var(--primary-dark); }
+        .install-block { background: var(--light); border-radius: 8px; padding: 20px; margin: 16px 0; border-left: 4px solid var(--primary); }
+        .install-block h4 { margin-bottom: 12px; color: var(--dark); }
+        pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 16px; overflow-x: auto; font-size: 0.9rem; margin: 12px 0; }
+        code { font-family: 'SFMono-Regular', Consolas, monospace; background: var(--code-bg); padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+        pre code { background: none; padding: 0; }
+        .success { color: var(--success); font-weight: 600; }
+        .warning { color: var(--warning); font-weight: 600; }
+        .danger { color: var(--danger); font-weight: 600; }
+        .note { background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; padding: 12px 16px; margin: 16px 0; }
+        .req-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        .req-table th, .req-table td { padding: 12px; text-align: left; border: 1px solid var(--border); }
+        .req-table th { background: var(--light); font-weight: 600; }
+        footer { background: var(--dark); color: white; padding: 24px 0; margin-top: 48px; text-align: center; }
+        footer a { color: rgba(255,255,255,0.8); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>安装指南 - Ghost Hub Protocol SDK</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="install.html" class="active">安装指南</a></li>
+                <li><a href="quickstart.html">快速开始</a></li>
+                <li><a href="userguide.html">使用指南</a></li>
+                <li><a href="scenarios.html">用户场景</a></li>
+                <li><a href="apiref.html">API参考</a></li>
+                <li><a href="troubleshooting.html">故障排查</a></li>
+                <li><a href="glossary.html">术语表</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section class="section">
+            <h2>系统要求</h2>
+            <table class="req-table">
+                <thead>
+                    <tr>
+                        <th>组件</th>
+                        <th>最低要求</th>
+                        <th>推荐配置</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Python</td>
+                        <td>3.10+</td>
+                        <td>3.12</td>
+                    </tr>
+                    <tr>
+                        <td>Node.js</td>
+                        <td>18.0+</td>
+                        <td>20 LTS</td>
+                    </tr>
+                    <tr>
+                        <td>内存</td>
+                        <td>512MB</td>
+                        <td>2GB+</td>
+                    </tr>
+                    <tr>
+                        <td>磁盘空间</td>
+                        <td>100MB</td>
+                        <td>500MB</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        
+        <section class="section">
+            <h2>Python SDK 安装</h2>
+            
+            <h3>方式一：pip 安装（推荐）</h3>
+            <div class="install-block">
+                <pre><code>pip install ghost-channel-sdk</code></pre>
+            </div>
+            <p class="success">✓ 安装成功验证</p>
+            <pre><code>python -c "from ghost_channel import GhostChannelSDK; print('OK')"</code></pre>
+            
+            <h3>方式二：本地安装（开发模式）</h3>
+            <div class="install-block">
+                <h4>1. 克隆 SDK 仓库</h4>
+                <pre><code>git clone https://github.com/ghost-channel/python-sdk.git
+cd python-sdk</code></pre>
+                
+                <h4>2. 安装依赖并设置开发模式</h4>
+                <pre><code>pip install -e .</code></pre>
+                
+                <h4>3. 验证安装</h4>
+                <pre><code>python -m pytest tests/ -v</code></pre>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>TypeScript SDK 安装</h2>
+            
+            <h3>方式一：npm 安装（推荐）</h3>
+            <div class="install-block">
+                <pre><code>npm install ghost-channel-sdk</code></pre>
+            </div>
+            
+            <h3>方式二：本地安装（开发模式）</h3>
+            <div class="install-block">
+                <h4>1. 克隆 SDK 仓库</h4>
+                <pre><code>git clone https://github.com/ghost-channel/typescript-sdk.git
+cd typescript-sdk</code></pre>
+                
+                <h4>2. 安装依赖</h4>
+                <pre><code>npm install</code></pre>
+                
+                <h4>3. 运行测试</h4>
+                <pre><code>npm test</code></pre>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>Docker 部署</h2>
+            <div class="install-block">
+                <h4>快速启动</h4>
+                <pre><code># 拉取镜像
+docker pull ghostchannel/sdk:latest
+
+# 运行交互式示例
+docker run -it ghostchannel/sdk:latest python stress_test_100_concurrent.py</code></pre>
+                
+                <h4>使用 Docker Compose</h4>
+                <pre><code>docker-compose up --build</code></pre>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>验证安装</h2>
+            <div class="install-block">
+                <h4>Python SDK 验证</h4>
+                <pre><code>python -c "
+import asyncio
+from ghost_channel import GhostChannelSDK, GhostChannelConfig
+
+async def test():
+    sdk = GhostChannelSDK(GhostChannelConfig())
+    result = await sdk.sync_memory_delta(
+        'agent_a', 'agent_b',
+        {'v': 'v1', 'data': 1},
+        {'v': 'v2', 'data': 2}
+    )
+    print(f'Success: {result.success}')
+    print(f'Bandwidth reduction: {result.bandwidth_reduction:.1%}')
+    print(f'Latency: {result.latency_ms:.2f}ms')
+
+asyncio.run(test())
+"</code></pre>
+                <p class="success">预期输出：Success: True, Bandwidth reduction: XX%, Latency: Xms</p>
+            </div>
+            
+            <div class="install-block">
+                <h4>TypeScript SDK 验证</h4>
+                <pre><code>npx ts-node -e "
+import { GhostChannelClient } from 'ghost-channel-sdk';
+
+const client = new GhostChannelClient({});
+const result = await client.syncMemoryDelta(
+  'agent_a', 'agent_b',
+  { v: 'v1', data: 1 },
+  { v: 'v2', data: 2 }
+);
+console.log('Success:', result.success);
+console.log('Bandwidth reduction:', result.bandwidthReduction);
+"</code></pre>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>常见问题</h2>
+            <div class="note">
+                <strong>⚠️ 依赖问题</strong><br>
+                如果遇到 cryptography 或其他依赖安装失败，请确保系统已安装 OpenSSL 开发库：
+                <pre><code># Ubuntu/Debian
+sudo apt-get install libssl-dev
+
+# macOS
+brew install openssl</code></pre>
+            </div>
+            
+            <div class="note">
+                <strong>⚠️ 权限问题</strong><br>
+                如果遇到权限错误，建议使用虚拟环境：
+                <pre><code>python -m venv venv
+source venv/bin/activate  # Linux/macOS
+# 或
+.\venv\Scripts\activate  # Windows
+pip install ghost-channel-sdk</code></pre>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p><a href="index.html">Ghost Hub 文档首页</a> | <a href="https://github.com/ghost-channel">GitHub</a></p>
+            <p style="margin-top: 8px; opacity: 0.7;">v1.0.0 | 2026-04-15</p>
+        </div>
+    </footer>
+</body>
+</html>

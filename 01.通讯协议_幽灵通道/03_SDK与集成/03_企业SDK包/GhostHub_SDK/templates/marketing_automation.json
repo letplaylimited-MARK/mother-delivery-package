@@ -1,0 +1,71 @@
+{
+  "id": "tpl_marketing_automation",
+  "name": "营销自动化",
+  "description": "自动化营销流程，用户分群，精准推送",
+  "domain": "marketing",
+  "category": "automation",
+  "intent_pattern": "营销|推送|用户|活动|转化|推广|广告",
+  "sample_inputs": [
+    "创建用户分群",
+    "发送促销活动",
+    "分析转化漏斗",
+    "用户生命周期管理",
+    "A/B测试分析"
+  ],
+  "intent_vector": {
+    "urgency": 0.5,
+    "complexity": 0.6,
+    "autonomy": 0.6,
+    "cooperation": 0.4,
+    "risk_tolerance": 0.4,
+    "domain": "marketing"
+  },
+  "tasks": [
+    {
+      "id": "mkt_task_1",
+      "name": "用户分析",
+      "description": "分析用户行为和特征",
+      "sequence": 1,
+      "dependencies": [],
+      "tools": ["user_analytics"]
+    },
+    {
+      "id": "mkt_task_2",
+      "name": "分群打标",
+      "description": "用户分群和标签管理",
+      "sequence": 2,
+      "dependencies": ["mkt_task_1"],
+      "tools": ["segmentation_engine"]
+    },
+    {
+      "id": "mkt_task_3",
+      "name": "内容生成",
+      "description": "生成个性化营销内容",
+      "sequence": 3,
+      "dependencies": ["mkt_task_2"],
+      "tools": ["content_generator"]
+    },
+    {
+      "id": "mkt_task_4",
+      "name": "执行推送",
+      "description": "执行多渠道推送",
+      "sequence": 4,
+      "dependencies": ["mkt_task_3"],
+      "tools": ["push_engine"],
+      "channels": ["email", "sms", "app", "wechat"]
+    }
+  ],
+  "business_metrics": {
+    "conversion_rate": "+35%",
+    "engagement": "+50%",
+    "cost_per_acquisition": "-40%"
+  },
+  "roi_estimate": {
+    "marketing_roi": "+200%",
+    "efficiency": "5x提升",
+    "personalization": "全面实现"
+  },
+  "tags": ["marketing", "automation", "segmentation", "push"],
+  "is_public": true,
+  "version": "1.0.0"
+}

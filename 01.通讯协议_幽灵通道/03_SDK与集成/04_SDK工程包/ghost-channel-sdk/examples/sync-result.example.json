@@ -1,0 +1,8 @@
+{
+  "success": true,
+  "bandwidth_reduction": 0.934,
+  "latency_ms": 6.3,
+  "consistency_verified": true,
+  "changes_applied": 4,
+  "errors": []
+}

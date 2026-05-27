@@ -1,0 +1,14 @@
+{
+  "error_code": "GC-CRY-002",
+  "error_name": "MACVerificationFailed",
+  "severity": "critical",
+  "message": "MAC verification failed - possible tampering detected",
+  "retryable": false,
+  "rollback_required": true,
+  "context": {
+    "stream_id": "stream_42",
+    "source_role": "role_a",
+    "destination_role": "role_b"
+  },
+  "timestamp": 1712345678.123
+}

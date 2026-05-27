@@ -1,0 +1,34 @@
+name: typescript-sdk-ci
+
+on:
+  push:
+    paths:
+      - 'ghost-channel-sdk/typescript/**'
+      - 'ghost-channel-sdk/schemas/**'
+      - 'ghost-channel-sdk/.github/workflows/typescript-sdk-ci.yml'
+  pull_request:
+    paths:
+      - 'ghost-channel-sdk/typescript/**'
+      - 'ghost-channel-sdk/schemas/**'
+      - 'ghost-channel-sdk/.github/workflows/typescript-sdk-ci.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: QCM/ghost-channel-sdk/typescript
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run unit tests
+        run: npm test

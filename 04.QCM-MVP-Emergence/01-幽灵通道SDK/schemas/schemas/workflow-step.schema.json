@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ghost-channel/schemas/workflow-step.json",
+  "title": "WorkflowStep",
+  "type": "object",
+  "required": [
+    "step_id",
+    "name",
+    "dependencies",
+    "status"
+  ],
+  "properties": {
+    "step_id": {"type": "string"},
+    "name": {"type": "string"},
+    "dependencies": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "running",
+        "completed",
+        "failed",
+        "blocked",
+        "recovered"
+      ]
+    },
+    "start_time": {"type": ["number", "null"]},
+    "end_time": {"type": ["number", "null"]},
+    "error": {"type": ["string", "null"]},
+    "state": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ghost Hub Protocol - User Guide">
+    <meta name="ai-task" content="user-guide">
+    <title>使用指南 - Ghost Hub</title>
+    <style>
+        :root {
+            --primary: #0066cc;
+            --primary-dark: #0052a3;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --border: #dee2e6;
+            --code-bg: #f5f5f5;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: var(--dark); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+        header { background: var(--primary); color: white; padding: 24px 0; }
+        header h1 { font-size: 1.75rem; }
+        nav { background: var(--light); border-bottom: 1px solid var(--border); position: sticky; top: 0; }
+        nav ul { list-style: none; display: flex; flex-wrap: wrap; }
+        nav a { display: block; padding: 16px 20px; color: var(--dark); text-decoration: none; font-weight: 500; border-bottom: 3px solid transparent; }
+        nav a:hover, nav a.active { color: var(--primary); border-bottom-color: var(--primary); }
+        main { padding: 32px 0; }
+        .section { margin: 32px 0; }
+        .section h2 { font-size: 1.5rem; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); }
+        .section h3 { font-size: 1.2rem; margin: 24px 0 12px; color: var(--primary-dark); }
+        pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 16px; overflow-x: auto; font-size: 0.9rem; margin: 12px 0; }
+        code { font-family: 'SFMono-Regular', Consolas, monospace; background: var(--code-bg); padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+        pre code { background: none; padding: 0; }
+        .info-box { background: #e7f3ff; border-left: 4px solid var(--primary); padding: 16px; margin: 16px 0; }
+        .warning-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 16px; margin: 16px 0; }
+        .success-box { background: #d4edda; border-left: 4px solid var(--success); padding: 16px; margin: 16px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th, td { padding: 10px 12px; text-align: left; border: 1px solid var(--border); }
+        th { background: var(--light); font-weight: 600; }
+        .method-card { border: 1px solid var(--border); border-radius: 8px; margin: 24px 0; overflow: hidden; }
+        .method-header { background: var(--light); padding: 16px 20px; border-bottom: 1px solid var(--border); }
+        .method-header code { background: var(--primary); color: white; padding: 4px 12px; border-radius: 4px; }
+        .method-body { padding: 20px; }
+        .method-body h4 { margin: 16px 0 8px; }
+        footer { background: var(--dark); color: white; padding: 24px 0; margin-top: 48px; text-align: center; }
+        footer a { color: rgba(255,255,255,0.8); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>使用指南 - Ghost Hub SDK 详细文档</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="install.html">安装指南</a></li>
+                <li><a href="quickstart.html">快速开始</a></li>
+                <li><a href="userguide.html" class="active">使用指南</a></li>
+                <li><a href="scenarios.html">用户场景</a></li>
+                <li><a href="apiref.html">API参考</a></li>
+                <li><a href="troubleshooting.html">故障排查</a></li>
+                <li><a href="glossary.html">术语表</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section class="section">
+            <h2>GhostChannelConfig 配置选项</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>选项</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>compression_level</code></td>
+                        <td>int</td>
+                        <td>9</td>
+                        <td>zlib压缩级别 (0=无, 9=最大)</td>
+                    </tr>
+                    <tr>
+                        <td><code>semantic_threshold</code></td>
+                        <td>float</td>
+                        <td>0.7</td>
+                        <td>语义相关性阈值</td>
+                    </tr>
+                    <tr>
+                        <td><code>audit_enabled</code></td>
+                        <td>bool</td>
+                        <td>true</td>
+                        <td>是否记录审计日志</td>
+                    </tr>
+                    <tr>
+                        <td><code>max_retry</code></td>
+                        <td>int</td>
+                        <td>3</td>
+                        <td>失败重试次数</td>
+                    </tr>
+                    <tr>
+                        <td><code>completion_mode</code></td>
+                        <td>str</td>
+                        <td>"apply"</td>
+                        <td>"apply"(等待APPLIED) 或 "verify"(等待VERIFIED)</td>
+                    </tr>
+                    <tr>
+                        <td><code>await_ack</code></td>
+                        <td>bool</td>
+                        <td>false</td>
+                        <td>是否等待ACK确认</td>
+                    </tr>
+                    <tr>
+                        <td><code>ack_timeout_ms</code></td>
+                        <td>int</td>
+                        <td>500</td>
+                        <td>ACK超时时间(毫秒)</td>
+                    </tr>
+                    <tr>
+                        <td><code>replay_window_size</code></td>
+                        <td>int</td>
+                        <td>1024</td>
+                        <td>重放窗口大小</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        
+        <section class="section">
+            <h2>核心 API 方法</h2>
+            
+            <div class="method-card">
+                <div class="method-header">
+                    <h3><code>sync_memory_delta()</code></h3>
+                    <p>执行两个状态间的增量同步</p>
+                </div>
+                <div class="method-body">
+                    <h4>Python 签名</h4>
+                    <pre><code>async def sync_memory_delta(
+    self,
+    source_role: str,
+    target_role: str,
+    old_state: dict,
+    new_state: dict,
+    semantic_filter: str | None = None
+) -> SyncResult</code></pre>
+                    
+                    <h4>TypeScript 签名</h4>
+                    <pre><code>async syncMemoryDelta(
+    sourceRole: string,
+    targetRole: string,
+    oldState: Record<string, unknown>,
+    newState: Record<string, unknown>,
+    semanticFilter?: string
+): Promise&lt;SyncResult&gt;</code></pre>
+                    
+                    <h4>参数说明</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>类型</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>source_role</td>
+                                <td>string</td>
+                                <td>源角色标识符</td>
+                            </tr>
+                            <tr>
+                                <td>target_role</td>
+                                <td>string</td>
+                                <td>目标角色标识符</td>
+                            </tr>
+                            <tr>
+                                <td>old_state</td>
+                                <td>dict</td>
+                                <td>同步前的状态快照</td>
+                            </tr>
+                            <tr>
+                                <td>new_state</td>
+                                <td>dict</td>
+                                <td>同步后的状态快照</td>
+                            </tr>
+                            <tr>
+                                <td>semantic_filter</td>
+                                <td>string|null</td>
+                                <td>可选的语义过滤关键词</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>返回 SyncResult</h4>
+                    <pre><code>class SyncResult:
+    success: bool              # 同步是否成功
+    bandwidth_reduction: float  # 带宽降低百分比 (0.0-1.0)
+    latency_ms: float          # 同步延迟(毫秒)
+    consistency_verified: bool # 一致性是否验证
+    changes_applied: int       # 应用的变更数量
+    errors: list[ErrorObject]  # 错误列表</code></pre>
+                </div>
+            </div>
+            
+            <div class="method-card">
+                <div class="method-header">
+                    <h3><code>sync_workflow_state()</code></h3>
+                    <p>同步工作流步骤状态，支持依赖追踪</p>
+                </div>
+                <div class="method-body">
+                    <h4>Python 签名</h4>
+                    <pre><code>async def sync_workflow_state(
+    self,
+    workflow_id: str,
+    step_id: str,
+    step_state: dict,
+    dependencies: list[str]
+) -> SyncResult</code></pre>
+                    
+                    <h4>示例</h4>
+                    <pre><code># 步骤1：无依赖
+await sdk.sync_workflow_state(
+    "workflow_1", "step_a",
+    {"status": "completed"},
+    []
+)
+
+# 步骤2：依赖步骤1
+await sdk.sync_workflow_state(
+    "workflow_1", "step_b",
+    {"status": "completed"},
+    ["step_a"]  # 等待 step_a 完成
+)</code></pre>
+                </div>
+            </div>
+            
+            <div class="method-card">
+                <div class="method-header">
+                    <h3><code>recover_from_failure()</code></h3>
+                    <p>从快照恢复失败步骤的状态</p>
+                </div>
+                <div class="method-body">
+                    <h4>Python 签名</h4>
+                    <pre><code>async def recover_from_failure(
+    self,
+    step_id: str,
+    last_known_state: dict
+) -> dict</code></pre>
+                    
+                    <div class="info-box">
+                        <strong>说明：</strong> 如果存在可用的快照记录，返回快照状态；否则返回 last_known_state。
+                    </div>
+                </div>
+            </div>
+            
+            <div class="method-card">
+                <div class="method-header">
+                    <h3><code>receive_ack()</code></h3>
+                    <p>处理接收到的 ACK 消息</p>
+                </div>
+                <div class="method-body">
+                    <h4>Python 签名</h4>
+                    <pre><code>async def receive_ack(self, ack: dict | AckMessage) -> None</code></pre>
+                    
+                    <div class="warning-box">
+                        <strong>注意：</strong> ACK 类型必须遵循单调递增规则：RECEIVED → VERIFIED → APPLIED
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>最佳实践</h2>
+            
+            <h3>1. 状态设计</h3>
+            <div class="info-box">
+                <strong>推荐：</strong> 将状态组织为嵌套字典结构，便于增量检测<br>
+                <strong>不推荐：</strong> 使用数组索引或复杂嵌套结构
+            </div>
+            <pre><code># 推荐
+state = {
+    "user": {"name": "张三", "preferences": {"theme": "dark"}},
+    "data": {"items": [1, 2, 3]}
+}
+
+# 不推荐
+state = ["user", "zhangsan", ["theme", "dark"]]</code></pre>
+            
+            <h3>2. 版本控制</h3>
+            <pre><code># 每次状态变更都更新版本号
+state = {
+    "__version__": "v2",  # 必须包含版本
+    "data": new_value
+}</code></pre>
+            
+            <h3>3. 列表追加优化</h3>
+            <pre><code># Ghost Hub 自动检测列表追加模式
+# 仅追加元素时，使用 list_appends 节省带宽
+
+# 每次追加而非替换整个列表
+interactions.append(new_item)  # ✓ 推荐
+interactions = interactions + [new_item]  # ✗ 带宽浪费</code></pre>
+            
+            <h3>4. 并发同步</h3>
+            <pre><code>import asyncio
+
+async def concurrent_sync_demo():
+    sdk = GhostChannelSDK()
+    
+    # 同时同步多个目标
+    tasks = [
+        sdk.sync_memory_delta("source", f"target_{i}", old_state, new_state)
+        for i in range(10)
+    ]
+    
+    results = await asyncio.gather(*tasks)
+    print(f"成功: {sum(1 for r in results if r.success)}/{len(results)}")</code></pre>
+        </section>
+        
+        <section class="section">
+            <h2>审计日志</h2>
+            <pre><code># 获取审计记录
+audit_trail = sdk.get_audit_trail(limit=100)
+
+for entry in audit_trail:
+    print(f"{entry.transaction_id}: {entry.source_role} -> {entry.destination_role}")
+    print(f"  Type: {entry.message_type}")
+    print(f"  Hash: {entry.delta_hash[:16]}...")
+    print(f"  Integrity: {'✓' if entry.signature_verified else '✗'}")</code></pre>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p><a href="index.html">Ghost Hub 文档首页</a> | <a href="https://github.com/ghost-channel">GitHub</a></p>
+            <p style="margin-top: 8px; opacity: 0.7;">v1.0.0 | 2026-04-15</p>
+        </div>
+    </footer>
+</body>
+</html>

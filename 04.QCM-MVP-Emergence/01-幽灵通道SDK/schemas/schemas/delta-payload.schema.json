@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ghost-channel/schemas/delta-payload.json",
+  "title": "DeltaPayload",
+  "type": "object",
+  "required": [
+    "added",
+    "modified",
+    "removed",
+    "version_from",
+    "version_to",
+    "timestamp"
+  ],
+  "properties": {
+    "added": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "modified": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "removed": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "list_appends": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": true
+      }
+    },
+    "changed_fields": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {"type": "string"}
+      }
+    },
+    "version_from": {"type": "string"},
+    "version_to": {"type": "string"},
+    "timestamp": {"type": "number"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ghost Hub Protocol - API Reference">
+    <meta name="ai-task" content="api-reference">
+    <title>API参考 - Ghost Hub</title>
+    <style>
+        :root { --primary: #0066cc; --primary-dark: #0052a3; --secondary: #6c757d; --success: #28a745; --light: #f8f9fa; --dark: #212529; --border: #dee2e6; --code-bg: #f5f5f5; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: var(--dark); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+        header { background: var(--primary); color: white; padding: 24px 0; }
+        header h1 { font-size: 1.75rem; }
+        nav { background: var(--light); border-bottom: 1px solid var(--border); position: sticky; top: 0; }
+        nav ul { list-style: none; display: flex; flex-wrap: wrap; }
+        nav a { display: block; padding: 16px 20px; color: var(--dark); text-decoration: none; font-weight: 500; border-bottom: 3px solid transparent; }
+        nav a:hover, nav a.active { color: var(--primary); border-bottom-color: var(--primary); }
+        main { padding: 32px 0; }
+        .endpoint { border: 1px solid var(--border); border-radius: 8px; margin: 24px 0; overflow: hidden; }
+        .endpoint-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: var(--light); border-bottom: 1px solid var(--border); }
+        .method { padding: 4px 12px; border-radius: 4px; font-weight: 600; font-size: 0.85rem; color: white; }
+        .method-get { background: #28a745; }
+        .method-post { background: #0066cc; }
+        .method-put { background: #fd7e14; }
+        .method-delete { background: #dc3545; }
+        .method-patch { background: #6f42c1; }
+        .endpoint-path { font-family: monospace; font-size: 1rem; }
+        .endpoint-body { padding: 20px; }
+        .endpoint-body h4 { margin: 16px 0 8px; color: var(--primary-dark); }
+        pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 16px; overflow-x: auto; font-size: 0.85rem; margin: 12px 0; }
+        code { font-family: 'SFMono-Regular', Consolas, monospace; background: var(--code-bg); padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+        pre code { background: none; padding: 0; }
+        table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+        th, td { padding: 8px 12px; text-align: left; border: 1px solid var(--border); }
+        th { background: var(--light); font-weight: 600; }
+        .info-box { background: #e7f3ff; border-left: 4px solid var(--primary); padding: 12px 16px; margin: 12px 0; }
+        footer { background: var(--dark); color: white; padding: 24px 0; margin-top: 48px; text-align: center; }
+        footer a { color: rgba(255,255,255,0.8); }
+    </style>
+</head>
+<body>
+<header><div class="container"><h1>Ghost Hub API 参考</h1></div></header>
+<nav><div class="container"><ul>
+    <li><a href="index.html">首页</a></li>
+    <li><a href="install.html">安装</a></li>
+    <li><a href="quickstart.html">快速开始</a></li>
+    <li><a href="userguide.html">使用指南</a></li>
+    <li><a href="apiref.html" class="active">API参考</a></li>
+    <li><a href="scenarios.html">场景</a></li>
+    <li><a href="troubleshooting.html">故障排查</a></li>
+    <li><a href="glossary.html">术语表</a></li>
+</ul></div></nav>
+<main class="container">
+    <section class="endpoint">
+        <div class="endpoint-header">
+            <span class="method method-get">GET</span>
+            <span class="endpoint-path">/v1/channels</span>
+        </div>
+        <div class="endpoint-body">
+            <p>获取所有频道列表</p>
+            <h4>响应</h4>
+            <pre><code>{
+  "channels": [
+    { "id": "ch_abc123", "name": "general", "type": "broadcast", "created_at": "2026-04-15T10:00:00Z" }
+  ]
+}</code></pre>
+            <table>
+                <tr><th>字段</th><th>类型</th><th>描述</th></tr>
+                <tr><td>id</td><td>string</td><td>频道唯一标识符</td></tr>
+                <tr><td>name</td><td>string</td><td>频道名称</td></tr>
+                <tr><td>type</td><td>string</td><td>类型: broadcast | multicast | unicast</td></tr>
+            </table>
+        </div>
+    </section>
+
+    <section class="endpoint">
+        <div class="endpoint-header">
+            <span class="method method-post">POST</span>
+            <span class="endpoint-path">/v1/channels</span>
+        </div>
+        <div class="endpoint-body">
+            <p>创建新频道</p>
+            <h4>请求体</h4>
+            <pre><code>{
+  "name": "my-channel",
+  "type": "broadcast",
+  "retention": { "max_messages": 10000 }
+}</code></pre>
+            <h4>响应</h4>
+            <pre><code>{
+  "id": "ch_xyz789",
+  "name": "my-channel",
+  "type": "broadcast",
+  "created_at": "2026-04-15T10:00:00Z"
+}</code></pre>
+        </div>
+    </section>
+
+    <section class="endpoint">
+        <div class="endpoint-header">
+            <span class="method method-post">POST</span>
+            <span class="endpoint-path">/v1/messages</span>
+        </div>
+        <div class="endpoint-body">
+            <p>发布消息到频道</p>
+            <h4>请求体</h4>
+            <pre><code>{
+  "channel_id": "ch_abc123",
+  "payload": { "text": "Hello World" },
+  "compression": "zstd"
+}</code></pre>
+            <h4>响应</h4>
+            <pre><code>{
+  "id": "msg_123",
+  "channel_id": "ch_abc123",
+  "timestamp": "2026-04-15T10:00:00.000Z",
+  "size_bytes": 256
+}</code></pre>
+        </div>
+    </section>
+
+    <section class="endpoint">
+        <div class="endpoint-header">
+            <span class="method method-get">GET</span>
+            <span class="endpoint-path">/v1/messages</span>
+        </div>
+        <div class="endpoint-body">
+            <p>拉取频道消息（短轮询）</p>
+            <h4>查询参数</h4>
+            <table>
+                <tr><th>参数</th><th>类型</th><th>描述</th></tr>
+                <tr><td>channel_id</td><td>string</td><td>频道ID</td></tr>
+                <tr><td>cursor</td><td>string</td><td>游标分页</td></tr>
+                <tr><td>limit</td><td>integer</td><td>返回数量 (默认50)</td></tr>
+            </table>
+        </div>
+    </section>
+
+    <section class="endpoint">
+        <div class="endpoint-header">
+            <span class="method method-delete">DELETE</span>
+            <span class="endpoint-path">/v1/channels/{id}</span>
+        </div>
+        <div class="endpoint-body">
+            <p>删除频道及其所有消息</p>
+        </div>
+    </section>
+
+    <section class="endpoint">
+        <div class="endpoint-header">
+            <span class="method method-get">GET</span>
+            <span class="endpoint-path">/v1/stats</span>
+        </div>
+        <div class="endpoint-body">
+            <p>获取运行时统计信息</p>
+            <h4>响应</h4>
+            <pre><code>{
+  "channels": 150,
+  "messages_per_second": 12450,
+  "active_subscribers": 3200,
+  "cache_hit_rate": 0.998
+}</code></pre>
+        </div>
+    </section>
+
+    <div class="info-box">
+        <strong>SDK封装：</strong>推荐使用Python/TypeScript SDK，它们自动处理认证、重试、压缩等细节。<br>
+        查看 <a href="userguide.html">使用指南</a> 获取SDK示例。
+    </div>
+</main>
+<footer><div class="container">
+    <p>&copy; 2026 Ghost Hub Protocol | <a href="index.html">文档首页</a></p>
+</div></footer>
+</body>
+</html>

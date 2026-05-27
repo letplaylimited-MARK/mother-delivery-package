@@ -1,7 +1,7 @@
 # AI Project Context Map
 
 > 用途：给未来的通用 AI 大模型、开发者、审查者快速理解本文件夹。  
-> 当前盘点时间：2026-05-26。  
+> 当前盘点时间：2026-05-27。  
 > 路径约定：本文不绑定具体电脑路径；统一使用 `<母交付包根目录>` 表示本文件所在目录。
 
 ## 0. 总体判断
@@ -16,9 +16,14 @@ Q-SpecTrum 智脑平台
   └─ AI项目管理知识库：角色、技能、平台 DB、长期记忆、协作流程
 ```
 
-`<母交付包根目录>` 本身不是 git 仓库；`03.数据库管理_文件夹整理AI应用` 和 `05.超极智脑_Q-SpecTrum` 是独立 git 仓库，修改前需要分别查看各自 `git status --short`。
+`<母交付包根目录>` 采用 **Git Monorepo** 结构管理：
+- 根目录本身是一个 git 仓库（main 分支），负责母包级文档和 `00.超级提示词工程` 的版本控制。
+- `03.数据库管理_文件夹整理AI应用` 和 `05.超极智脑_Q-SpecTrum` 作为 git submodule 引入（03→knowledge-base-manager main, 05→Q-Spectrum master）。
+- 修改子模块内容后需在子模块目录内 commit+push，再在根目录更新 submodule 引用。
 
-根目录新增 `MISSION-MEMORY.md`，作为母交付包长期使命、身份边界、自然语言唤醒握手和记忆写入原则的第一入口。未来 AI 进入母包时，应先读 `MISSION-MEMORY.md`，再读本文。
+根目录还包含核心方法论技能文件 `qcm-universal-ai-system-v3.0.skill`（ZIP，45角色/9阶段/24维/5子代理），这是QCM质量评估框架的完整定义，AI在深度模式下按阶段激活角色子集。
+
+根目录新增 `MISSION-MEMORY.md`，作为母交付包长期使命、身份边界、自然语言唤醒握手和记忆写入原则的第一入口。根目录 `MOTHER-PACK-ACTIVATION-GUIDE.md` 是**唯一的权威AI启动协议**，所有其他文档中的启动步骤均为其扩展或简化版本。未来 AI 进入母包时，应先读 `MISSION-MEMORY.md`，再读本文件。
 
 ## 0.1 交付包边界
 
@@ -227,7 +232,9 @@ Q-SpecTrum
 
 ## 5. 建议的未来 AI 协作流程
 
-每次新模型进入根目录，先读 `MISSION-MEMORY.md`，再读本文件，再进入 `00.超级提示词工程`，最后按任务进入子系统。若任务涉及交付链路，必须先判断是在维护母交付包，还是在组装某个具体项目的用户交付包：
+> **权威启动协议**: 标准AI唤醒序列以根目录 `MOTHER-PACK-ACTIVATION-GUIDE.md` 的"AI 激活序列"章节为准。以下为扩展参考。
+
+每次新模型进入根目录，先读 `MOTHER-PACK-ACTIVATION-GUIDE.md` 完成标准唤醒激活，再按任务进入子系统。若任务涉及交付链路，必须先判断是在维护母交付包，还是在组装某个具体项目的用户交付包：
 
 1. 使命唤醒：读 `MISSION-MEMORY.md`，确认母包使命、模型原生边界、母包/子包边界和长期记忆写入原则。
 2. 全局理解：读 `AI_PROJECT_CONTEXT.md`。
@@ -262,7 +269,7 @@ Q-SpecTrum
 | `04/health_check.py` 与测试结果不一致 | 健康检查显示 needs attention，README 测试通过 | 复核 health_check 的 6 项条件是否过期 |
 | `05/run.py --status` GBK 输出失败 | Windows 默认终端无法打印 emoji | 设置 `$env:PYTHONUTF8='1'` 或移除状态输出 emoji |
 | `05` 依赖说明冲突 | requirements 与 pyproject 对依赖描述不一致 | 统一安装说明 |
-| 根目录不是 git 仓库 | 全局变更无法一键追踪 | 若要长期协作，考虑根目录初始化 git 或保留独立子仓库策略 |
+| 根目录 Git Monorepo | 03/05为submodule，修改后需分别在子模块内commit，再更新根目录引用 | 修改前先 `git status` 确认所在层级 |
 
 ## 7. 最短启动命令清单
 

@@ -62,6 +62,9 @@ awakening_check:
 
 ## ═══ AI 激活序列 ═══
 
+> **本章节是母交付包的唯一权威AI启动协议。**
+> 其他文档(MASTER-ORCHESTRATOR-PROMPT、MISSION-MEMORY-AWAKENING-PROTOCOL、SSP v3.0)中的启动步骤均为本序列的扩展或简化版本，发生冲突时以本序列为准。
+
 你是首次进入母交付包的AI。请严格按以下顺序执行。**未完成序列前, 不得处理任何用户任务。**
 
 ### 0. 模型原生边界
@@ -110,6 +113,9 @@ $missing = @()
 foreach ($s in $subsystems) {
     if (-not (Test-Path $s)) { $missing += $s }
 }
+# QCM方法论Skill文件确认
+$qcmSkill = "qcm-universal-ai-system-v3.0.skill"
+if (-not (Test-Path $qcmSkill)) { $missing += $qcmSkill }
 ```
 
 缺失列表 → 填入`awakening_check.missing_files`。

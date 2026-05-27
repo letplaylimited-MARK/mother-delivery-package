@@ -11,6 +11,7 @@
 | 知识库模板、MemoryOS、wiki、AGENTS 框架 | `02.通用知识库框架_Universal-KB` | `README.md`, `05-agents/AGENTS.md` | 模板审查 + `memoryos.py` compile/smoke；smoke 有测试记忆副作用 |
 | 文件整理、收件箱、搜索、向量、MCP、Flask | `03.数据库管理_文件夹整理AI应用` | `README.md`, `AGENTS.md`, `mcp_server.py` | `python verify_install.py`; `pytest tests/ -v` |
 | QCM、涌现、共鸣、公式、沙盘、飞轮、角色协同 | `04.QCM-MVP-Emergence` | `README.md`, `PROJECT_HANDOFF-QCM.md`, `22_FORMULA_SYSTEM.md` | `test_qcm_all.py` + 指定 pytest；`health_check.py` 需单独复核 |
+| QCM-45角色、9阶段方法论、24维评估、质量评估框架、跨系统深度协同 | 根目录 `qcm-universal-ai-system-v3.0.skill`（方法论文档）+ `04.QCM-MVP-Emergence`（运行代码） | QCM Skill内 `SKILL.md`、`config.yaml`、`references/` 目录 | config.yaml完整性验证（SSOT）；SKILL.md与config.yaml一致性检查 |
 | 提示词、启动、上下文、跨项目协同、AI 操作规程 | `00.超级提示词工程` | `README.md`, `01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md` | 文档审查 + 任务模拟 |
 | 引导秘书、秘书逻辑、导航、分流、入口、5D Radar、handoff、置信度路由 | `00.超级提示词工程/12-引导秘书逻辑` | `GUIDE-SECRETARY-PROTOCOL.md`, `GUIDE-SECRETARY-HANDOFF-TEMPLATE.md` | 交接包审查 + 路由模拟 |
 | 超级提示词、旧系统提示词、源提示词、提示词演化、使用经验、失败案例吸收 | `00.超级提示词工程/13-源提示词吸收与演化` | `SOURCE-PROMPT-INGESTION-PROTOCOL.md` | 场景还原 + 冲突审查 + 母包映射 |
@@ -52,6 +53,7 @@ Web/API/主平台功能 -> 05
 MCP 工具/知识库功能 -> 03
 SDK/协议功能 -> 01
 公式/算法/涌现逻辑 -> 04
+QCM-45方法论/24维评估/质量框架 -> 根目录 qcm-universal-ai-system-v3.0.skill + 04
 需求/规格/计划/审计治理 -> 00 + 05 + 03
 PRD/SPEC/验收标准锻造 -> 00/06 SPECFORGE-PRD-SPEC-GATE.md
 复杂架构/交付沙盘 -> 00 + 05 + 04

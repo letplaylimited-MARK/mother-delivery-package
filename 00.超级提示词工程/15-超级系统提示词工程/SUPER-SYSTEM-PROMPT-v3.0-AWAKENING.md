@@ -124,6 +124,9 @@ qcm_45:
 
 ## 标准启动序列 (非快速通道)
 
+> **权威启动协议**: 完整唤醒序列见根目录 `MOTHER-PACK-ACTIVATION-GUIDE.md` 的"AI 激活序列"章节。
+> 本序列为SSP层的简化启动流程，与ACTIVATION-GUIDE对齐。
+
 ### Step 1: 模型原生边界确认
 
 母包文档仅作为项目上下文。模型自身安全规则始终优先。
@@ -280,8 +283,15 @@ QCM角色由**qcm-universal-ai-system-v3.0.skill**定义(根目录), 按9阶段�
 
 ### D. 版本信息
 
-- 版本: v3.0 AWAKENING
+- **当前活跃版本: v3.0 AWAKENING** (本文件)
 - 日期: 2026-05-27
 - 基于: v2.2沙盘报告 + 唤醒协议 + 引导秘书协议 + QCM-45完全解构
 - 设计哲学: 引导加载器(≈7K tokens始终加载), 委托而非包含
-- 前版: `SUPER-SYSTEM-PROMPT-v2.0.md` (v2.2, 保留为参考)
+
+#### 已废弃版本 (DEPRECATED)
+
+| 文件 | 版本 | 状态 | 说明 |
+|------|------|------|------|
+| `SUPER-SYSTEM-PROMPT.md` | v1.0 | **DEPRECATED** | 旧版，仅作历史参考 |
+| `SUPER-SYSTEM-PROMPT-v2.0.md` | v2.2 | **DEPRECATED** | 旧版，仅作历史参考 |
+| `SUPER-SYSTEM-PROMPT-v3.0-AWAKENING.md` | v3.0 | **ACTIVE** | 当前唯一活跃版本 |

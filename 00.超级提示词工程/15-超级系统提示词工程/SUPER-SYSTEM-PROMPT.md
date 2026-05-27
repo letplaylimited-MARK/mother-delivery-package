@@ -1,3 +1,7 @@
+> ⚠️ **DEPRECATED — 本文件已过时，请勿作为系统提示词使用。**
+> 当前活跃版本: `SUPER-SYSTEM-PROMPT-v3.0-AWAKENING.md`（引导加载器架构，3级激活，L10元治理）
+> 本文件保留仅为历史参考和源提示词吸收(`00/13`)使用。
+
 # SUPER SYSTEM PROMPT v1.0
 ## 母交付包 · AI Mother Delivery System
 

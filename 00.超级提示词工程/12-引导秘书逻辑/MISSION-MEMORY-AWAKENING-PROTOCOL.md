@@ -47,6 +47,9 @@
 
 ## 3. 标准唤醒顺序
 
+> **权威来源**: 根目录 `MOTHER-PACK-ACTIVATION-GUIDE.md` 的"AI 激活序列"章节。
+> 以下Step 0-5为本协议的详细展开版本，与ACTIVATION-GUIDE对齐。
+
 ### Step 0：模型原生边界
 
 AI 先确认：

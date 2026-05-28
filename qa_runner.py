@@ -162,11 +162,15 @@ def load_yaml(path: Path) -> dict | None:
 def run_cmd(cmd: str, cwd: Path | None = None, timeout: int = 120) -> dict:
     """Execute a command and return structured result."""
     start = time.time()
+    # Ensure shell environment is available (ComSpec, SystemRoot, PATH)
+    env = os.environ.copy()
+    env.setdefault("PYTHONUTF8", "1")
+    env.setdefault("PYTHONIOENCODING", "utf-8")
     try:
         result = subprocess.run(
             cmd, shell=True, cwd=cwd or MOTHER_ROOT,
             capture_output=True, text=True, timeout=timeout,
-            encoding="utf-8", errors="replace"
+            encoding="utf-8", errors="replace", env=env
         )
         elapsed = time.time() - start
         return {
@@ -319,7 +323,7 @@ def _try_auto_execute(vid: str, cmd_str: str, cwd: Path | None) -> dict | None:
         result = _auto_run_script(cmd_str, cwd)
     elif vid == "VAL-05-STATUS":
         # Python status check with UTF-8 (Windows-compatible)
-        cmd = f'set "PYTHONUTF8=1" && python run.py --status'
+        cmd = 'python run.py --status'
         r = run_cmd(cmd, cwd=cwd)
         status = "PASS" if r["exit_code"] == 0 else "FAIL"
         result = {
@@ -329,7 +333,7 @@ def _try_auto_execute(vid: str, cmd_str: str, cwd: Path | None) -> dict | None:
         }
     elif vid == "VAL-03-TESTS":
         # pytest with UTF-8 (Windows-compatible)
-        env_cmd = f'set "PYTHONUTF8=1" && set "PYTHONIOENCODING=utf-8" && pytest tests/ -q'
+        env_cmd = 'pytest tests/ -q'
         r = run_cmd(env_cmd, cwd=cwd, timeout=180)
         status = "PASS" if r["exit_code"] == 0 else "FAIL"
         result = {
@@ -417,11 +421,12 @@ def _auto_markdown_fences() -> dict:
     md_root = MOTHER_ROOT
     issues = []
     checked = 0
+    fence_re = re.compile(r"^```", re.MULTILINE)
     for md_file in md_root.rglob("*.md"):
         if ".git" in str(md_file) or "node_modules" in str(md_file):
             continue
         content = md_file.read_text(encoding="utf-8", errors="replace")
-        opens = content.count("```")
+        opens = len(fence_re.findall(content))
         if opens % 2 != 0:
             issues.append(f"{md_file.relative_to(md_root)}: {opens} fences")
         checked += 1

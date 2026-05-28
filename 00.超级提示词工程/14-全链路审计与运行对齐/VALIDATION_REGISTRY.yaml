@@ -128,3 +128,10 @@ validations:
     expected: "Final project delivery passes only after project context, handoff, changelog, traceability, validation report, and project-specific verification entry exist."
     current_status: "needs_review"
     evidence: "Current strict run intentionally failed with 10 failures: 5 missing project artifacts, 4 remaining system-template placeholders including 03-结构体系, and 1 missing project-specific verification entry."
+
+  - id: "VAL-00-CROSS-DOC-CONSISTENCY"
+    scope: "P00_SUPER_PROMPT"
+    command: "python qa_runner.py consistency"
+    expected: "10/10 checks PASS (WARN allowed for C5 routing matrix coverage)."
+    current_status: "verified_current"
+    evidence: "qa_runner.py consistency runs validate_consistency.py (10 dimensions). Baseline: 9 PASS, 1 WARN (C5: USER_PACK not in routing matrix)."

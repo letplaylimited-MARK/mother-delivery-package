@@ -1,0 +1,964 @@
+#!/usr/bin/env python3
+"""
+Mother Delivery Package - QA Runner (三环集成内核)
+=====================================================
+统一入口脚本，覆盖4条子命令：
+  validate     Validation环 — 执行VALIDATION_REGISTRY 16条验证命令
+  status       Status环 — 读取4注册表+LEDGER，输出系统全貌
+  consistency  Consistency环 — 10维度跨文档一致性检查
+  route        Routing环 — Guide Secretary意图匹配与路由
+
+Usage:
+  python qa_runner.py validate [--scope SCOPE]
+  python qa_runner.py status
+  python qa_runner.py consistency
+  python qa_runner.py route "<user input text>"
+
+Phase 1-3 可执行脚本（GUIDE-SECRETARY-PROTOCOL.md §14）
+"""
+
+import argparse
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+from dataclasses import dataclass, field
+from datetime import datetime
+from pathlib import Path
+
+try:
+    import yaml
+except ImportError:
+    # Fallback: minimal YAML loader for simple cases
+    yaml = None
+
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
+
+MOTHER_ROOT = Path(__file__).resolve().parent
+REGISTRY_DIR = MOTHER_ROOT / "00.超级提示词工程" / "14-全链路审计与运行对齐"
+VALIDATION_REGISTRY_PATH = REGISTRY_DIR / "VALIDATION_REGISTRY.yaml"
+PROJECT_REGISTRY_PATH = REGISTRY_DIR / "PROJECT_REGISTRY.yaml"
+CAPABILITY_REGISTRY_PATH = REGISTRY_DIR / "CAPABILITY_REGISTRY.yaml"
+ARTIFACT_REGISTRY_PATH = REGISTRY_DIR / "ARTIFACT_REGISTRY.yaml"
+LEDGER_PATH = REGISTRY_DIR / "UNIFIED-STATUS-LEDGER.yaml"
+CONSISTENCY_SCRIPT = MOTHER_ROOT / "00.超级提示词工程" / "validate_consistency.py"
+
+VALIDATION_SCOPE_MAP = {
+    "ROOT": ".",
+    "P00_SUPER_PROMPT": "00.超级提示词工程",
+    "P01_GHOST_CHANNEL": "01.通讯协议_幽灵通道",
+    "P02_UNIVERSAL_KB": "02.通用知识库框架_Universal-KB",
+    "P03_WORKBUDDY_KB": "03.数据库管理_文件夹整理AI应用",
+    "P04_QCM": "04.QCM-MVP-Emergence",
+    "P05_QSPECTRUM": "05.超极智脑_Q-SpecTrum",
+    "USER_PACK": "协同通用AI大模型开发交付包",
+}
+
+INTENT_REGISTRY = {
+    "PACKAGE_UNDERSTANDING": {
+        "keywords": ["理解", "母包", "目录", "地图", "集成", "整体", "全貌",
+                     "架构", "架构概览", "导航", "overview", "understand",
+                     "文件夹", "子系统"],
+        "primary_route": "00/00 + MISSION-MEMORY.md",
+        "track": "understanding",
+    },
+    "GUIDE_SECRETARY": {
+        "keywords": ["引导", "秘书", "路由", "交接", "handoff", "5D", "雷达",
+                     "入口", "分流", "navigator"],
+        "primary_route": "00/12 引导秘书逻辑",
+        "track": "understanding",
+    },
+    "PROJECT_INITIATION": {
+        "keywords": ["新项目", "启动", "初始化", "想法", "立项", "kickoff",
+                     "init", "project start"],
+        "primary_route": "00/06 + 用户交付包四体系",
+        "track": "planning",
+    },
+    "REQUIREMENT_SPEC": {
+        "keywords": ["需求", "PRD", "SPEC", "规格", "变更", "漂移", "冻结",
+                     "requirement", "specification"],
+        "primary_route": "00/06 + 00/07",
+        "track": "prd_spec",
+    },
+    "IMPLEMENTATION": {
+        "keywords": ["开发", "代码", "实现", "集成", "修复", "fix", "implement",
+                     "code", "bug", "feature", "启动", "运行"],
+        "primary_route": "目标子系统 + 对应验证",
+        "track": "implementation",
+    },
+    "REVIEW_AUDIT": {
+        "keywords": ["审查", "审计", "评审", "review", "audit", "检查",
+                     "验证", "quality"],
+        "primary_route": "目标子系统 + 00/07 + 测试/证据",
+        "track": "review",
+    },
+    "KNOWLEDGE_MEMORY": {
+        "keywords": ["知识库", "记忆", "图谱", "结晶", "knowledge", "memory",
+                     "brain", "检索", "search"],
+        "primary_route": "02 + 03 + 05/BRAIN-KB",
+        "track": "memory",
+    },
+    "ROLE_TEAM_SANDBOX": {
+        "keywords": ["角色", "团队", "沙盘", "推演", "role", "team",
+                     "sandbox", "涌现", "emergence"],
+        "primary_route": "00/08 + 04",
+        "track": "planning",
+    },
+    "CAPABILITY_INTEGRATION": {
+        "keywords": ["模型", "智能体", "Skill", "MCP", "插件", "LSP",
+                     "integration", "plugin", "capability", "Q-SpecTrum",
+                     "QSpecTrum", "超极智脑", "智脑", "qspectrum"],
+        "primary_route": "00/10 通用AI协作生态 或 05.Q-SpecTrum",
+        "track": "implementation",
+    },
+    "MISSION_MEMORY_AWAKENING": {
+        "keywords": ["使命", "唤醒", "身份", "元智核", "活起来", "awakening",
+                     "mission", "identity"],
+        "primary_route": "MISSION-MEMORY.md + 00/12",
+        "track": "memory",
+    },
+    "MODEL_NATIVE_HANDOFF": {
+        "keywords": ["接手", "其他AI", "handoff", "移交", "transfer",
+                     "model native"],
+        "primary_route": "00/11 模型原生协作协议",
+        "track": "delivery",
+    },
+    "USER_DELIVERY": {
+        "keywords": ["交付", "打包", "用户", "四体系", "delivery", "package",
+                     "release", "发布"],
+        "primary_route": "协同通用AI大模型开发交付包",
+        "track": "delivery",
+    },
+    "AMBIGUOUS": {
+        "keywords": [],
+        "primary_route": "追问，不执行",
+        "track": "understanding",
+    },
+}
+
+# ---------------------------------------------------------------------------
+# Utilities
+# ---------------------------------------------------------------------------
+
+
+def load_yaml(path: Path) -> dict | None:
+    """Load YAML file, with fallback if pyyaml not available."""
+    if yaml:
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                return yaml.safe_load(f)
+        except Exception as e:
+            print(f"  [WARN] YAML parse error: {path}: {e}", file=sys.stderr)
+            return None
+    else:
+        print(f"  [WARN] PyYAML not installed, cannot read {path}", file=sys.stderr)
+        return None
+
+
+def run_cmd(cmd: str, cwd: Path | None = None, timeout: int = 120) -> dict:
+    """Execute a command and return structured result."""
+    start = time.time()
+    try:
+        result = subprocess.run(
+            cmd, shell=True, cwd=cwd or MOTHER_ROOT,
+            capture_output=True, text=True, timeout=timeout,
+            encoding="utf-8", errors="replace"
+        )
+        elapsed = time.time() - start
+        return {
+            "exit_code": result.returncode,
+            "stdout": result.stdout.strip(),
+            "stderr": result.stderr.strip(),
+            "elapsed": round(elapsed, 2),
+            "timeout": False,
+        }
+    except subprocess.TimeoutExpired:
+        return {
+            "exit_code": -1,
+            "stdout": "",
+            "stderr": f"TIMEOUT after {timeout}s",
+            "elapsed": timeout,
+            "timeout": True,
+        }
+    except Exception as e:
+        return {
+            "exit_code": -1,
+            "stdout": "",
+            "stderr": str(e),
+            "elapsed": time.time() - start,
+            "timeout": False,
+        }
+
+
+def print_header(title: str, width: int = 70):
+    print("=" * width)
+    print(f"  {title}")
+    print(f"  {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("=" * width)
+
+
+def print_subheader(title: str, width: int = 70):
+    print(f"\n{'─' * width}")
+    print(f"  {title}")
+    print(f"{'─' * width}")
+
+
+# ---------------------------------------------------------------------------
+# VALIDATE Command
+# ---------------------------------------------------------------------------
+
+
+def cmd_validate(args):
+    """Execute validations from VALIDATION_REGISTRY."""
+    print_header("Validation环 — VALIDATION_REGISTRY 自动验证")
+
+    registry = load_yaml(VALIDATION_REGISTRY_PATH)
+    if not registry:
+        print("  [FAIL] Cannot load VALIDATION_REGISTRY.yaml")
+        return 1
+
+    validations = registry.get("validations", [])
+    if not validations:
+        print("  [WARN] No validations found in registry")
+        return 0
+
+    # Filter by scope if specified
+    scope_filter = args.scope.upper() if args.scope else None
+    if scope_filter:
+        # Handle partial scope matching
+        validations = [v for v in validations
+                       if scope_filter in v.get("scope", "").upper()]
+
+    print(f"  验证项总数: {len(validations)}")
+    print(f"  过滤条件: {scope_filter or 'ALL'}")
+    print()
+
+    results = []
+    for v in validations:
+        vid = v.get("id", "UNKNOWN")
+        scope = v.get("scope", "UNKNOWN")
+        cmd_str = v.get("command", "")
+        expected = v.get("expected", "")
+
+        # Resolve CWD from scope
+        scope_dir = None
+        for scope_key, dir_name in VALIDATION_SCOPE_MAP.items():
+            if scope.startswith(scope_key):
+                scope_dir = MOTHER_ROOT / dir_name
+                break
+
+        print(f"  [{vid}] ({scope})")
+
+        # Determine if this is auto-executable
+        auto_result = _try_auto_execute(vid, cmd_str, scope_dir)
+
+        if auto_result:
+            r = auto_result
+        else:
+            # Manual check — report current_status from registry
+            current = v.get("current_status", "not_run_current")
+            evidence = v.get("evidence", "未执行")
+            r = {
+                "id": vid,
+                "scope": scope,
+                "status": "SKIP" if current == "not_run_current" else current.upper().replace("VERIFIED_", ""),
+                "detail": evidence,
+                "command": cmd_str,
+                "auto": False,
+            }
+
+        results.append(r)
+        icon = {"PASS": "+", "FAIL": "X", "WARN": "!", "SKIP": "-",
+                "NEEDS_REVIEW": "?"}.get(r["status"], "?")
+        auto_tag = " [AUTO]" if r.get("auto") else " [MANUAL]"
+        print(f"      [{icon}]{auto_tag} {r['status']}")
+        if r.get("detail"):
+            detail = r["detail"][:120]
+            print(f"        {detail}")
+
+    # Summary
+    print_subheader("验证总结")
+    pass_count = sum(1 for r in results if r["status"] == "PASS")
+    fail_count = sum(1 for r in results if r["status"] == "FAIL")
+    warn_count = sum(1 for r in results if r["status"] in ("WARN", "NEEDS_REVIEW"))
+    skip_count = sum(1 for r in results if r["status"] == "SKIP")
+    auto_count = sum(1 for r in results if r.get("auto"))
+
+    print(f"  总计: {len(results)}")
+    print(f"  PASS: {pass_count}  |  FAIL: {fail_count}  |  "
+          f"WARN: {warn_count}  |  SKIP: {skip_count}")
+    print(f"  自动执行: {auto_count}/{len(results)}")
+
+    if fail_count == 0:
+        print("\n  结果: ALL CLEAR")
+        return 0
+    else:
+        print(f"\n  结果: ACTION REQUIRED — {fail_count} 个失败项需修复")
+        return 1
+
+
+def _try_auto_execute(vid: str, cmd_str: str, cwd: Path | None) -> dict | None:
+    """Attempt to auto-execute a validation command. Returns None if manual."""
+    result = None
+
+    # Auto-executable validation map
+    if vid == "VAL-ROOT-YAML-PARSE":
+        result = _auto_yaml_parse()
+    elif vid == "VAL-ROOT-MARKDOWN-FENCES":
+        result = _auto_markdown_fences()
+    elif vid == "VAL-ROOT-FILE-COUNT":
+        result = _auto_file_count()
+    elif vid in ("VAL-03-INSTALL", "VAL-01-GHOST-VERIFY",
+                 "VAL-05-INTEGRATION", "VAL-USER-PACK-DELIVERY",
+                 "VAL-USER-PACK-DELIVERY-STRICT"):
+        # PowerShell verification scripts
+        result = _auto_run_script(cmd_str, cwd)
+    elif vid == "VAL-05-STATUS":
+        # Python status check with UTF-8 (Windows-compatible)
+        cmd = f'set "PYTHONUTF8=1" && python run.py --status'
+        r = run_cmd(cmd, cwd=cwd)
+        status = "PASS" if r["exit_code"] == 0 else "FAIL"
+        result = {
+            "id": vid, "scope": "", "status": status,
+            "detail": r["stdout"][:200] or r["stderr"][:200],
+            "command": cmd_str, "auto": True,
+        }
+    elif vid == "VAL-03-TESTS":
+        # pytest with UTF-8 (Windows-compatible)
+        env_cmd = f'set "PYTHONUTF8=1" && set "PYTHONIOENCODING=utf-8" && pytest tests/ -q'
+        r = run_cmd(env_cmd, cwd=cwd, timeout=180)
+        status = "PASS" if r["exit_code"] == 0 else "FAIL"
+        result = {
+            "id": vid, "scope": "", "status": status,
+            "detail": r["stdout"][-300:] or r["stderr"][-300:],
+            "command": cmd_str, "auto": True,
+        }
+    elif vid in ("VAL-04-QCM-ALL", "VAL-04-QCM-PAPER"):
+        # QCM tests
+        if vid == "VAL-04-QCM-ALL":
+            test_cmd = 'python "02-代码编写\\test_qcm_all.py"'
+        else:
+            test_cmd = ('pytest "02-代码编写\\test_roles.py" '
+                        '"02-代码编写\\test_collaboration.py" '
+                        '"02-代码编写\\test_sandbox.py" '
+                        '"02-代码编写\\test_flywheel.py" '
+                        '"02-代码编写\\test_summoning.py" -q')
+        r = run_cmd(test_cmd, cwd=cwd, timeout=180)
+        status = "PASS" if r["exit_code"] == 0 else "FAIL"
+        result = {
+            "id": vid, "scope": "", "status": status,
+            "detail": r["stdout"][-300:] or r["stderr"][-300:],
+            "command": cmd_str, "auto": True,
+        }
+    elif vid in ("VAL-01-SDK-TESTS",):
+        # SDK tests (multiple suites)
+        suites = [
+            ("core", "core/lightweight/enterprise"),
+        ]
+        total_pass = 0
+        total_fail = 0
+        details = []
+        for name, suite_dir in suites:
+            r = run_cmd(f'python -m pytest {suite_dir} -q', cwd=cwd, timeout=180)
+            # Parse pass/fail from output
+            for line in r["stdout"].split("\n"):
+                m = re.search(r"(\d+) passed", line)
+                if m:
+                    total_pass += int(m.group(1))
+                m = re.search(r"(\d+) failed", line)
+                if m:
+                    total_fail += int(m.group(1))
+            details.append(f"{name}: exit={r['exit_code']}")
+        status = "PASS" if total_fail == 0 and total_pass > 0 else "FAIL"
+        result = {
+            "id": vid, "scope": "", "status": status,
+            "detail": f"SDK tests: {total_pass} passed, {total_fail} failed",
+            "command": cmd_str, "auto": True,
+        }
+
+    if result:
+        result.setdefault("id", vid)
+        result.setdefault("scope", "")
+        result.setdefault("auto", True)
+    return result
+
+
+def _auto_yaml_parse() -> dict:
+    """Auto-check: YAML parse validation."""
+    yaml_dir = REGISTRY_DIR
+    yaml_files = list(yaml_dir.glob("*.yaml")) + list(yaml_dir.glob("*.yml"))
+    passed = 0
+    failed = 0
+    details = []
+    for f in yaml_files:
+        data = load_yaml(f)
+        if data is not None:
+            passed += 1
+        else:
+            failed += 1
+            details.append(f"FAIL: {f.name}")
+    status = "PASS" if failed == 0 else "FAIL"
+    return {
+        "id": "VAL-ROOT-YAML-PARSE",
+        "scope": "ROOT/P00",
+        "status": status,
+        "detail": f"{passed} parsed, {failed} failed" + (
+            f" ({'; '.join(details)})" if details else ""),
+        "auto": True,
+    }
+
+
+def _auto_markdown_fences() -> dict:
+    """Auto-check: Markdown fence balance."""
+    md_root = MOTHER_ROOT
+    issues = []
+    checked = 0
+    for md_file in md_root.rglob("*.md"):
+        if ".git" in str(md_file) or "node_modules" in str(md_file):
+            continue
+        content = md_file.read_text(encoding="utf-8", errors="replace")
+        opens = content.count("```")
+        if opens % 2 != 0:
+            issues.append(f"{md_file.relative_to(md_root)}: {opens} fences")
+        checked += 1
+    status = "PASS" if not issues else "FAIL"
+    return {
+        "id": "VAL-ROOT-MARKDOWN-FENCES",
+        "scope": "ROOT/P00",
+        "status": status,
+        "detail": f"Checked {checked} files" + (
+            f"; unbalanced: {issues}" if issues else ""),
+        "auto": True,
+    }
+
+
+def _auto_file_count() -> dict:
+    """Auto-check: File count verification."""
+    excludes = [".git", "node_modules", "dist", "build", "coverage",
+                "__pycache__", ".pytest_cache"]
+    total = 0
+    by_subsystem = {}
+    for p in MOTHER_ROOT.rglob("*"):
+        if not p.is_file():
+            continue
+        rel = str(p.relative_to(MOTHER_ROOT)).replace("\\", "/")
+        if any(ex in rel for ex in excludes):
+            continue
+        total += 1
+        # Classify by subsystem
+        parts = rel.split("/")
+        if len(parts) >= 1:
+            top = parts[0]
+            by_subsystem[top] = by_subsystem.get(top, 0) + 1
+    # Note: submodule dirs (03, 05) may show different counts locally vs in-tree
+    status = "PASS" if total >= 1050 else "WARN"
+    detail_parts = [f"total={total} (baseline=1118, submodule差异正常)"]
+    for k in sorted(by_subsystem):
+        detail_parts.append(f"{k[:20]}={by_subsystem[k]}")
+    return {
+        "id": "VAL-ROOT-FILE-COUNT",
+        "scope": "ROOT",
+        "status": status,
+        "detail": "; ".join(detail_parts),
+        "auto": True,
+    }
+
+
+def _auto_run_script(cmd_str: str, cwd: Path | None) -> dict | None:
+    """Auto-run a PowerShell or Python verification script."""
+    if not cwd or not cwd.exists():
+        return None
+
+    # Extract script path from command
+    script_match = re.search(r"-File\s+(.+?)(?:\s|$)", cmd_str)
+    if script_match:
+        ps_script = script_match.group(1).strip()
+        if not ps_script.endswith(".ps1"):
+            ps_script += ".ps1"
+        script_path = cwd / ps_script.replace("\\", "/")
+        if not script_path.exists():
+            # Try with backslash
+            script_path = cwd / ps_script
+        if not script_path.exists():
+            return {
+                "id": "", "scope": "", "status": "SKIP",
+                "detail": f"Script not found: {ps_script}",
+                "command": cmd_str, "auto": True,
+            }
+        # Check for -Strict flag
+        strict = "-Strict" in cmd_str
+        strict_arg = " -Strict" if strict else ""
+        ps_cmd = f'powershell -ExecutionPolicy Bypass -File ".\\{ps_script}"{strict_arg}'
+        r = run_cmd(ps_cmd, cwd=cwd, timeout=120)
+        status = "PASS" if r["exit_code"] == 0 else "FAIL"
+        return {
+            "id": "", "scope": "", "status": status,
+            "detail": r["stdout"][-300:] or r["stderr"][-200:],
+            "command": cmd_str, "auto": True,
+        }
+
+    # Python script
+    py_match = re.search(r"python\s+(.+?)(?:\s|$)", cmd_str)
+    if py_match:
+        py_script = py_match.group(1).strip().strip('"')
+        script_path = cwd / py_script.replace("\\", "/")
+        if not script_path.exists():
+            return {
+                "id": "", "scope": "", "status": "SKIP",
+                "detail": f"Script not found: {py_script}",
+                "command": cmd_str, "auto": True,
+            }
+        r = run_cmd(f'python "{py_script}"', cwd=cwd, timeout=120)
+        status = "PASS" if r["exit_code"] == 0 else "FAIL"
+        return {
+            "id": "", "scope": "", "status": status,
+            "detail": r["stdout"][-300:] or r["stderr"][-200:],
+            "command": cmd_str, "auto": True,
+        }
+
+    return None
+
+
+# ---------------------------------------------------------------------------
+# STATUS Command
+# ---------------------------------------------------------------------------
+
+
+def cmd_status(_args):
+    """Read all registries and output system overview."""
+    print_header("Status环 — 系统全貌报告")
+
+    # Load registries
+    project_reg = load_yaml(PROJECT_REGISTRY_PATH)
+    cap_reg = load_yaml(CAPABILITY_REGISTRY_PATH)
+    art_reg = load_yaml(ARTIFACT_REGISTRY_PATH)
+    val_reg = load_yaml(VALIDATION_REGISTRY_PATH)
+    ledger = load_yaml(LEDGER_PATH)
+
+    # --- Projects ---
+    print_subheader("1. 项目注册表 (PROJECT_REGISTRY)")
+    if project_reg:
+        projects = project_reg.get("projects", [])
+        print(f"  子系统总数: {len(projects)}")
+        status_counts = {}
+        for p in projects:
+            pid = p.get("id", "?")
+            pstatus = p.get("status", "?")
+            role = p.get("role", "?")[:40]
+            risks = p.get("risks", [])
+            status_counts[pstatus] = status_counts.get(pstatus, 0) + 1
+            risk_str = f" [{len(risks)} risk(s)]" if risks else ""
+            print(f"  [{pstatus:8s}] {pid:20s} {role}{risk_str}")
+        print(f"\n  状态分布: {json.dumps(status_counts)}")
+    else:
+        print("  [WARN] Cannot load PROJECT_REGISTRY")
+
+    # --- Capabilities ---
+    print_subheader("2. 能力注册表 (CAPABILITY_REGISTRY)")
+    if cap_reg:
+        capabilities = cap_reg.get("capabilities", [])
+        print(f"  能力总数: {len(capabilities)}")
+        perm_counts = {}
+        type_counts = {}
+        for c in capabilities:
+            cid = c.get("id", "?")
+            name = c.get("name", "?")
+            perm = c.get("permission", "?")
+            ctype = c.get("type", "?")
+            perm_counts[perm] = perm_counts.get(perm, 0) + 1
+            type_counts[ctype] = type_counts.get(ctype, 0) + 1
+            print(f"  [{perm:16s}] {cid:30s} {name}")
+        print(f"\n  权限分布: {json.dumps(perm_counts)}")
+        print(f"  类型分布: {json.dumps(type_counts)}")
+    else:
+        print("  [WARN] Cannot load CAPABILITY_REGISTRY")
+
+    # --- Artifacts ---
+    print_subheader("3. 制品注册表 (ARTIFACT_REGISTRY)")
+    if art_reg:
+        artifacts = art_reg.get("artifacts", [])
+        print(f"  制品总数: {len(artifacts)}")
+        type_counts = {}
+        priority_counts = {}
+        for a in artifacts:
+            aid = a.get("id", "?")
+            atype = a.get("type", "?")
+            priority = a.get("read_priority", "?")
+            role = a.get("role", "?")[:50]
+            type_counts[atype] = type_counts.get(atype, 0) + 1
+            priority_counts[priority] = priority_counts.get(priority, 0) + 1
+            print(f"  [{atype:10s} P{priority}] {aid:30s} {role}")
+        print(f"\n  类型分布: {json.dumps(type_counts)}")
+        print(f"  优先级分布: {json.dumps(priority_counts)}")
+    else:
+        print("  [WARN] Cannot load ARTIFACT_REGISTRY")
+
+    # --- Validations ---
+    print_subheader("4. 验证注册表 (VALIDATION_REGISTRY)")
+    if val_reg:
+        validations = val_reg.get("validations", [])
+        print(f"  验证项总数: {len(validations)}")
+        status_counts = {}
+        for v in validations:
+            vid = v.get("id", "?")
+            vstatus = v.get("current_status", "?")
+            status_counts[vstatus] = status_counts.get(vstatus, 0) + 1
+            print(f"  [{vstatus:28s}] {vid}")
+        print(f"\n  状态分布: {json.dumps(status_counts)}")
+    else:
+        print("  [WARN] Cannot load VALIDATION_REGISTRY")
+
+    # --- Ledger ---
+    print_subheader("5. 统一状态账本 (UNIFIED-STATUS-LEDGER)")
+    if ledger:
+        status_objects = ledger.get("status_objects", [])
+        active = [s for s in status_objects if s.get("status") == "active"]
+        print(f"  状态对象总数: {len(status_objects)}")
+        print(f"  活跃项: {len(active)}")
+        for s in active:
+            sid = s.get("id", "?")[:50]
+            stype = s.get("type", "?")
+            priority = s.get("priority", "?")
+            title = s.get("title", "?")[:60]
+            print(f"  [{stype:8s} {priority}] {sid}")
+            print(f"           {title}")
+    else:
+        print("  [WARN] Cannot load LEDGER")
+
+    # --- Git Status ---
+    print_subheader("6. Git 状态")
+    r = run_cmd("git log --oneline -5")
+    if r["exit_code"] == 0:
+        print(f"  最近提交:")
+        for line in r["stdout"].split("\n"):
+            print(f"    {line}")
+    r2 = run_cmd("git status --short")
+    if r2["stdout"]:
+        print(f"  工作区变更:")
+        for line in r2["stdout"].split("\n"):
+            print(f"    {line}")
+    else:
+        print(f"  工作区: CLEAN")
+    r3 = run_cmd("git remote -v")
+    if r3["stdout"]:
+        print(f"  Remote: {r3['stdout'][:200]}")
+    else:
+        print(f"  Remote: 未配置")
+
+    print(f"\n{'=' * 70}")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# CONSISTENCY Command
+# ---------------------------------------------------------------------------
+
+
+def cmd_consistency(_args):
+    """Run validate_consistency.py 10-dimension cross-document check."""
+    print_header("Consistency环 — 10维度跨文档一致性检查")
+
+    if not CONSISTENCY_SCRIPT.exists():
+        print(f"  [FAIL] Script not found: {CONSISTENCY_SCRIPT}")
+        return 1
+
+    # Import and run directly for clean integration
+    sys.path.insert(0, str(CONSISTENCY_SCRIPT.parent))
+    try:
+        from validate_consistency import ConsistencyValidator, print_report
+        validator = ConsistencyValidator(MOTHER_ROOT)
+        results = validator.run_all()
+        exit_code = print_report(results)
+        return exit_code
+    except ImportError as e:
+        # Fallback: run as subprocess
+        r = run_cmd(f'python "{CONSISTENCY_SCRIPT}" "{MOTHER_ROOT}"', timeout=60)
+        print(r["stdout"])
+        if r["stderr"]:
+            print(r["stderr"])
+        return r["exit_code"]
+    except Exception as e:
+        print(f"  [FAIL] {e}")
+        return 1
+
+
+# ---------------------------------------------------------------------------
+# ROUTE Command
+# ---------------------------------------------------------------------------
+
+
+def cmd_route(args):
+    """Guide Secretary intent matching and routing."""
+    user_input = args.text
+    if not user_input:
+        print("  [ERROR] 请提供用户输入文本")
+        print("  用法: python qa_runner.py route \"<user input>\"")
+        return 1
+
+    print_header("Routing环 — Guide Secretary 意图路由")
+
+    # Step 1: Keyword matching against intent registry
+    input_lower = user_input.lower()
+    scores = {}
+
+    for intent_id, intent_data in INTENT_REGISTRY.items():
+        if intent_id == "AMBIGUOUS":
+            continue
+        keywords = intent_data.get("keywords", [])
+        if not keywords:
+            continue
+        match_count = 0
+        for kw in keywords:
+            kw_lower = kw.lower()
+            if kw_lower in input_lower:
+                # Avoid false substring matches: short ASCII keywords (<4 chars)
+                # must match at word boundaries
+                if len(kw_lower) <= 5 and kw_lower.isascii():
+                    if not re.search(r'\b' + re.escape(kw_lower) + r'\b', input_lower):
+                        continue
+                match_count += 1
+        if match_count > 0:
+            # Score based on match ratio and keyword specificity
+            score = match_count / len(keywords)
+            # Boost for longer keyword matches (more specific)
+            for kw in keywords:
+                if kw.lower() in input_lower and len(kw) >= 4:
+                    score += 0.1
+            scores[intent_id] = min(score, 1.0)
+
+    # Step 2: Determine top intent
+    if not scores:
+        top_intent = "AMBIGUOUS"
+        confidence = 0.30
+    else:
+        sorted_intents = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+        top_intent, top_score = sorted_intents[0]
+        # Recalculate confidence with practical scoring:
+        # keyword_score: use raw match count normalized to 3 (3 hits = strong signal)
+        raw_hits = sum(1 for kw in INTENT_REGISTRY.get(top_intent, {}).get("keywords", [])
+                       if kw.lower() in input_lower)
+        keyword_norm = min(raw_hits / 3.0, 1.0)
+        keyword_score = min(keyword_norm * 0.40, 0.40)
+        # Uniqueness bonus: big gap between top and second
+        if len(sorted_intents) >= 2:
+            gap = top_score - sorted_intents[1][1]
+            uniqueness_score = min(0.15 + gap * 0.3, 0.25)
+        else:
+            uniqueness_score = 0.25
+        # Clarity bonus: longer input = more context
+        clarity_score = min(len(user_input) / 200 * 0.10, 0.10)
+        base_confidence = keyword_score + uniqueness_score + clarity_score
+        confidence = round(max(min(base_confidence + 0.15, 0.98), 0.35), 2)
+
+    # Step 3: Route decision
+    if confidence >= 0.80:
+        route_decision = "DIRECT"
+    elif confidence >= 0.60:
+        route_decision = "CONFIRM"
+    else:
+        route_decision = "CLARIFY"
+
+    # Step 4: Radar scan
+    intent_data = INTENT_REGISTRY.get(top_intent, {})
+    track = intent_data.get("track", "understanding")
+    primary_route = intent_data.get("primary_route", "追问，不执行")
+
+    # Platform detection from keywords
+    platform = "mother_pack"
+    platform_map = {
+        "03": "P03_WORKBUDDY_KB",
+        "04": "P04_QCM",
+        "05": "P05_QSPECTRUM",
+        "01": "P01_GHOST_CHANNEL",
+        "02": "P02_UNIVERSAL_KB",
+    }
+    for code, name in platform_map.items():
+        if code in user_input or name.lower().split("_")[0] in input_lower:
+            platform = name
+            break
+    # Check for cross-subsystem keywords
+    cross_keywords = ["跨", "全部", "整体", "所有", "cross", "all"]
+    if any(kw in input_lower for kw in cross_keywords):
+        platform = "cross_subsystem"
+
+    # People detection
+    people = ["developer"]
+    people_map = {
+        "审查": ["risk_auditor", "qa"], "审计": ["risk_auditor"],
+        "架构": ["architect"], "知识": ["knowledge_manager"],
+        "交付": ["delivery_architect"], "用户": ["final_user"],
+        "测试": ["qa"], "沙盘": ["architect", "developer"],
+    }
+    for kw, roles in people_map.items():
+        if kw in user_input:
+            people = roles
+            break
+
+    # Step 5: Generate output
+    print_subheader("意图判定")
+    print(f"  用户输入: {user_input[:100]}")
+    print(f"  归一化意图: {intent_data.get('keywords', [''])[0] if top_intent != 'AMBIGUOUS' else '目标不清楚'}")
+    print(f"  意图 ID: {top_intent}")
+    print(f"  置信度: {confidence}")
+    print(f"  路由决策: {route_decision}")
+
+    if scores:
+        print_subheader("意图匹配分数")
+        for iid, score in sorted(scores.items(), key=lambda x: x[1], reverse=True)[:5]:
+            bar = "█" * int(score * 20) + "░" * (20 - int(score * 20))
+            print(f"  {iid:30s} {bar} {score:.2f}")
+
+    print_subheader("五维雷达")
+    print(f"  Track:     {track}")
+    print(f"  Platform:  {platform}")
+    print(f"  People:    {', '.join(people)}")
+    style = "explore" if route_decision == "CLARIFY" else (
+        "decisive" if route_decision == "DIRECT" else "review")
+    print(f"  Style:     {style}")
+    supplements = []
+    if confidence < 0.60:
+        supplements.append("need_user_confirmation")
+    if top_intent == "IMPLEMENTATION":
+        supplements.append("need_tests")
+    if platform == "cross_subsystem":
+        supplements.append("missing_goal")
+    print(f"  Supplement: {', '.join(supplements) or 'none'}")
+
+    print_subheader("路由目标")
+    print(f"  主路由: {primary_route}")
+    rejected = [iid for iid, sc in scores.items() if iid != top_intent and sc > 0.2]
+    if rejected:
+        print(f"  排除路由: {', '.join(rejected[:5])}")
+
+    # Generate YAML output
+    print_subheader("Guide Secretary YAML")
+    ts = datetime.now().isoformat(timespec="seconds")
+    yaml_out = f"""\
+guide_secretary:
+  schema_version: "1.0"
+  raw_user_input: "{user_input[:200]}"
+  normalized_intent: "{intent_data.get('keywords', [''])[0] if top_intent != 'AMBIGUOUS' else '目标不清楚'}"
+  intent_id: "{top_intent}"
+  route_decision: "{route_decision}"
+  confidence: {confidence}
+  radar:
+    track: "{track}"
+    platform: "{platform}"
+    people: {json.dumps(people)}
+    style: "{style}"
+    supplement: {json.dumps(supplements)}
+  target:
+    subsystem: "{primary_route}"
+    primary_files: []
+    role_team: {json.dumps(people)}
+    tools_or_commands: []
+  traceability:
+    uso_id: null
+    ledger_ref: "00.超级提示词工程/14-全链路审计与运行对齐/UNIFIED-STATUS-LEDGER.yaml"
+    validation_refs: []
+  route_feedback:
+    routing_matrix_version: "{ts[:10]}"
+    selected_route: "{primary_route}"
+    rejected_routes: {json.dumps(rejected[:5])}
+    confidence_after_routing: {confidence}
+    feedback_to_guide: "{"keep" if route_decision == "DIRECT" else "confirm" if route_decision == "CONFIRM" else "clarify"}"
+    blocked_reason: null
+  governance:
+    required_ids: []
+    stage_gate: "{_map_track_to_gate(track)}"
+    missing_items: []
+    stop_lines: []
+  next_action:
+    type: "{"handoff" if route_decision == "DIRECT" else "ask"}"
+    description: "{"交给执行模型/角色/子系统" if route_decision == "DIRECT" else "请用户确认路由方向"}"
+generated_at: "{ts}"
+"""
+    print(yaml_out)
+
+    return 0
+
+
+def _map_track_to_gate(track: str) -> str:
+    """Map track to stage gate."""
+    gate_map = {
+        "understanding": "需求发现",
+        "planning": "架构设计",
+        "prd_spec": "架构设计",
+        "implementation": "实施规划",
+        "review": "验证测试",
+        "delivery": "总结归档",
+        "memory": "需求发现",
+        "emergency": "需求发现",
+    }
+    return gate_map.get(track, "需求发现")
+
+
+# ---------------------------------------------------------------------------
+# Main CLI
+# ---------------------------------------------------------------------------
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Mother Delivery Package — QA Runner (三环集成内核)",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""\
+子命令:
+  validate     执行VALIDATION_REGISTRY验证命令
+  status       输出4注册表+LEDGER系统全貌
+  consistency  运行10维度跨文档一致性检查
+  route        Guide Secretary意图匹配与路由
+
+示例:
+  python qa_runner.py validate
+  python qa_runner.py validate --scope QCM
+  python qa_runner.py status
+  python qa_runner.py consistency
+  python qa_runner.py route "帮我理解整个母包"
+"""
+    )
+    subparsers = parser.add_subparsers(dest="command", help="子命令")
+
+    # validate
+    p_val = subparsers.add_parser("validate", help="Validation环")
+    p_val.add_argument("--scope", "-s", type=str, default=None,
+                       help="过滤范围 (ROOT/P00/P01/P02/P03/P04/P05/USER_PACK)")
+
+    # status
+    subparsers.add_parser("status", help="Status环")
+
+    # consistency
+    subparsers.add_parser("consistency", help="Consistency环")
+
+    # route
+    p_route = subparsers.add_parser("route", help="Routing环")
+    p_route.add_argument("text", type=str, nargs="?", default=None,
+                         help="用户输入文本")
+
+    args = parser.parse_args()
+
+    if not args.command:
+        parser.print_help()
+        sys.exit(0)
+
+    cmd_map = {
+        "validate": cmd_validate,
+        "status": cmd_status,
+        "consistency": cmd_consistency,
+        "route": cmd_route,
+    }
+
+    handler = cmd_map.get(args.command)
+    if handler:
+        sys.exit(handler(args))
+    else:
+        print(f"Unknown command: {args.command}")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

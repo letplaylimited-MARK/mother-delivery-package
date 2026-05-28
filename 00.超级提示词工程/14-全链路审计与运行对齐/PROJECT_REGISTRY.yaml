@@ -26,7 +26,7 @@ projects:
       - "path_hardcode_scan"
       - "markdown_fence_check"
     risks:
-      - "Root is not a git repository; global changes must be tracked through file inventory or separate VCS policy."
+      - "No GitHub remote configured; local-only repo with 5 commits on main branch (49e364f)."
 
   - id: "P00_SUPER_PROMPT"
     path: "00.超级提示词工程"

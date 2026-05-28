@@ -47,6 +47,9 @@ ARTIFACT_REGISTRY_PATH = REGISTRY_DIR / "ARTIFACT_REGISTRY.yaml"
 LEDGER_PATH = REGISTRY_DIR / "UNIFIED-STATUS-LEDGER.yaml"
 CONSISTENCY_SCRIPT = MOTHER_ROOT / "00.超级提示词工程" / "validate_consistency.py"
 
+# Venv Python — used by run_cmd for all validate commands
+VENV_PYTHON = Path(r"C:\Users\wanwa\.workbuddy\binaries\python\envs\default\Scripts\python.exe")
+
 VALIDATION_SCOPE_MAP = {
     "ROOT": ".",
     "P00_SUPER_PROMPT": "00.超级提示词工程",
@@ -159,6 +162,16 @@ def load_yaml(path: Path) -> dict | None:
         return None
 
 
+def _reroute_python(cmd: str) -> str:
+    """Replace bare 'python' invocations with venv Python path."""
+    venv_str = str(VENV_PYTHON).replace("\\", "\\\\")
+    # Match 'python ...' or 'python -m ...' but not inside quoted paths
+    cmd = re.sub(
+        r'\bpython(?=\s)', venv_str, cmd, count=1
+    )
+    return cmd
+
+
 def run_cmd(cmd: str, cwd: Path | None = None, timeout: int = 120) -> dict:
     """Execute a command and return structured result."""
     start = time.time()
@@ -166,6 +179,9 @@ def run_cmd(cmd: str, cwd: Path | None = None, timeout: int = 120) -> dict:
     env = os.environ.copy()
     env.setdefault("PYTHONUTF8", "1")
     env.setdefault("PYTHONIOENCODING", "utf-8")
+    # Auto-route 'python' to venv Python if available
+    if VENV_PYTHON.exists():
+        cmd = _reroute_python(cmd)
     try:
         result = subprocess.run(
             cmd, shell=True, cwd=cwd or MOTHER_ROOT,
@@ -196,6 +212,32 @@ def run_cmd(cmd: str, cwd: Path | None = None, timeout: int = 120) -> dict:
             "elapsed": time.time() - start,
             "timeout": False,
         }
+
+
+def run_cmd_raw(cmd: str, cwd: Path | None = None, timeout: int = 120,
+                 env: dict | None = None) -> dict:
+    """Execute a command with custom env (no venv rerouting)."""
+    start = time.time()
+    try:
+        result = subprocess.run(
+            cmd, shell=True, cwd=cwd or MOTHER_ROOT,
+            capture_output=True, text=True, timeout=timeout,
+            encoding="utf-8", errors="replace", env=env or os.environ.copy()
+        )
+        elapsed = time.time() - start
+        return {
+            "exit_code": result.returncode,
+            "stdout": result.stdout.strip(),
+            "stderr": result.stderr.strip(),
+            "elapsed": round(elapsed, 2),
+            "timeout": False,
+        }
+    except subprocess.TimeoutExpired:
+        return {"exit_code": -1, "stdout": "", "stderr": f"TIMEOUT after {timeout}s",
+                "elapsed": timeout, "timeout": True}
+    except Exception as e:
+        return {"exit_code": -1, "stdout": "", "stderr": str(e),
+                "elapsed": time.time() - start, "timeout": False}
 
 
 def print_header(title: str, width: int = 70):
@@ -359,15 +401,38 @@ def _try_auto_execute(vid: str, cmd_str: str, cwd: Path | None) -> dict | None:
             "command": cmd_str, "auto": True,
         }
     elif vid in ("VAL-01-SDK-TESTS",):
-        # SDK tests (multiple suites)
+        # SDK tests (3 actual suites under 01 subsystem)
+        # Each suite has its own PYTHONPATH requirement
+        sdk_base = MOTHER_ROOT / "01.通讯协议_幽灵通道" / "03_SDK与集成"
         suites = [
-            ("core", "core/lightweight/enterprise"),
+            ("开源社区SDK", "02_开源社区包/ghost_channel开源库",
+             "tests/unit", "src"),  # src-layout: PYTHONPATH=src
+            ("GhostHub企业SDK", "03_企业SDK包/GhostHub_SDK",
+             "tests", ""),  # flat layout: PYTHONPATH=parent
+            ("轻量SDK工程包", "04_SDK工程包/ghost-channel-sdk/python",
+             "tests", ""),  # tests under python/
         ]
         total_pass = 0
         total_fail = 0
+        total_error = 0
         details = []
-        for name, suite_dir in suites:
-            r = run_cmd(f'python -m pytest {suite_dir} -q', cwd=cwd, timeout=180)
+        for name, pkg_dir, test_rel, extra_path in suites:
+            pkg_path = sdk_base / pkg_dir
+            test_path = pkg_path / test_rel
+            if not test_path.exists():
+                details.append(f"{name}: NOT FOUND")
+                continue
+            # Build PYTHONPATH: append extra_path (e.g. src/) if specified
+            cmd_env = os.environ.copy()
+            cmd_env.setdefault("PYTHONUTF8", "1")
+            cmd_env.setdefault("PYTHONIOENCODING", "utf-8")
+            pythonpath_parts = [str(pkg_path)]
+            if extra_path:
+                pythonpath_parts.insert(0, str(pkg_path / extra_path))
+            cmd_env["PYTHONPATH"] = ";".join(pythonpath_parts)
+            py = str(VENV_PYTHON) if VENV_PYTHON.exists() else "python"
+            r = run_cmd_raw(f'{py} -m pytest "{test_rel}" -q',
+                           cwd=pkg_path, timeout=180, env=cmd_env)
             # Parse pass/fail from output
             for line in r["stdout"].split("\n"):
                 m = re.search(r"(\d+) passed", line)
@@ -376,11 +441,22 @@ def _try_auto_execute(vid: str, cmd_str: str, cwd: Path | None) -> dict | None:
                 m = re.search(r"(\d+) failed", line)
                 if m:
                     total_fail += int(m.group(1))
-            details.append(f"{name}: exit={r['exit_code']}")
-        status = "PASS" if total_fail == 0 and total_pass > 0 else "FAIL"
+                m = re.search(r"(\d+) error", line)
+                if m:
+                    total_error += int(m.group(1))
+            if r["exit_code"] != 0 and not r["stdout"]:
+                total_error += 1
+            detail_msg = r["stdout"][-80:].strip()
+            details.append(f"{name}: exit={r['exit_code']} {detail_msg}")
+        if total_fail > 0 or (total_pass == 0 and total_error > 0):
+            status = "FAIL"
+        elif total_pass > 0:
+            status = "PASS"
+        else:
+            status = "FAIL"
         result = {
             "id": vid, "scope": "", "status": status,
-            "detail": f"SDK tests: {total_pass} passed, {total_fail} failed",
+            "detail": f"SDK: {total_pass} passed, {total_fail} failed, {total_error} errors; " + "; ".join(details[:3]),
             "command": cmd_str, "auto": True,
         }
 
@@ -497,7 +573,10 @@ def _auto_run_script(cmd_str: str, cwd: Path | None) -> dict | None:
         # Check for -Strict flag
         strict = "-Strict" in cmd_str
         strict_arg = " -Strict" if strict else ""
-        ps_cmd = f'powershell -ExecutionPolicy Bypass -File ".\\{ps_script}"{strict_arg}'
+        # PowerShell with UTF-8 output encoding (fixes Windows GBK garbling)
+        ps_cmd = (f'powershell -ExecutionPolicy Bypass '
+                  f'-Command "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; '
+                  f'& \\".\\{ps_script}\\"{strict_arg}"')
         r = run_cmd(ps_cmd, cwd=cwd, timeout=120)
         status = "PASS" if r["exit_code"] == 0 else "FAIL"
         return {

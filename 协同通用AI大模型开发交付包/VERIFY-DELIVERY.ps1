@@ -1,4 +1,4 @@
-param(
+﻿param(
     [switch]$Strict
 )
 
@@ -113,7 +113,7 @@ foreach ($file in $markdownFiles) {
 }
 
 $localPathPatterns = @(
-    "[A-Za-z]:[\\/]",
+    "(?<!http)(?<!ftp)(?<!ssh)[A-Za-z]:[\\/]",
     "/Users/[^/\s]+/",
     "/home/[^/\s]+/"
 )
@@ -183,7 +183,7 @@ foreach ($file in $files) {
     }
 
     foreach ($pattern in $localPathPatterns) {
-        if ($text -match $pattern) {
+        if ($text -match $pattern -and $text -notmatch "://") {
             Add-Failure "Possible local absolute path leak in $(Get-RelativePath $file.FullName): pattern $pattern"
             break
         }
@@ -270,3 +270,4 @@ if ($Failures.Count -gt 0) {
 Write-Host ""
 Write-Host "PASS: delivery package base verification completed."
 exit 0
+

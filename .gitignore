@@ -91,6 +91,9 @@ _HANDOFF/
 test_size_*.txt
 test_write_*.txt
 
+# Backup files
+*.bak
+
 # Debug output files
 api_err.txt
 api_out.txt

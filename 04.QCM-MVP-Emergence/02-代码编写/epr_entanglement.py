@@ -9,6 +9,9 @@ from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
 import numpy as np
 
+from qcm.config import load_config
+_cfg = load_config()
+
 
 @dataclass
 class EntanglementState:
@@ -26,15 +29,15 @@ class EPREntanglement:
     """
 
     # 论文校准参数
-    LAMBDA = 0.1            # 对易子权重
-    ENTANGLEMENT_THRESHOLD = 0.5  # 纠缠判定阈值
-    STRONG_ENTANGLEMENT = 0.7     # 强纠缠阈值
+    LAMBDA = _cfg.get_param("epr_entanglement", "LAMBDA")  # was: 0.1            # 对易子权重
+    ENTANGLEMENT_THRESHOLD = _cfg.get_param("epr_entanglement", "ENTANGLEMENT_THRESHOLD")  # was: 0.5  # 纠缠判定阈值
+    STRONG_ENTANGLEMENT = _cfg.get_param("epr_entanglement", "STRONG_ENTANGLEMENT")  # was: 0.7     # 强纠缠阈值
 
     # 论文统计
-    MEAN_ENTANGLEMENT = 0.64
-    STD_ENTANGLEMENT = 0.12
-    MIN_ENTANGLEMENT = 0.28
-    MAX_ENTANGLEMENT = 0.89
+    MEAN_ENTANGLEMENT = _cfg.get_param("epr_entanglement", "MEAN_ENTANGLEMENT")
+    STD_ENTANGLEMENT = _cfg.get_param("epr_entanglement", "STD_ENTANGLEMENT")
+    MIN_ENTANGLEMENT = _cfg.get_param("epr_entanglement", "MIN_ENTANGLEMENT")
+    MAX_ENTANGLEMENT = _cfg.get_param("epr_entanglement", "MAX_ENTANGLEMENT")
 
     def __init__(self, dimension: int = 4):
         self.dimension = dimension

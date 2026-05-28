@@ -8,6 +8,8 @@ import math
 import random
 from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
+from qcm.config import load_config
+_cfg = load_config()
 
 
 @dataclass
@@ -28,8 +30,8 @@ class SemanticMatcher:
     # 论文校准参数
     MIN_SCORE = 0.0
     MAX_SCORE = 1.0
-    TOP_K = 10
-    PRECISION_TARGET = 0.941  # 论文: 94.1%
+    TOP_K = _cfg.get_param("semantic_matcher", "TOP_K")
+    PRECISION_TARGET = _cfg.get_param("semantic_matcher", "PRECISION_TARGET")  # was: 0.941  # 论文: 94.1%
 
     def __init__(self, use_real_embeddings: bool = False):
         """
@@ -45,6 +47,7 @@ class SemanticMatcher:
         if use_real_embeddings:
             try:
                 from embedding import Embedder
+
                 self.embedder = Embedder()
                 print("[OK] Semantic Matcher using real embeddings")
             except ImportError:

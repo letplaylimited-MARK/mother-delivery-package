@@ -24,6 +24,62 @@ DEFAULT_CONFIG = {
     "logging": {"level": "INFO", "file": None, "dir": "logs"},
     "output": {"dir": "output", "format": "json"},
     "audit": True,
+
+    # ── Phase 2: paper_params — all 14 formula module constants ──
+    "paper_params": {
+        "calculator": {
+            "W_K": 0.35, "W_C": 0.40, "W_I": 0.25, "W_E": 0.00,
+            "F_0": 5,
+            "TRANSITION_START": 10, "TRANSITION_END": 30,
+        },
+        "detector": {
+            "THRESHOLD_NONE": 0.3, "THRESHOLD_PRELIMINARY": 0.5,
+            "THRESHOLD_MODERATE": 0.65, "THRESHOLD_DEEP": 0.85,
+        },
+        "epr_entanglement": {
+            "LAMBDA": 0.1, "ENTANGLEMENT_THRESHOLD": 0.5,
+            "STRONG_ENTANGLEMENT": 0.7,
+            "MEAN_ENTANGLEMENT": 0.64, "STD_ENTANGLEMENT": 0.12,
+            "MIN_ENTANGLEMENT": 0.28, "MAX_ENTANGLEMENT": 0.89,
+        },
+        "dynamic_weight": {
+            "LAMBDA": 0.1, "R_TARGET": 0.85, "K_DECAY": 0.05,
+            "INITIAL_WEIGHTS": {"w_k": 0.25, "w_c": 0.35, "w_i": 0.20, "w_e": 0.20},
+        },
+        "deadlock_detector": {
+            "ALPHA_1": 0.30, "ALPHA_2": 0.35, "ALPHA_3": 0.20, "ALPHA_4": 0.15,
+            "ETA_N": 2, "ETA_G": 0.5, "ETA_S": 0.01, "DEADLOCK_THRESHOLD": 2.0,
+        },
+        "flywheel": {
+            "ALPHA_INIT": 0.1, "BETA": 0.9, "GAMMA": 0.1, "KAPPA": 0.5,
+            "LAMBDA_VAR": 0.1, "ETA": 0.1, "T_REF": 10, "ZETA": 0.7, "RHO_MAX": 0.73,
+        },
+        "knowledge_growth": {
+            "ETA": 0.1, "TARGET_GROWTH": 4.22, "SYNERGY_BETA": 0.91,
+        },
+        "sandbox": {
+            "LAMBDA": 0.5, "MU": 0.2, "SRS_TARGET": 0.9, "SIGMA": 0.1,
+        },
+        "neural_router": {
+            "NEURAL_THRESHOLD": 0.7, "SYMBOLIC_THRESHOLD": 0.3,
+            "TIME_CRITICAL_THRESHOLD": 0.8,
+        },
+        "pareto_cost": {
+            "ALPHA": 0.4, "BETA": 0.3, "GAMMA": 0.3,
+        },
+        "semantic_matcher": {
+            "TOP_K": 10, "PRECISION_TARGET": 0.941,
+        },
+        "predictive_sync": {
+            "TARGET_ACCURACY": 0.86, "WINDOW_SIZE": 10,
+        },
+        "mahalanobis_distance": {
+            "MARGIN_POS": 0.5, "MARGIN_NEG": 2.0,
+        },
+        "rcs_hybrid": {
+            "ALPHA": 0.4, "BETA": 0.35, "GAMMA": 0.25, "DECISION_THRESHOLD": 0.7,
+        },
+    },
 }
 
 
@@ -105,6 +161,10 @@ class QCMConfig:
     @property
     def max_rounds(self):
         return self._data['max_rounds']
+
+    def get_param(self, module: str, key: str, default=None):
+        """Get a paper_param value: config.get_param('calculator', 'W_K') → 0.35"""
+        return self._data.get('paper_params', {}).get(module, {}).get(key, default)
 
     def to_dict(self):
         return copy.deepcopy(self._data)

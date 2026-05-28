@@ -10,6 +10,9 @@ from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
 from enum import Enum
 
+from qcm.config import load_config
+_cfg = load_config()
+
 
 class ReasoningType(Enum):
     """推理类型"""
@@ -44,9 +47,9 @@ class NeuralRouter:
     """
 
     # 论文校准参数
-    NEURAL_THRESHOLD = 0.7      # 高复杂度用Neural
-    SYMBOLIC_THRESHOLD = 0.3     # 低复杂度用Symbolic
-    TIME_CRITICAL_THRESHOLD = 0.8  # 时间紧急用Hybrid
+    NEURAL_THRESHOLD = _cfg.get_param("neural_router", "NEURAL_THRESHOLD")  # was: 0.7      # 高复杂度用Neural
+    SYMBOLIC_THRESHOLD = _cfg.get_param("neural_router", "SYMBOLIC_THRESHOLD")  # was: 0.3     # 低复杂度用Symbolic
+    TIME_CRITICAL_THRESHOLD = _cfg.get_param("neural_router", "TIME_CRITICAL_THRESHOLD")  # was: 0.8  # 时间紧急用Hybrid
 
     # 各推理类型的预期准确率和延迟
     REASONING_STATS = {

@@ -9,6 +9,9 @@ import numpy as np
 from typing import List, Dict, Optional
 from dataclasses import dataclass
 
+from qcm.config import load_config
+_cfg = load_config()
+
 
 @dataclass
 class DeadlockFactors:
@@ -26,18 +29,18 @@ class DeadlockDetector:
     """
 
     # 论文校准参数
-    ALPHA_1 = 0.30  # 共识数量权重
-    ALPHA_2 = 0.35  # 分歧分数权重
-    ALPHA_3 = 0.20  # 斜率权重
-    ALPHA_4 = 0.15  # 循环权重
+    ALPHA_1 = _cfg.get_param("deadlock_detector", "ALPHA_1")  # was: 0.30  # 共识数量权重
+    ALPHA_2 = _cfg.get_param("deadlock_detector", "ALPHA_2")  # was: 0.35  # 分歧分数权重
+    ALPHA_3 = _cfg.get_param("deadlock_detector", "ALPHA_3")  # was: 0.20  # 斜率权重
+    ALPHA_4 = _cfg.get_param("deadlock_detector", "ALPHA_4")  # was: 0.15  # 循环权重
 
     # 阈值参数
-    ETA_N = 2        # 共识数量阈值（低于此值可能死锁）
-    ETA_G = 0.5      # 分歧分数阈值（高于此值可能死锁）
-    ETA_S = 0.01    # 斜率阈值（接近0表示停滞）
+    ETA_N = _cfg.get_param("deadlock_detector", "ETA_N")  # was: 2        # 共识数量阈值（低于此值可能死锁）
+    ETA_G = _cfg.get_param("deadlock_detector", "ETA_G")  # was: 0.5      # 分歧分数阈值（高于此值可能死锁）
+    ETA_S = _cfg.get_param("deadlock_detector", "ETA_S")  # was: 0.01    # 斜率阈值（接近0表示停滞）
 
     # 死锁判定阈值（加权和 >= 2 触发预警）
-    DEADLOCK_THRESHOLD = 2.0
+    DEADLOCK_THRESHOLD = _cfg.get_param("deadlock_detector", "DEADLOCK_THRESHOLD")
 
     def __init__(self, window_size: int = 5):
         self.window_size = window_size
@@ -236,7 +239,7 @@ class SoftDeadlockDetector:
     WEIGHT_SLOPE = 0.2
     WEIGHT_LOOP = 0.15
 
-    ETA_S = 0.01  # 斜率阈值
+    ETA_S = _cfg.get_param("deadlock_detector", "ETA_S")  # was: 0.01  # 斜率阈值
 
     # 判定阈值
     MODERATE_WARNING = 0.4

@@ -9,6 +9,8 @@ Flywheel Optimizer - 飞轮优化系统
 import math
 from typing import Dict, List, Optional
 from dataclasses import dataclass
+from qcm.config import load_config
+_cfg = load_config()
 
 
 @dataclass
@@ -27,19 +29,19 @@ class FlywheelOptimizer:
     """
 
     # 论文校准参数
-    ALPHA_INIT = 0.1     # 初始学习率
-    BETA = 0.9          # 衰减系数
-    GAMMA = 0.1          # 扰动系数
-    KAPPA = 0.5         # 学习率衰减指数
-    LAMBDA_VAR = 0.1     # 方差衰减系数
+    ALPHA_INIT = _cfg.get_param("flywheel", "ALPHA_INIT")  # was: 0.1     # 初始学习率
+    BETA = _cfg.get_param("flywheel", "BETA")  # was: 0.9          # 衰减系数
+    GAMMA = _cfg.get_param("flywheel", "GAMMA")  # was: 0.1          # 扰动系数
+    KAPPA = _cfg.get_param("flywheel", "KAPPA")  # was: 0.5         # 学习率衰减指数
+    LAMBDA_VAR = _cfg.get_param("flywheel", "LAMBDA_VAR")  # was: 0.1     # 方差衰减系数
 
     # 能量参数
-    ETA = 0.1           # 加速度增长系数
-    T_REF = 10          # 参考时间步
-    ZETA = 0.7          # 增长指数
+    ETA = _cfg.get_param("flywheel", "ETA")  # was: 0.1           # 加速度增长系数
+    T_REF = _cfg.get_param("flywheel", "T_REF")  # was: 10          # 参考时间步
+    ZETA = _cfg.get_param("flywheel", "ZETA")  # was: 0.7          # 增长指数
 
     # Lyapunov稳定性阈值
-    RHO_MAX = 0.73
+    RHO_MAX = _cfg.get_param("flywheel", "RHO_MAX")
 
     def __init__(self):
         self.t = 0                      # 时间步
@@ -234,6 +236,7 @@ class FlywheelOptimizer:
 
         # 简单估算
         import math as m
+
         steps_needed = int(m.log(target_loss / current_loss) / m.log(1 - rho)) + 1
 
         return min(steps_needed, 1000)

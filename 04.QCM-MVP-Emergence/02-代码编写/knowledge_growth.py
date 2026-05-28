@@ -9,6 +9,9 @@ import math
 from typing import Dict, List, Optional
 from dataclasses import dataclass
 
+from qcm.config import load_config
+_cfg = load_config()
+
 
 @dataclass
 class KnowledgeState:
@@ -33,17 +36,17 @@ class KnowledgeGrowthEngine:
     """
 
     # 论文校准参数
-    ETA = 0.1        # 知识增长系数
+    ETA = _cfg.get_param("knowledge_growth", "ETA")  # was: 0.1        # 知识增长系数
 
     # 目标增长率
-    TARGET_GROWTH = 4.22  # 论文: 4.22×增长
+    TARGET_GROWTH = _cfg.get_param("knowledge_growth", "TARGET_GROWTH")  # was: 4.22  # 论文: 4.22×增长
 
     def __init__(self, initial_knowledge: float = 1.0):
         self.K_0 = initial_knowledge
         self.knowledge = initial_knowledge
         self.experience = 0.0
         self.synergy = 0.0
-        self.synergy_beta = 0.91  # EMA decay (lower = faster adaptation)
+        self.synergy_beta = _cfg.get_param("knowledge_growth", "SYNERGY_BETA")  # EMA decay
 
         self.t = 0
         self.knowledge_history = [initial_knowledge]

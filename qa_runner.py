@@ -384,15 +384,16 @@ def _try_auto_execute(vid: str, cmd_str: str, cwd: Path | None) -> dict | None:
             "command": cmd_str, "auto": True,
         }
     elif vid in ("VAL-04-QCM-ALL", "VAL-04-QCM-PAPER"):
-        # QCM tests
+        # QCM tests (need PYTHONPATH=cwd for qcm namespace package)
+        qcm_py = str(cwd).replace("\\", "/") if cwd else "."
         if vid == "VAL-04-QCM-ALL":
-            test_cmd = 'python "02-代码编写\\test_qcm_all.py"'
+            test_cmd = f'set PYTHONPATH={qcm_py}&& python "02-代码编写/test_qcm_all.py"'
         else:
-            test_cmd = ('pytest "02-代码编写\\test_roles.py" '
-                        '"02-代码编写\\test_collaboration.py" '
-                        '"02-代码编写\\test_sandbox.py" '
-                        '"02-代码编写\\test_flywheel.py" '
-                        '"02-代码编写\\test_summoning.py" -q')
+            test_cmd = (f'set PYTHONPATH={qcm_py}&& pytest "02-代码编写/test_roles.py" '
+                        f'"02-代码编写/test_collaboration.py" '
+                        f'"02-代码编写/test_sandbox.py" '
+                        f'"02-代码编写/test_flywheel.py" '
+                        f'"02-代码编写/test_summoning.py" -q')
         r = run_cmd(test_cmd, cwd=cwd, timeout=180)
         status = "PASS" if r["exit_code"] == 0 else "FAIL"
         result = {

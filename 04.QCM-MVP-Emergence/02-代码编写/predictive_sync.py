@@ -9,6 +9,9 @@ from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
 from collections import defaultdict
 
+from qcm.config import load_config
+_cfg = load_config()
+
 
 @dataclass
 class SyncCandidate:
@@ -33,8 +36,8 @@ class PredictiveSync:
     """
 
     # 论文校准参数
-    TARGET_ACCURACY = 0.86
-    WINDOW_SIZE = 10
+    TARGET_ACCURACY = _cfg.get_param("predictive_sync", "TARGET_ACCURACY")
+    WINDOW_SIZE = _cfg.get_param("predictive_sync", "WINDOW_SIZE")
 
     def __init__(self):
         self.history: List[SyncHistory] = []

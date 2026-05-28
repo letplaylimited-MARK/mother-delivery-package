@@ -3,6 +3,9 @@ QCM Resonance Calculator - R value calculation
 Version: 6.0 (2026-04-28)
 Weights: v6.0 emergence (0.35/0.40/0.25) + E penalty removed
 Ref: 22_FORMULA_MATRIX_ANALYSIS.md, Line 429
+
+NOTE: Constants sourced from qcm/config.py DEFAULT_CONFIG["paper_params"]["calculator"].
+      Cannot use lazy import here due to circular dependency (qcm.core → calculator → qcm.config).
 """
 import math
 from typing import List, Dict
@@ -13,13 +16,14 @@ from semantic_embedder import SemanticEmbedder
 class ResonanceCalculator:
     """Resonance calculator - R value core"""
 
+    # Paper-calibrated constants (source: qcm/config.py paper_params.calculator)
     W_K = 0.35  # v6.0 calibrated weight
     W_C = 0.40  # v6.0 calibrated weight
     W_I = 0.25  # v6.0 calibrated weight
     W_E = 0.00  # v6.0: E penalty removed (kept param for back-compat)
-    
+
     F_0 = 5  # Paper half-saturation constant
-    
+
     # Hybrid mode config
     TRANSITION_START = 10  # Round to start transition
     TRANSITION_END = 30   # Round when fully embedding-based

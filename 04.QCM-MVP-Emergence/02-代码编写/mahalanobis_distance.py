@@ -10,6 +10,9 @@ import random
 from typing import List, Dict, Tuple, Optional
 import numpy as np
 
+from qcm.config import load_config
+_cfg = load_config()
+
 
 class ContrastiveLoss:
     """
@@ -19,8 +22,8 @@ class ContrastiveLoss:
     """
 
     # 论文校准参数
-    MARGIN_POS = 0.5   # 正样本距离阈值
-    MARGIN_NEG = 2.0   # 负样本距离阈值
+    MARGIN_POS = _cfg.get_param("mahalanobis_distance", "MARGIN_POS")  # was: 0.5   # 正样本距离阈值
+    MARGIN_NEG = _cfg.get_param("mahalanobis_distance", "MARGIN_NEG")  # was: 2.0   # 负样本距离阈值
 
     def __init__(self):
         self.loss_history: List[float] = []

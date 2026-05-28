@@ -8,6 +8,9 @@ import math
 from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
 
+from qcm.config import load_config
+_cfg = load_config()
+
 
 @dataclass
 class Option:
@@ -37,9 +40,9 @@ class ParetoCostCalculator:
     """
 
     # 论文校准参数
-    ALPHA = 0.4    # 成本权重
-    BETA = 0.3     # 风险权重
-    GAMMA = 0.3    # 机会损失权重
+    ALPHA = _cfg.get_param("pareto_cost", "ALPHA")  # was: 0.4    # 成本权重
+    BETA = _cfg.get_param("pareto_cost", "BETA")  # was: 0.3     # 风险权重
+    GAMMA = _cfg.get_param("pareto_cost", "GAMMA")  # was: 0.3    # 机会损失权重
 
     def __init__(self):
         self.options: List[Option] = []

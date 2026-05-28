@@ -13,6 +13,9 @@ from typing import Dict, List, Optional
 from dataclasses import dataclass
 from enum import Enum
 
+from qcm.config import load_config
+_cfg = load_config()
+
 
 class SandboxLevel(Enum):
     """沙盘层级"""
@@ -48,9 +51,9 @@ class SandboxManager:
     """
 
     # 论文校准参数
-    LAMBDA = 0.5       # 成功增长率
-    MU = 0.2           # 失败衰减率
-    SRS_TARGET = 0.9   # 成功率目标
+    LAMBDA = _cfg.get_param("sandbox", "LAMBDA")  # was: 0.5       # 成功增长率
+    MU = _cfg.get_param("sandbox", "MU")  # was: 0.2           # 失败衰减率
+    SRS_TARGET = _cfg.get_param("sandbox", "SRS_TARGET")  # was: 0.9   # 成功率目标
 
     # 配置
     CONFIGS = {

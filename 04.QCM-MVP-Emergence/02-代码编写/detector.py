@@ -3,6 +3,9 @@ QCM Emergence Detector - 涌现检测
 Version: 2.0 (2026-04-26)
 Threshold: 论文版0.85 (R>=0.85为涌现)
 Ref: CHANGELOG.md
+
+NOTE: Constants sourced from qcm/config.py DEFAULT_CONFIG["paper_params"]["detector"].
+      Cannot use lazy import here due to circular dependency (qcm.core → detector → qcm.config).
 """
 from typing import List, Dict
 
@@ -10,9 +13,7 @@ from typing import List, Dict
 class EmergenceDetector:
     """涌现检测器 - 核心心脏"""
 
-    # 涌现等级阈值
-    # 注意: 演示版使用0.75作为阈值以便快速演示涌现
-    # 论文对齐版本使用0.85作为阈值
+    # Paper-calibrated thresholds (source: qcm/config.py paper_params.detector)
     THRESHOLD_NONE = 0.3
     THRESHOLD_PRELIMINARY = 0.5
     THRESHOLD_MODERATE = 0.65

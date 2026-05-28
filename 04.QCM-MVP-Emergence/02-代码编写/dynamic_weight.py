@@ -8,6 +8,9 @@ import math
 from typing import Dict
 from dataclasses import dataclass
 
+from qcm.config import load_config
+_cfg = load_config()
+
 
 @dataclass
 class Weights:
@@ -25,16 +28,17 @@ class DynamicWeightCalculator:
     """
 
     # 论文校准参数
-    LAMBDA = 0.1    # 学习率
-    R_TARGET = 0.85  # 目标R值（论文阈值）
-    K_DECAY = 0.05   # 指数衰减系数
+    LAMBDA = _cfg.get_param("dynamic_weight", "LAMBDA")  # was: 0.1    # 学习率
+    R_TARGET = _cfg.get_param("dynamic_weight", "R_TARGET")  # was: 0.85  # 目标R值（论文阈值）
+    K_DECAY = _cfg.get_param("dynamic_weight", "K_DECAY")  # was: 0.05   # 指数衰减系数
 
     # 初始权重（论文值）
+    _IW = _cfg.get_param("dynamic_weight", "INITIAL_WEIGHTS")
     INITIAL_WEIGHTS = Weights(
-        w_k=0.25,
-        w_c=0.35,
-        w_i=0.20,
-        w_e=0.20
+        w_k=_IW["w_k"],
+        w_c=_IW["w_c"],
+        w_i=_IW["w_i"],
+        w_e=_IW["w_e"]
     )
 
     # 各分量对R值的贡献权重（用于调整）

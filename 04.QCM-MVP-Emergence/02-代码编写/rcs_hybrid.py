@@ -11,6 +11,9 @@ from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
 from collections import Counter
 
+from qcm.config import load_config
+_cfg = load_config()
+
 
 @dataclass
 class RCSResult:
@@ -29,12 +32,12 @@ class RCSHybrid:
     """
 
     # 论文校准参数
-    ALPHA = 0.4   # 共振权重
-    BETA = 0.35   # 共识权重
-    GAMMA = 0.25  # 综合权重
+    ALPHA = _cfg.get_param("rcs_hybrid", "ALPHA")  # was: 0.4   # 共振权重
+    BETA = _cfg.get_param("rcs_hybrid", "BETA")  # was: 0.35   # 共识权重
+    GAMMA = _cfg.get_param("rcs_hybrid", "GAMMA")  # was: 0.25  # 综合权重
 
     # 决策阈值
-    DECISION_THRESHOLD = 0.7
+    DECISION_THRESHOLD = _cfg.get_param("rcs_hybrid", "DECISION_THRESHOLD")
 
     def __init__(self):
         self.history: List[RCSResult] = []

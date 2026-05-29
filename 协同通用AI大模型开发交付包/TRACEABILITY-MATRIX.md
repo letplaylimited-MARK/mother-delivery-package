@@ -66,3 +66,117 @@
 | MEM-3 | Submodule 操作规范 | P0 | MEMORY.md §4.3 |
 | MEM-4 | MANIFEST 排除规则 | P1 | MEMORY.md §4.2 |
 | MEM-5 | 循环依赖处理方案 | P1 | HANDOFF.md §4 |
+
+---
+
+## 7. 子系统项目级追踪实例
+
+> 本节补充各子系统内部从 GOAL → REQ → TASK → TEST → AUD 的完整追踪链，与 §1-§6 母包级追踪形成层次。
+
+### 7.1 00 超级提示词工程
+
+| ID | 目标/需求 | 任务 | 测试 | 审计 |
+|---|---|---|---|---|
+| G-00-1 | 建立模型原生协作边界，防止源提示词越权 | T-00-1 创建 `00/11-模型原生协作协议.md` | AUD-00-1 检查所有 md 无"你现在就是..."表述 | AUD-00-1 PASS |
+| REQ-00-1 | 源提示词吸收需有可验证的转译记录 | T-00-2 创建 `SUPER-PROMPT-ATOMIC-RESEARCH-REVIEW.md`（26机制矩阵） | TEST-00-1 26/26 机制验证通过 | AUD-00-2 11/11 reject 零泄漏 |
+| REQ-00-2 | 使命唤醒必须有真实文件证据 | T-00-3 创建 `MISSION-MEMORY.md` + `MISSION-MEMORY-AWAKENING-PROTOCOL.md` | TEST-00-2 awakening_check 协议 8 步可手动验证 | AUD-00-3 无"记忆宫殿已加载"等假声明 |
+
+### 7.2 01 通讯协议_幽灵通道
+
+| ID | 目标/需求 | 任务 | 测试 | 审计 |
+|---|---|---|---|---|
+| G-01-1 | 文件完整性验证零误报 | T-01-1 实现 `GHOST-VERIFY` + MANIFEST.yaml（299文件） | TEST-01-1 VAL-01-GHOST-VERIFY: 299 files ALL CLEAN | AUD-01-1 MANIFEST 排除 `.pytest_cache/` 等运行时目录 |
+| REQ-01-1 | 开源 SDK 测试用例全通过 | T-01-2 创建 `test_sdk_ps1.py` + `test_sdk_ts.ts`（18 tests） | TEST-01-2 VAL-01-SDK-TESTS: 18 passed | AUD-01-2 SDK 测试路径 `/` 替换 `\\` + PYTHONPATH 注入 |
+| REQ-01-2 | PowerShell 中文路径 UTF8 兼容 | T-01-3 修改 `_auto_run_script` UTF8 输出 | TEST-01-3 `pytest test_sdk_ps1.py -v` 中文路径无 UnicodeDecodeError | AUD-01-3 `_auto_run_script` 使用 `PowerShell -UTF8` + `Write-Output` |
+
+### 7.3 03 数据库管理_文件夹整理AI应用（knowledge-base-manager）
+
+| ID | 目标/需求 | 任务 | 测试 | 审计 |
+|---|---|---|---|---|
+| G-03-1 | 103 项测试全 PASS，0 跳过 | T-03-1 实现 `tests/` 目录 12 个测试模块 | TEST-03-1 VAL-03-TESTS: 103/103 passed | AUD-03-1 H4 修复：23 个 except Exception 全部补 `logger.exception()` |
+| REQ-03-1 | requirements.txt 无未使用包 | T-03-2 清理 5 个未使用依赖，保留 ruff | TEST-03-2 `pip check` 零冲突 + ruff check 无 F401 | AUD-03-2 M1 修复：15 处 sys.path hacks 整合为 `path_setup.py` |
+| REQ-03-2 | install.ps1 一键安装验证通过 | T-03-3 创建 `install.ps1` + `validate_install.py` | TEST-03-3 VAL-03-INSTALL: install + validate 双 PASS | AUD-03-3 PowerShell `-ExecutionPolicy Bypass` 兼容性确认 |
+
+### 7.4 04 QCM-MVP-Emergence
+
+| ID | 目标/需求 | 任务 | 测试 | 审计 |
+|---|---|---|---|---|
+| G-04-1 | QCM 公式模块从硬编码迁移为 config-driven | T-04-1 扩展 `qcm/config.py` paper_params 段（14 模块，60 常量） | TEST-04-1 VAL-04-QCM-ALL: 173/173 PASS | AUD-04-1 calculator.py/detector.py 因循环依赖保留硬编码，标注来源 |
+| REQ-04-1 | 涌现公式 R > 0.85 可复现（seed=42） | T-04-2 实现 `detector.py` 核心公式 + `test_emergence.py`（38 tests） | TEST-04-2 VAL-04-QCM-PAPER: 38/38 PASS, R=0.8664 | AUD-04-2 公式版本 v6.3，E 惩罚项已移除，R 上限 0.85+ |
+| REQ-04-2 | qa_runner.py 在 sandbox 环境可运行 | T-04-3 修复 `run_cmd()` 添加 `env=os.environ.copy()` | TEST-04-3 `python qa_runner.py validate` 12 PASS / 0 FAIL | AUD-04-3 Markdown fence 检测改用 `re.MULTILINE` 防止 false negative |
+
+### 7.5 05 超极智脑_Q-Spectrum
+
+| ID | 目标/需求 | 任务 | 测试 | 审计 |
+|---|---|---|---|---|
+| G-05-1 | 端到端集成测试覆盖核心工作流 | T-05-1 创建 `test_integration.py`（12 场景） | TEST-05-1 VAL-05-INTEGRATION: 12/12 PASS | AUD-05-1 BRAIN-KB/.chroma_db/ 持久化验证 |
+| REQ-05-1 | 状态对齐：MISSION-MEMORY + CAPABILITY-REGISTRY 一致 | T-05-2 运行 `qa_runner.py status` 生成状态快照 | TEST-05-2 VAL-05-STATUS: capability_count 与 registry 一致 | AUD-05-2 ROLE-REGISTRY.yaml 与 AGENTS.md 角色列表对齐 |
+| REQ-05-2 | CI/CD 自动化（GitHub Actions） | T-05-3 创建 `.github/workflows/ci.yml`（Python 3.12/3.13/3.14 矩阵） | TEST-05-3 GitHub Actions green on push to master | AUD-05-3 `ci.yml` 参考 03 的 `test.yml` 但修复 `runs-on: ubuntu-latest` 拼写 |
+
+### 7.6 协同通用AI大模型开发交付包
+
+| ID | 目标/需求 | 任务 | 测试 | 审计 |
+|---|---|---|---|---|
+| G-C-1 | 四体系（价值/功能/结构/运作）从模板态升级为可交付内容 | T-C-1 填充 `01-价值体系/README.md` ~ `04-运作体系/README.md` | TEST-C-1 VERIFY-DELIVERY.ps1 -Strict: 0 failures, 0 warnings | AUD-C-1 四体系内容基于真实开发过程，非模板填充 |
+| REQ-C-1 | 5 个交付门禁文件必须存在且内容非空 | T-C-2 创建 AI_PROJECT_CONTEXT / HANDOFF / CHANGELOG / TRACEABILITY-MATRIX / VALIDATION_REPORT | TEST-C-2 `scripts/verify.ps1` 调用 VERIFY-DELIVERY.ps1 -Strict 全 PASS | AUD-C-2 HANDOFF.md 包含 AKU 规范待建等已知缺口 |
+| REQ-C-2 | 占位符 `<...>` 在严格模式下零容忍 | T-C-3 全局替换 `<母交付包根目录>` → `project-root`，`<package>` → `{package}` | TEST-C-3 Grep `<[A-Za-z]` 零匹配 | AUD-C-3 白名单机制因编码问题未生效，直接替换更可靠 |
+
+---
+
+## 8. 跨子系统追踪链示例
+
+### 8.1 用户唤醒握手 end-to-end 追踪
+
+```
+GOAL: G-00-1（唤醒协议标准化）
+  ↓
+REQ: REQ-00-2（使命唤醒必须有真实文件证据）
+  ↓
+TASK: T-00-3（创建 MISSION-MEMORY.md + AWAKENING-PROTOCOL.md）
+  ↓
+TEST: TEST-00-2（awakening_check 8 步可手动验证）
+  ↓
+AUD: AUD-00-3（无假记忆声明）
+  ↓
+MEM: MEM-3（Submodule 操作规范，跨唤醒 session 持久化）
+```
+
+### 8.2 QCM 公式模块 config-driven 迁移追踪
+
+```
+GOAL: G-04-1（硬编码 → config-driven）
+  ↓
+REQ: REQ-04-1（参数可配置，来源可追溯）
+  ↓
+TASK: T-04-1（config.py paper_params + 12 模块迁移，60 常量）
+  ↓
+TEST: TEST-04-1（VAL-04-QCM-ALL 173/173 PASS）
+  TEST: TEST-04-2（VAL-04-QCM-PAPER 38/38 PASS）
+  ↓
+AUD: AUD-04-1（calculator.py/detector.py 标注硬编码来源，待 Phase 3 解循环依赖）
+  ↓
+MEM: MEM-1（config.py 路径写入 MEMORY.md §4.1）
+```
+
+### 8.3 交付包四体系严格模式追踪
+
+```
+GOAL: G-C-1（四体系可交付）
+  ↓
+REQ: REQ-C-1（5 个门禁文件必须存在）
+  REQ: REQ-C-2（占位符零容忍）
+  ↓
+TASK: T-C-1（四体系内容填充，基于真实开发过程）
+  TASK: T-C-2（5 个文件创建）
+  TASK: T-C-3（占位符全局替换）
+  ↓
+TEST: TEST-C-1（VERIFY-DELIVERY.ps1 -Strict 0 failures）
+  TEST: TEST-C-2（scripts/verify.ps1 全 PASS）
+  TEST: TEST-C-3（Grep `<[A-Za-z]` 零匹配）
+  ↓
+AUD: AUD-C-1（内容非模板，有真实数据）
+  AUD-C-2（HANDOFF.md 已知缺口明确标记）
+  ↓
+MEM: MEM-5（循环依赖方案写入 HANDOFF.md §4）
+```
+

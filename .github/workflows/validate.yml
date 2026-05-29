@@ -1,0 +1,89 @@
+name: Mother Delivery Package CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.13", "3.14"]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml pytest
+
+      - name: qa_runner.py validate
+        run: python qa_runner.py validate
+        working-directory: .
+
+      - name: qa_runner.py status
+        run: python qa_runner.py status
+        working-directory: .
+
+      - name: Markdown fence check
+        run: |
+          python -c "
+import os, re, sys
+root = '.'
+fences = []
+for dirpath, dirnames, filenames in os.walk(root):
+    dirnames[:] = [d for d in dirnames if not d.startswith('.')]
+    for f in filenames:
+        if f.endswith('.md'):
+            fp = os.path.join(dirpath, f)
+            try:
+                content = open(fp, encoding='utf-8').read()
+                if content.count('\`\`\`') % 2 != 0:
+                    fences.append(fp)
+            except: pass
+if fences:
+    print('UNBALANCED FENCES:')
+    for f in fences[:10]: print(f)
+    sys.exit(1)
+else:
+    print('Markdown fence check: ALL CLEAR')
+"
+
+      - name: Submodule status check
+        run: |
+          git submodule status | while read line; do
+            if echo "$line" | grep -q "^-"; then
+              echo "FAIL: submodule not initialized: $line"
+              exit 1
+            fi
+            if echo "$line" | grep -q "^+"; then
+              echo "WARN: submodule not synced: $line"
+            fi
+          done
+          echo "Submodule status: OK"
+
+  powershell-verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: VERIFY-DELIVERY.ps1 -Strict
+        shell: pwsh
+        run: |
+          if (Test-Path "协同通用AI大模型开发交付包/scripts/verify.ps1") {
+            cd "协同通用AI大模型开发交付包"
+            powershell -ExecutionPolicy Bypass -File scripts/verify.ps1
+          } else {
+            Write-Warning "VERIFY-DELIVERY.ps1 not found, skipping"
+          }

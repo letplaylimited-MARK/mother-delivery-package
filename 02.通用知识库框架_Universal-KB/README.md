@@ -1,110 +1,175 @@
-# Universal-KB 通用知识库框架 V1.0 [模板]
+# Universal-KB 通用知识库框架
 
-> **版本**: V1.0
-> **创建时间**: 2026-04-21
-> **定位**: 轻量级知识管理**模板**（非可运行应用）。提供目录结构、MemoryOS 概念引擎和 AGENTS 配置参考。
->
-> **V2 可运行版**: 位于 `../03.数据库管理_文件夹整理AI应用/`，基于 Flask + MCP + 向量检索的完整知识管理应用。
-> **迁移指引**: 参见根目录 `V1_TO_V2_MIGRATION.md`
+> **版本**: V2.1 | **更新**: 2026-05-29
+> **定位**: 通用知识库**模板规范**。`03.数据库管理_文件夹整理AI应用/` 是本模板的完整可运行实现（Flask + FAISS + MCP）。
+> **关系**: 本目录 = 模板 / `03` = 实现。迁移指引见根目录 `V1_TO_V2_MIGRATION.md`
 
 ---
 
-## 🎯 核心特性
+## 核心定位
 
-- **通用设计**: 无业务依赖，可用于任何领域
-- **三层架构**: 原始 → 知识图谱 → 长期记忆
-- **完整功能**: Ingest/Query/Lint 全套工作流
-- **开箱即用**: AGENTS配置集成
+| 项目 | 类型 | 技术栈 | 状态 |
+|------|------|----------|------|
+| **02 Universal-KB**（本目录） | 模板规范 | Markdown + Python 脚本 | 模板态 |
+| **03 knowledge-base-manager** | 可运行实现 | Flask + FAISS + MCP + ChromaDB | ✅ 生产级（103/103 tests） |
+
+**使用选择**：
+- 需要**快速开始 / 轻量部署** → 直接使用 `03/` 的 V2.0 实现
+- 需要**自定义模板 / 学习架构** → 参考本目录结构
 
 ---
 
-## 📁 目录结构（完整功能已实现）
+## 目录结构（6 层完整架构）
 
 ```
 Universal-KB/
-├── 01-raw/              # Layer 1: 原始资料（只读）
-├── 02-processed/        # Layer 2: 处理后数据
-├── 03-wiki/            # Layer 3: 知识图谱 ✅
-│   ├── concepts/      # 概念定义 (3个页面)
-│   ├── entities/      # 实体定义 (1个页面)
-│   ├── sources/       # 源摘要
+├── 01-raw/              # Layer 1: 原始资料（只读， ingest 入口）
+├── 02-processed/        # Layer 2: 处理后数据（可选）
+├── 03-wiki/            # Layer 3: 知识图谱
+│   ├── concepts/      # 概念定义（AKU 规范兼容）
+│   ├── entities/      # 实体定义
+│   ├── sources/       # 源摘要（映射 AKU source 字段）
 │   ├── comparisons/   # 对比分析
-│   ├── index.md       # 知识图谱总索引 ✅
-│   └── log.md        # 活动日志 ✅
-├── 04-memory/          # Layer 4: 长期记忆 ✅
-│   ├── memoryos.py    # MemoryOS引擎 ✅
-│   ├── config.yaml   # 配置文件 ✅
-│   ├── short_term/   # 短期记忆
-│   ├── mid_term/    # 中期记忆
-│   └── long_term/   # 长期记忆
-├── 05-agents/          # Layer 5: AGENTS配置 ✅
-│   └── AGENTS.md    # AI行为配置 ✅
-├── 06-output/          # Layer 6: 输出成果
-└── README.md           # 本文件 ✅
-```
-
-## ✅ 已实现功能
-
-| 模块 | 状态 | 说明 |
-|------|------|------|
-| 目录结构 | ✅ | 6层完整架构 |
-| MemoryOS | ✅ | 三层记忆引擎 |
-| AGENTS配置 | ✅ | Ingest/Query/Lint流程 |
-| 知识图谱 | ✅ | index + 4概念 + 1实体 |
-| 链路串联 | ✅ | 完整内部链接 |
-
-## 🔗 链路串联
-
-```
-AGENTS.md → 定义行为 →
-  ├─ ingest → 01-raw → 03-wiki/sources → 03-wiki/concepts → index
-  ├─ 查询 → 03-wiki/index → concepts/entities
-  └─ lint → 03-wiki/log
-
-memoryos.py →
-  ├─ short_term (FIFO 7条)
-  ├─ mid_term (热度1000条)
-  └─ long_term (持久100条)
+│   ├── index.md       # 知识图谱总索引
+│   └── log.md        # 活动日志
+├── 04-memory/          # Layer 4: 长期记忆（MemoryOS 引擎）
+│   ├── memoryos.py    # MemoryOS 引擎（三层：short/mid/long）
+│   ├── config.yaml   # 记忆配置（FIFO 7 / 热度 1000 / 持久 100）
+│   ├── short_term/   # 短期记忆（当前 session）
+│   ├── mid_term/     # 中期记忆（热度排序）
+│   └── long_term/   # 长期记忆（持久化）
+├── 05-agents/          # Layer 5: AGENTS 配置（AI 行为定义）
+│   └── AGENTS.md    # Ingest / Query / Lint 三流程
+├── 06-output/          # Layer 6: 输出成果（交付物）
+├── docs/               # 补充文档
+├── README.md           # 本文件
+└── V1_TO_V2_MIGRATION.md  # 迁移指引（→ 03/ 实现）
 ```
 
 ---
 
-## 🚀 快速开始
+## 核心功能
 
-### 1. 初始化
+### 1. 知识摄取（Ingest）
+
+```
+原始文件 → 01-raw/
+  → 03-wiki/sources/（源摘要）
+  → 03-wiki/concepts/（概念提取，符合 AKU 规范）
+  → 03-wiki/index.md（知识图谱索引更新）
+```
+
+**AKU 规范对接**：摄取的每条概念自动生成 `aku_id:` frontmatter（参见 `00/13-源提示词吸收与演化/AKU-KNOWLEDGE-ATOM-SPEC.md`）
+
+### 2. 知识查询（Query）
+
+```
+用户查询 → 03-wiki/index.md → concepts/ + entities/
+  → 如启用 05 Q-Spectrum BRAIN-KB：向量检索 .chroma_db/
+```
+
+### 3. 知识健康检查（Lint）
+
+```
+Lint 触发 → 03-wiki/log.md（检查知识图谱完整性）
+  → 断链检测（AKU links: [] 中的无效引用）
+  → 过期检测（超过 30 天未 re-verified 的 AKU）
+```
+
+### 4. 长期记忆（MemoryOS）
+
+```
+memoryos.py 三层引擎：
+  - short_term: FIFO 7 条（当前 session）
+  - mid_term:   热度排序 1000 条（跨 session）
+  - long_term:  持久化 100 条（核心知识锚点）
+```
+
+**与 MISSION-MEMORY 对接**：每次唤醒时读取 `04-memory/long_term/` 中的 High 置信度 AKU，作为唤醒上下文。
+
+---
+
+## 快速开始
+
+### 方案 A：直接使用 03/ 可运行版（推荐）
 
 ```bash
-# 创建目录结构（自动生成）
-mkdir -p Universal-KB/{01-raw,02-processed,03-wiki/{concepts,entities,sources,comparisons},04-memory/{short_term,mid_term,long_term},05-agents,06-output,docs}
+# 克隆母交付包
+git clone https://github.com/letplaylimited-MARK/mother-delivery-package.git
+cd mother-delivery-package
+
+# 进入 03 实现版
+cd "03.数据库管理_文件夹整理AI应用"
+
+# 创建 Python venv（使用 managed Python）
+C:/Users/wanwa/.workbuddy/binaries/python/versions/3.13.12/python.exe -m venv .venv
+.venv/Scripts/activate
+
+# 安装依赖
+pip install -r requirements.txt
+
+# 运行测试（103/103 预期）
+pytest tests/ -v
+
+# 启动 Flask 知识库服务
+python app.py
 ```
 
-### 2. 摄取知识
+### 方案 B：基于本模板自建
 
-将原始文件放入 `01-raw/`，然后执行ingest流程。
+```bash
+# 复制本目录为项目起点
+cp -r "02.通用知识库框架_Universal-KB" your-project-kb/
 
-### 3. 查询
+# 初始化目录结构
+cd your-project-kb/
+mkdir -p 01-raw 02-processed 03-wiki/{concepts,entities,sources,comparisons} \
+         04-memory/{short_term,mid_term,long_term} 05-agents 06-output docs
 
-查询 `03-wiki/` 下的知识图谱。
+# 将 MemoryOS 引擎放入 04-memory/
+# （从 03/ 实现版复制 memoryos.py 和 config.yaml）
+```
 
 ---
 
-## 🔗 功能模块
+## 与母包其他子系统的接口
 
-| 模块 | 路径 | 功能 |
+| 对接目标 | 接口方式 | 说明 |
+|-----------|----------|------|
+| **00 超级提示词工程** | `AKU-KNOWLEDGE-ATOM-SPEC.md` | 知识原子格式规范，ingest 时自动生成 AKU frontmatter |
+| **03 knowledge-base-manager** | 直接调用 Flask API | 本模板的 ingest/query/lint 流程即 03 的核心工作流 |
+| **05 Q-Spectrum BRAIN-KB** | `.chroma_db/` 向量库 | 03-wiki/ 的概念可同步写入 BRAIN-KB 向量检索 |
+| **协同交付包** | `03-wiki/index.md` | 项目知识图谱作为交付包的一部分 |
+
+---
+
+## 验证方式
+
+| 验证项 | 工具 | 通过条件 |
+|--------|------|----------|
+| 目录结构完整性 | `verify.ps1 -Strict` | 6 层目录全部存在 |
+| AKU frontmatter 格式 | `qa_runner.py validate_aku`（待实现） | 所有 `aku_id:` 字段符合规范 |
+| 知识图谱断链 | `03-wiki/log.md` 检查 | `links:` 中所有 AKU ID 均存在 |
+| MemoryOS 三层 | `memoryos.py --check` | short/mid/long 均可读写 |
+
+---
+
+## 版本记录
+
+| 版本 | 日期 | 变更 |
 |------|------|------|
-| Ingest | 01-raw → 03-wiki | 知识摄取 |
-| Query | 03-wiki/ | 知识查询 |
-| Lint | 03-wiki/ | 健康检查 |
-| Memory | 04-memory/ | 长期记忆 |
-| Agents | 05-agents/ | AI配置 |
+| V2.1 | 2026-05-29 | 升级 README：明确与 03 实现版的关系，补充 AKU 对接规范，移除占位符 |
+| V1.0 | 2026-04-21 | 初始模板版本（6 层架构定义） |
+| V2.0 | 2026-05-23 | 03/ 实现版完成（Flask + FAISS + MCP，103 tests） |
 
 ---
 
-## 📖 详细文档
+## 待完善
 
-- [架构设计](docs/architecture.md)
-- [快速开始](docs/quickstart.md)
+- [ ] 实现 `qa_runner.py validate_aku` 子命令（批量 AKU 验证）
+- [ ] 本模板的 `memoryos.py` 补全为可运行版本（当前仅 03/ 中有完整实现）
+- [ ] `03-wiki/` 与 `05/BRAIN-KB/` 的双向同步脚本
 
 ---
 
-*本框架通用设计，无业务依赖，可直接交付使用*
+*本框架通用设计，无业务依赖。可运行实现见 `03.数据库管理_文件夹整理AI应用/`*

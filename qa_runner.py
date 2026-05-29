@@ -358,11 +358,19 @@ def _try_auto_execute(vid: str, cmd_str: str, cwd: Path | None) -> dict | None:
         result = _auto_markdown_fences()
     elif vid == "VAL-ROOT-FILE-COUNT":
         result = _auto_file_count()
-    elif vid in ("VAL-03-INSTALL", "VAL-01-GHOST-VERIFY",
+    elif vid in ("VAL-03-INSTALL", "VAL-01-GHOST-VERIFY", "VAL-04-HEALTH",
                  "VAL-05-INTEGRATION", "VAL-USER-PACK-DELIVERY",
                  "VAL-USER-PACK-DELIVERY-STRICT"):
-        # PowerShell verification scripts
+        # PowerShell/Python verification scripts
         result = _auto_run_script(cmd_str, cwd)
+    elif vid == "VAL-02-TEMPLATE-REVIEW":
+        result = _auto_template_review(cwd)
+    elif vid == "VAL-00-CROSS-DOC-CONSISTENCY":
+        result = _auto_consistency_check()
+    elif vid == "VAL-00-MEMORY-SOURCE-INDEX":
+        result = _auto_memory_source_index()
+    elif vid == "VAL-ROOT-HARDCODE-PATH":
+        result = _auto_hardcode_path_check()
     elif vid == "VAL-05-STATUS":
         # Python status check with UTF-8 (Windows-compatible)
         cmd = 'python run.py --status'
@@ -608,10 +616,158 @@ def _auto_run_script(cmd_str: str, cwd: Path | None) -> dict | None:
     return None
 
 
-# ---------------------------------------------------------------------------
-# STATUS Command
-# ---------------------------------------------------------------------------
+def _auto_template_review(cwd: Path | None) -> dict:
+    """Auto-check: py_compile + smoke test for 02 template."""
+    p02 = MOTHER_ROOT / "02.通用知识库框架_Universal-KB" / "04-memory" / "memoryos.py"
+    if not p02.exists():
+        return {
+            "id": "VAL-02-TEMPLATE-REVIEW", "scope": "P02_UNIVERSAL_KB",
+            "status": "FAIL", "detail": f"memoryos.py not found: {p02}",
+            "command": "python -m py_compile memoryos.py", "auto": True,
+        }
+    # py_compile
+    r1 = run_cmd(f'python -m py_compile "{p02}"', cwd=cwd, timeout=30)
+    if r1["exit_code"] != 0:
+        return {
+            "id": "VAL-02-TEMPLATE-REVIEW", "scope": "P02_UNIVERSAL_KB",
+            "status": "FAIL", "detail": f"py_compile failed: {r1['stderr'][:120]}",
+            "command": "python -m py_compile memoryos.py", "auto": True,
+        }
+    # smoke run
+    r2 = run_cmd(f'python "{p02}"', cwd=p02.parent, timeout=30)
+    status = "PASS" if r2["exit_code"] == 0 else "FAIL"
+    return {
+        "id": "VAL-02-TEMPLATE-REVIEW", "scope": "P02_UNIVERSAL_KB",
+        "status": status,
+        "detail": f"py_compile OK; smoke exit={r2['exit_code']}: {r2['stdout'][:100]}",
+        "command": "python -m py_compile memoryos.py and python memoryos.py", "auto": True,
+    }
 
+
+def _auto_consistency_check() -> dict:
+    """Auto-check: run validate_consistency.py and report."""
+    script = CONSISTENCY_SCRIPT
+    if not script.exists():
+        return {
+            "id": "VAL-00-CROSS-DOC-CONSISTENCY", "scope": "P00_SUPER_PROMPT",
+            "status": "SKIP", "detail": f"validate_consistency.py not found: {script}",
+            "command": "python validate_consistency.py", "auto": True,
+        }
+    r = run_cmd(f'python "{script}"', cwd=MOTHER_ROOT, timeout=120)
+    stdout = r["stdout"]
+    # Parse PASS/FAIL/WARN counts from output
+    pass_m = re.search(r"PASS:\s*(\d+)", stdout)
+    fail_m = re.search(r"FAIL:\s*(\d+)", stdout)
+    warn_m = re.search(r"WARN:\s*(\d+)", stdout)
+    pass_count = int(pass_m.group(1)) if pass_m else 0
+    fail_count = int(fail_m.group(1)) if fail_m else 0
+    warn_count = int(warn_m.group(1)) if warn_m else 0
+    if fail_count > 0:
+        status = "FAIL"
+    elif warn_count > 0:
+        status = "WARN"
+    else:
+        status = "PASS"
+    detail = f"{pass_count} PASS / {fail_count} FAIL / {warn_count} WARN"
+    return {
+        "id": "VAL-00-CROSS-DOC-CONSISTENCY", "scope": "P00_SUPER_PROMPT",
+        "status": status, "detail": detail,
+        "command": "python validate_consistency.py", "auto": True,
+    }
+
+
+def _auto_memory_source_index() -> dict:
+    """Auto-check: MEMORY-SOURCE-INDEX.yaml field validation."""
+    idx_path = REGISTRY_DIR / "MEMORY-SOURCE-INDEX.yaml"
+    if not idx_path.exists():
+        return {
+            "id": "VAL-00-MEMORY-SOURCE-INDEX", "scope": "P00_SUPER_PROMPT",
+            "status": "SKIP", "detail": f"MEMORY-SOURCE-INDEX.yaml not found: {idx_path}",
+            "command": "Parse MEMORY-SOURCE-INDEX.yaml", "auto": True,
+        }
+    data = load_yaml(idx_path)
+    if data is None:
+        return {
+            "id": "VAL-00-MEMORY-SOURCE-INDEX", "scope": "P00_SUPER_PROMPT",
+            "status": "FAIL", "detail": "Failed to parse MEMORY-SOURCE-INDEX.yaml",
+            "command": "Parse MEMORY-SOURCE-INDEX.yaml", "auto": True,
+        }
+    sources = data.get("memory_sources", [])
+    required_fields = ["id", "owner_project", "path", "authority_scope",
+                       "read_priority", "write_target", "query_entry",
+                       "conflict_owner", "side_effects", "source_status"]
+    missing = []
+    for src in sources:
+        for field in required_fields:
+            if field not in src or src[field] is None:
+                missing.append(f"{src.get('id', '?')}.{field}")
+    status = "PASS" if not missing else "FAIL"
+    detail = f"{len(sources)} sources, {len(missing)} missing fields" + (
+        f": {missing[:5]}" if missing else ""
+    )
+    return {
+        "id": "VAL-00-MEMORY-SOURCE-INDEX", "scope": "P00_SUPER_PROMPT",
+        "status": status, "detail": detail,
+        "command": "Parse MEMORY-SOURCE-INDEX.yaml and inspect required fields", "auto": True,
+    }
+
+
+def _auto_hardcode_path_check() -> dict:
+    """Auto-check: scan for local absolute path leakage."""
+    # Patterns: Windows drive paths and common user home paths
+    patterns = [r"[A-Za-z]:\\s*\\", r"C:\\s*Users\\s*wanwa", r"D:\\s*工作资料"]
+    # Whitelist: lines containing detector/regex/pattern references are not leakage
+    detector_keywords = ["rg -n", "re.search", "re.compile", "re.findall",
+                         "pattern", "regex", "正则", "detector", "检测器",
+                         "check(", "硬編碼", "硬编码", "禁止 ", "違規"]
+    findings = []
+
+    def _is_detector_line(line: str) -> bool:
+        return any(kw in line for kw in detector_keywords)
+
+    def _check_file(f: Path) -> bool:
+        try:
+            for line in f.read_text(encoding="utf-8", errors="replace").splitlines():
+                if _is_detector_line(line):
+                    continue
+                for pat in patterns:
+                    if re.search(pat, line):
+                        return True
+        except Exception:
+            pass
+        return False
+
+    for md_file in MOTHER_ROOT.rglob("*.md"):
+        if ".git" in str(md_file) or "node_modules" in str(md_file):
+            continue
+        if _check_file(md_file):
+            rel = str(md_file.relative_to(MOTHER_ROOT)).replace("\\", "/")
+            findings.append(rel)
+
+    # Also check Python/YAML for local paths (excluding this script itself and test fixtures)
+    for glob_pat in ["*.py", "*.yaml", "*.yml"]:
+        for f in MOTHER_ROOT.rglob(glob_pat):
+            if ".git" in str(f) or "node_modules" in str(f):
+                continue
+            rel = str(f.relative_to(MOTHER_ROOT)).replace("\\", "/")
+            if "qa_runner.py" in rel or "test_" in rel or "_test.py" in rel:
+                continue
+            if _check_file(f):
+                findings.append(rel)
+
+    # Deduplicate
+    findings = list(dict.fromkeys(findings))
+    if findings:
+        status = "WARN"
+        detail = f"Found {len(findings)} files with potential hardcoded paths: {findings[:5]}"
+    else:
+        status = "PASS"
+        detail = "No local absolute path leakage found in operational docs/code."
+    return {
+        "id": "VAL-ROOT-HARDCODE-PATH", "scope": "ROOT",
+        "status": status, "detail": detail,
+        "command": "rg scan for local absolute paths", "auto": True,
+    }
 
 def cmd_status(_args):
     """Read all registries and output system overview."""

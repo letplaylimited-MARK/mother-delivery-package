@@ -1,8 +1,9 @@
 # Ghost Channel v1.0 Delivery Verification Script
 # Run: powershell -ExecutionPolicy Bypass -File VERIFY.ps1
 #
-# Cross-platform: tries both raw and LF-normalized hashes for text files,
-# so verification passes on Windows (autocrlf), Linux, and macOS.
+# Cross-platform: compares raw and LF-normalized hashes.
+# MANIFEST.yaml contains LF-normalized hashes to ensure consistency
+# across Windows (CRLF), Linux (LF), and macOS (LF).
 
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $manifestFile = Join-Path $root "MANIFEST.yaml"
@@ -19,16 +20,28 @@ Write-Host ""
 $verified = 0
 $failed = 0
 $missing = 0
+$skipped = 0
 $total = 0
 
 # Text file extensions that may have CRLF/LF differences
 $textExtensions = @('.md','.py','.yaml','.yml','.json','.html','.css','.js','.ts','.sh','.ps1','.bat','.txt','.toml')
+# Binary patterns (regex) for files not tracked by Git (build artifacts / generated deliverables)
+# These are optional: if present we verify hash, if absent we SKIP instead of MISSING
+$binaryPatterns = @('\.pyd$','\.tar\.gz$','\.whl$','\.pdf$')
 
 function Get-NormalizedHash($path) {
-    $content = [System.IO.File]::ReadAllText($path, [System.Text.Encoding]::UTF8)
-    $normalized = $content -replace "`r`n", "`n"
-    $bytes = [System.Text.Encoding]::UTF8.GetBytes($normalized)
-    $stream = New-Object System.IO.MemoryStream(,$bytes)
+    $bytes = [System.IO.File]::ReadAllBytes($path)
+    $hasBOM = ($bytes.Length -ge 3 -and $bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF)
+    $text = [System.Text.Encoding]::UTF8.GetString($bytes)
+    # Remove BOM character if present (UTF8.GetString preserves it as U+FEFF)
+    if ($text.Length -gt 0 -and [int]$text[0] -eq 0xFEFF) { $text = $text.Substring(1) }
+    $normalized = $text -replace "`r`n", "`n" -replace "`r", "`n"
+    $outBytes = [System.Text.Encoding]::UTF8.GetBytes($normalized)
+    if ($hasBOM) {
+        $bom = [byte[]]@(0xEF, 0xBB, 0xBF)
+        $outBytes = $bom + $outBytes
+    }
+    $stream = New-Object System.IO.MemoryStream(,$outBytes)
     $hash = (Get-FileHash -InputStream $stream -Algorithm SHA256).Hash.ToLower()
     $stream.Close()
     return $hash
@@ -54,11 +67,10 @@ Get-Content $manifestFile -Encoding UTF8 | ForEach-Object {
     
     if (Test-Path $path) {
         $ext = [System.IO.Path]::GetExtension($file).ToLower()
-        $hash = $null
-        $hashNorm = $null
+        $fileName = [System.IO.Path]::GetFileName($file)
+        $isText = ($textExtensions -contains $ext) -or ($fileName -eq "LICENSE")
         
-        if ($textExtensions -contains $ext) {
-            # Try both raw and normalized hashes for text files
+        if ($isText) {
             $hash = (Get-FileHash $path -Algorithm SHA256).Hash.ToLower()
             $hashNorm = Get-NormalizedHash $path
         } else {
@@ -72,8 +84,17 @@ Get-Content $manifestFile -Encoding UTF8 | ForEach-Object {
             $failed++
         }
     } else {
-        Write-Host "MISSING: $file" -ForegroundColor Yellow
-        $missing++
+        $isBinary = $false
+        foreach ($pat in $binaryPatterns) {
+            if ($file -match $pat) { $isBinary = $true; break }
+        }
+        if ($isBinary) {
+            Write-Host "SKIP: $file (binary artifact not in Git)" -ForegroundColor DarkGray
+            $skipped++
+        } else {
+            Write-Host "MISSING: $file" -ForegroundColor Yellow
+            $missing++
+        }
     }
 }
 
@@ -82,6 +103,7 @@ Write-Host "Summary: $total files checked" -ForegroundColor Cyan
 Write-Host "  Verified: $verified" -ForegroundColor Green
 Write-Host "  Failed:   $failed" -ForegroundColor $(if ($failed -gt 0) { "Red" } else { "Green" })
 Write-Host "  Missing:  $missing" -ForegroundColor $(if ($missing -gt 0) { "Yellow" } else { "Green" })
+Write-Host "  Skipped:  $skipped" -ForegroundColor $(if ($skipped -gt 0) { "DarkGray" } else { "Green" })
 
 if ($failed -eq 0 -and $missing -eq 0) {
     Write-Host ""

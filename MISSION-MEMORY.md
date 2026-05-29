@@ -172,29 +172,37 @@ awakening_check:
 | 沙盘飞轮 | 00/08 角色沙盘 + 04 QCM + 验证门 |
 | AKU | 可追踪知识原子，进入知识库或注册表前必须有来源和置信度 |
 
-## 9. 当前最重要缺口
+## 9. 核心索引与缺口状态
 
-为了让母包真正“活起来”，已经建立初始版的核心索引：
+已建立初始版核心索引（9个 YAML/MD 注册表，位于 `00.超级提示词工程/14-全链路审计与运行对齐/`）：
 
 ```text
-00.超级提示词工程/14-全链路审计与运行对齐/PROJECT_REGISTRY.yaml
-00.超级提示词工程/14-全链路审计与运行对齐/CAPABILITY_REGISTRY.yaml
-00.超级提示词工程/14-全链路审计与运行对齐/ARTIFACT_REGISTRY.yaml
-00.超级提示词工程/14-全链路审计与运行对齐/VALIDATION_REGISTRY.yaml
-00.超级提示词工程/14-全链路审计与运行对齐/MEMORY-SOURCE-PRIORITY.md
-00.超级提示词工程/14-全链路审计与运行对齐/MEMORY-SOURCE-INDEX.yaml
-00.超级提示词工程/14-全链路审计与运行对齐/BREAKPOINT-REPAIR-MATRIX.md
-00.超级提示词工程/14-全链路审计与运行对齐/UNIFIED-STATUS-OBJECT-SPEC.md
-00.超级提示词工程/14-全链路审计与运行对齐/UNIFIED-STATUS-LEDGER.yaml
+PROJECT_REGISTRY.yaml         # 项目元数据注册
+CAPABILITY_REGISTRY.yaml      # 能力注册
+ARTIFACT_REGISTRY.yaml        # 产物注册
+VALIDATION_REGISTRY.yaml      # 验证规则注册（18项）
+MEMORY-SOURCE-PRIORITY.md     # 记忆源优先级
+MEMORY-SOURCE-INDEX.yaml      # 记忆源索引
+BREAKPOINT-REPAIR-MATRIX.md   # 断裂点修复矩阵
+UNIFIED-STATUS-OBJECT-SPEC.md # 统一状态对象规格
+UNIFIED-STATUS-LEDGER.yaml    # 统一状态账本（11个状态对象）
 ```
 
-下一阶段仍必须补齐和深化：
+飞轮迭代（R1→R3）中已完成或部分完成的工件：
 
 ```text
-TRACEABILITY-MATRIX.md               # 项目级 GOAL/REQ/PRD/SPEC/TASK/TEST/AUD/MEM 实例
-AKU-KNOWLEDGE-ATOM-SPEC.md           # 知识原子进入知识库/注册表的标准
-VERIFY-DELIVERY.ps1                  # 用户交付包总体验证脚本
-注册表字段级证据、自动校验、变更记录
+AKU-KNOWLEDGE-ATOM-SPEC.md                # ✅ 已完成 — 00/13-源提示词吸收与演化/
+VERIFY-DELIVERY.ps1                       # ✅ 已完成 — 协同通用AI大模型开发交付包/（273行，-Strict模式）
+TRACEABILITY-MATRIX.md                    # 半完成 — 模板在 00/06-原子化开发治理/，项目实例在 协同/ 交付包中
+```
+
+仍需深化的方向：
+
+```text
+注册表字段级证据、自动校验、变更记录    # 注册表从手工维护→自动校验
+TRACEABILITY-MATRIX 项目实例填充          # 从模板+骨架→真实项目 GOAL/REQ/PRD/SPEC/TASK/TEST/AUD/MEM
+CHANGELOG 自动化                          # git log → 结构化变更日志
+多 AI 平台兼容验证                        # 跨平台启动序列验证
 ```
 
 这些不是装饰文档，而是未来 AI 自然语言进入母包后能自动理解状态、能力、任务、证据和交付路径的核心索引。

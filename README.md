@@ -31,7 +31,7 @@ git submodule update --init --recursive
 
 ## 验证
 
-根目录提供 `qa_runner.py` 统一验证工具（13 项验证规则）：
+根目录提供 `qa_runner.py` 统一验证工具（18 项验证规则，含 5 项 MANUAL）：
 
 ```bash
 python qa_runner.py validate    # 运行全量验证
@@ -54,7 +54,8 @@ powershell -ExecutionPolicy Bypass -File .\VERIFY-DELIVERY.ps1 -Strict # 严格�
 
 | 文件 | 用途 |
 |------|------|
-| `AI_PROJECT_CONTEXT.md` | **全局导航地图** — 目录结构、子系统说明、跨系统关系、启动命令 |
+| `AI_PROJECT_CONTEXT.md` | **全局导航地图** — 目录结构、子系统说明、跨系统关系、启动命令、CI/CD、开发迭代记录 |
+| `LICENSE` | MIT 开源许可证 |
 | `MISSION-MEMORY.md` | 母包使命、边界、AI 唤醒锚点 |
 | `MOTHER-PACK-ACTIVATION-GUIDE.md` | **唯一权威 AI 启动协议** |
 | `开发者母交付包使用说明.md` | 面向 zip 包接收者的完整使用指引（交付流程、子系统定位、验证步骤） |

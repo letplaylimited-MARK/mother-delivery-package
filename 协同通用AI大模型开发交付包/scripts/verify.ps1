@@ -1,10 +1,9 @@
-# verify.ps1 — Project-level Verification Script
-# Calls the main delivery verification script
+# verify.ps1 - Thin wrapper for project-level verification
+# Delegates to the main VERIFY-DELIVERY.ps1 script with -Strict mode
 $ErrorActionPreference = "Stop"
-$Root = Split-Path -Parent $MyInvocation.MyCommand.Path
-$DeliveryScript = Join-Path (Split-Path -Parent $Root) "协同通用AI大模型开发交付包\VERIFY-DELIVERY.ps1"
-if (Test-Path $DeliveryScript) {
-    & $DeliveryScript -Strict
-} else {
-    & (Join-Path $PSScriptRoot "..\VERIFY-DELIVERY.ps1") -Strict
+$mainScript = Join-Path $PSScriptRoot "..\VERIFY-DELIVERY.ps1"
+if (-not (Test-Path $mainScript)) {
+    Write-Error "Main verification script not found: $mainScript"
+    exit 1
 }
+& $mainScript -Strict

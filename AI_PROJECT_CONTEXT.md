@@ -1,7 +1,7 @@
 # AI Project Context Map
 
 > 用途：给未来的通用 AI 大模型、开发者、审查者快速理解本文件夹。  
-> 当前盘点时间：2026-05-27。  
+> 当前盘点时间：2026-05-29。  
 > 路径约定：本文不绑定具体电脑路径；统一使用 `<母交付包根目录>` 表示本文件所在目录。
 
 ## 0. 总体判断
@@ -46,15 +46,15 @@ Q-SpecTrum 智脑平台
 
 | 目录 | 当前状态 | 定位 | 关键入口 |
 |---|---:|---|---|
-| `00.超级提示词工程` | 39 文件 | 跨项目 AI 协同的提示词操作系统：总控启动、引导秘书、使命记忆唤醒、SpecForge PRD/SPEC Gate、Skill Configuration Gate、源提示词吸收、元智核解构、超级提示词原子化复核、全链路审计与运行对齐、机器可读注册表、统一状态对象、审计问题日志、断裂点修复矩阵、记忆源索引、路由、上下文包、原子治理、反漂移、角色沙盘、母包集成蓝图、通用 AI 协作生态接入契约、模型原生协作协议 | `README.md`, `01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md`, `06-原子化开发治理/SPECFORGE-PRD-SPEC-GATE.md`, `10-通用AI协作生态/SKILL-CONFIGURATION-GATE.md`, `12-引导秘书逻辑/MISSION-MEMORY-AWAKENING-PROTOCOL.md`, `12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md`, `13-源提示词吸收与演化/META-INTELLIGENCE-CORE-SUPER-PROMPT-DECONSTRUCTION.md`, `13-源提示词吸收与演化/SOURCE-PROMPT-INGESTION-PROTOCOL.md`, `13-源提示词吸收与演化/SUPER-PROMPT-ATOMIC-RESEARCH-REVIEW.md`, `14-全链路审计与运行对齐/FULL-STACK-WORKFLOW-AUDIT-PROTOCOL.md`, `14-全链路审计与运行对齐/MOTHER-CHILD-WORKFLOW-MAP.md`, `14-全链路审计与运行对齐/AUDIT-COVERAGE-REGISTRY.md`, `14-全链路审计与运行对齐/WORKFLOW-AUDIT-ISSUE-LOG.md`, `14-全链路审计与运行对齐/BREAKPOINT-REPAIR-MATRIX.md`, `14-全链路审计与运行对齐/UNIFIED-STATUS-OBJECT-SPEC.md`, `14-全链路审计与运行对齐/UNIFIED-STATUS-LEDGER.yaml`, `14-全链路审计与运行对齐/PROJECT_REGISTRY.yaml`, `14-全链路审计与运行对齐/CAPABILITY_REGISTRY.yaml`, `14-全链路审计与运行对齐/ARTIFACT_REGISTRY.yaml`, `14-全链路审计与运行对齐/VALIDATION_REGISTRY.yaml`, `14-全链路审计与运行对齐/MEMORY-SOURCE-PRIORITY.md`, `14-全链路审计与运行对齐/MEMORY-SOURCE-INDEX.yaml`, `09-母包集成蓝图/MOTHER-PACK-AI-COLLABORATION-BLUEPRINT.md`, `11-模型原生协作协议/MODEL-NATIVE-COLLABORATION-PROTOCOL.md` |
-| `01.通讯协议_幽灵通道` | 299 文件 | Ghost Channel v1.0 协议、SDK、部署与商业交付包 | `README.md`, `INDEX.md`, `00_总览/PROJECT_HANDOFF.md` |
+| `00.超级提示词工程` | 52 文件 | 跨项目 AI 协同的提示词操作系统：总控启动、引导秘书、使命记忆唤醒、SpecForge PRD/SPEC Gate、Skill Configuration Gate、源提示词吸收、元智核解构、超级提示词原子化复核、全链路审计与运行对齐、机器可读注册表、统一状态对象、审计问题日志、断裂点修复矩阵、记忆源索引、路由、上下文包、原子治理、反漂移、角色沙盘、母包集成蓝图、通用 AI 协作生态接入契约、模型原生协作协议 | `README.md`, `01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md`, `06-原子化开发治理/SPECFORGE-PRD-SPEC-GATE.md`, `10-通用AI协作生态/SKILL-CONFIGURATION-GATE.md`, `12-引导秘书逻辑/MISSION-MEMORY-AWAKENING-PROTOCOL.md`, `12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md`, `13-源提示词吸收与演化/META-INTELLIGENCE-CORE-SUPER-PROMPT-DECONSTRUCTION.md`, `13-源提示词吸收与演化/SOURCE-PROMPT-INGESTION-PROTOCOL.md`, `13-源提示词吸收与演化/SUPER-PROMPT-ATOMIC-RESEARCH-REVIEW.md`, `14-全链路审计与运行对齐/FULL-STACK-WORKFLOW-AUDIT-PROTOCOL.md`, `14-全链路审计与运行对齐/MOTHER-CHILD-WORKFLOW-MAP.md`, `14-全链路审计与运行对齐/AUDIT-COVERAGE-REGISTRY.md`, `14-全链路审计与运行对齐/WORKFLOW-AUDIT-ISSUE-LOG.md`, `14-全链路审计与运行对齐/BREAKPOINT-REPAIR-MATRIX.md`, `14-全链路审计与运行对齐/UNIFIED-STATUS-OBJECT-SPEC.md`, `14-全链路审计与运行对齐/UNIFIED-STATUS-LEDGER.yaml`, `14-全链路审计与运行对齐/PROJECT_REGISTRY.yaml`, `14-全链路审计与运行对齐/CAPABILITY_REGISTRY.yaml`, `14-全链路审计与运行对齐/ARTIFACT_REGISTRY.yaml`, `14-全链路审计与运行对齐/VALIDATION_REGISTRY.yaml`, `14-全链路审计与运行对齐/MEMORY-SOURCE-PRIORITY.md`, `14-全链路审计与运行对齐/MEMORY-SOURCE-INDEX.yaml`, `09-母包集成蓝图/MOTHER-PACK-AI-COLLABORATION-BLUEPRINT.md`, `11-模型原生协作协议/MODEL-NATIVE-COLLABORATION-PROTOCOL.md` |
+| `01.通讯协议_幽灵通道` | 295 文件 | Ghost Channel v1.0 协议、SDK、部署与商业交付包 | `README.md`, `INDEX.md`, `00_总览/PROJECT_HANDOFF.md` |
 | `02.通用知识库框架_Universal-KB` | 21 文件 | V1 通用知识库框架模板 | `README.md`, `05-agents/AGENTS.md` |
-| `03.数据库管理_文件夹整理AI应用` | 172 文件 | V2 知识库应用：Flask + MCP + 文件整理 + 向量检索 | `README.md`, `AGENTS.md`, `app.py`, `mcp_server.py` |
+| `03.数据库管理_文件夹整理AI应用` | 172+ 文件 | V2 知识库应用：Flask + MCP + 文件整理 + 向量检索（独立 submodule） | `README.md`, `AGENTS.md`, `app.py`, `mcp_server.py` |
 | `04.QCM-MVP-Emergence` | 146 文件 | QCM 共鸣/涌现 MVP，22 公式实现和测试 | `README.md`, `PROJECT_HANDOFF-QCM.md`, `qcm/main.py` |
-| `05.超极智脑_Q-SpecTrum` | 431 文件 | 主平台：15 角色、Web UI、API、DB、知识库、验证门 | `README.md`, `INDEX.md`, `AGENTS.md`, `智腦協議-BRAIN-PROTOCOL.md`, `run.py` |
-| `协同通用AI大模型开发交付包` | 7 文件 | 开发者完成具体项目后交给最终用户的交付包骨架，承载价值/功能/结构/运作四体系，并提供模板/严格两种交付验证模式 | `README.md`, `交付包组装规则.md`, `VERIFY-DELIVERY.ps1`, `01-价值体系/README.md` |
+| `05.超极智脑_Q-SpecTrum` | 431+ 文件 | 主平台：15 角色、Web UI、API、DB、知识库、验证门（独立 submodule） | `README.md`, `INDEX.md`, `AGENTS.md`, `智腦協議-BRAIN-PROTOCOL.md`, `run.py` |
+| `协同通用AI大模型开发交付包` | 13 文件 | 开发者完成具体项目后交给最终用户的交付包骨架，承载价值/功能/结构/运作四体系，并提供模板/严格两种交付验证模式 | `README.md`, `交付包组装规则.md`, `VERIFY-DELIVERY.ps1`, `01-价值体系/README.md` |
 
-统计口径：排除 `.git`、`node_modules`、`dist/build/coverage`、`__pycache__`、`.pytest_cache`、submodule 展开目录后，根仓库 Git 跟踪约 541 个文件（含 submodule 指针）；submodule 内部分别有 172+ 和 431+ 文件。全量约 1082 个文件；其中 Markdown、Python、JSON/YAML、HTML/PDF、SQLite DB 是主体。`.pytest_cache` 会因验证命令临时生成，不计入稳定交付基线。
+统计口径：00/01/02/04/协同的文件数为 `git ls-files` 跟踪数；03/05 为独立 submodule，数字标注 `+` 表示含 submodule 内部展开，根仓库仅跟踪指针文件。根仓库总跟踪 542 文件（含 submodule 指针），全量展开约 1082 文件。Markdown、Python、JSON/YAML、HTML/PDF、SQLite DB 是主体。`.pytest_cache` 会因验证命令临时生成，不计入稳定交付基线。
 
 ## 2. 子系统理解
 
@@ -303,7 +303,26 @@ $env:PYTHONUTF8='1'; python run.py --status
 python run.py --web
 ```
 
-## 8. 工作原则
+## 8. CI/CD 与自动化
+
+GitHub Actions 工作流位于 `.github/workflows/validate.yml`，每次 push 到 main 或 PR 时自动运行：
+
+- **validate Job** (ubuntu-latest, Python 3.13/3.14)：qa_runner.py validate/status、Markdown fence 检查、submodule 状态检查
+- **powershell-verify Job** (windows-latest)：`VERIFY-DELIVERY.ps1 -Strict` 交付验证
+
+## 9. 开发迭代记录
+
+| 阶段 | Commit 范围 | 主要成果 |
+|------|-------------|----------|
+| D (交付门禁) | b46c207 → 05a8147 | GitHub 创建、submodule push、根指针 commit |
+| P1 (验证消除) | f683678 → 5ae25dc | venv 路由、SDK PYTHONPATH、MANIFEST 重生成、UTF8 编码、四体系填充、5 缺失文件 |
+| P2 (架构提升) | 711e3e4 → 6ccb664 | QCM config 化 60 常量、源提示词吸收验证、AKU-SPEC、TRACEABILITY 实例、02 升级、CI/CD pipeline、.gitignore |
+| R1 (飞轮) | f5fba1c | 45 专家名统一、SA 编号映射、commit 数校正、MASTER 12→15 模块、启动序列 1-17、LEDGER 11 对象 |
+| R2 (飞轮) | 219c6d3 | P0-3 MASTER 15 模块引用、P1-4 启动序列重编号、P1-3 LEDGER 扩充 |
+| R3 (飞轮) | b60edb1 | 全量验证 + 飞轮报告 v3.0-final |
+| v3.1 (审计) | f7c250d → ef79aec | README/LICENSE 创建、文件数口径统一、飞轮报告 14 项事实核查 |
+
+## 10. 工作原则
 
 - 先分清“权威运行时”和“归档/副本/旧报告”。
 - 文档声明与实际脚本冲突时，以当前代码、当前验证输出、当前 DB 查询为准。

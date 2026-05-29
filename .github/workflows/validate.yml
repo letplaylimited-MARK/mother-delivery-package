@@ -81,9 +81,11 @@ else:
       - name: VERIFY-DELIVERY.ps1 -Strict
         shell: pwsh
         run: |
-          if (Test-Path "协同通用AI大模型开发交付包/scripts/verify.ps1") {
+          $verifyScript = "协同通用AI大模型开发交付包\VERIFY-DELIVERY.ps1"
+          if (Test-Path $verifyScript) {
             cd "协同通用AI大模型开发交付包"
-            powershell -ExecutionPolicy Bypass -File scripts/verify.ps1
+            powershell -ExecutionPolicy Bypass -File .\VERIFY-DELIVERY.ps1 -Strict
           } else {
-            Write-Warning "VERIFY-DELIVERY.ps1 not found, skipping"
+            Write-Error "VERIFY-DELIVERY.ps1 not found at $verifyScript - delivery verification cannot run"
+            exit 1
           }

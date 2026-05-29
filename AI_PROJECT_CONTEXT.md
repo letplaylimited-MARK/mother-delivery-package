@@ -54,7 +54,7 @@ Q-SpecTrum 智脑平台
 | `05.超极智脑_Q-SpecTrum` | 431 文件 | 主平台：15 角色、Web UI、API、DB、知识库、验证门 | `README.md`, `INDEX.md`, `AGENTS.md`, `智腦協議-BRAIN-PROTOCOL.md`, `run.py` |
 | `协同通用AI大模型开发交付包` | 7 文件 | 开发者完成具体项目后交给最终用户的交付包骨架，承载价值/功能/结构/运作四体系，并提供模板/严格两种交付验证模式 | `README.md`, `交付包组装规则.md`, `VERIFY-DELIVERY.ps1`, `01-价值体系/README.md` |
 
-统计口径：排除 `.git`、`node_modules`、`dist/build/coverage`、`__pycache__`、`.pytest_cache` 后，约 1118 个文件；其中 Markdown、Python、JSON/YAML、HTML/PDF、SQLite DB 是主体。`.pytest_cache` 会因验证命令临时生成，不计入稳定交付基线。
+统计口径：排除 `.git`、`node_modules`、`dist/build/coverage`、`__pycache__`、`.pytest_cache`、submodule 展开目录后，根仓库 Git 跟踪约 541 个文件（含 submodule 指针）；submodule 内部分别有 172+ 和 431+ 文件。全量约 1082 个文件；其中 Markdown、Python、JSON/YAML、HTML/PDF、SQLite DB 是主体。`.pytest_cache` 会因验证命令临时生成，不计入稳定交付基线。
 
 ## 2. 子系统理解
 

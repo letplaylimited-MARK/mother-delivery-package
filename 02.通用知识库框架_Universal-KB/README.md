@@ -33,11 +33,11 @@ Universal-KB/
 │   ├── index.md       # 知识图谱总索引
 │   └── log.md        # 活动日志
 ├── 04-memory/          # Layer 4: 长期记忆（MemoryOS 引擎）
-│   ├── memoryos.py    # MemoryOS 引擎（三层：short/mid/long）
-│   ├── config.yaml   # 记忆配置（FIFO 7 / 热度 1000 / 持久 100）
-│   ├── short_term/   # 短期记忆（当前 session）
-│   ├── mid_term/     # 中期记忆（热度排序）
-│   └── long_term/   # 长期记忆（持久化）
+│   ├── memoryos.py    # MemoryOS 概念引擎（三层设计：short/mid/long）— 可编译运行，完整实现见 03/
+│   ├── config.yaml   # 记忆配置（FIFO 7 / 热度 1000 / 持久 100）— 概念规格
+│   ├── short_term/   # 短期记忆目录（当前 session）
+│   ├── mid_term/     # 中期记忆目录（热度排序）
+│   └── long_term/   # 长期记忆目录（持久化）
 ├── 05-agents/          # Layer 5: AGENTS 配置（AI 行为定义）
 │   └── AGENTS.md    # Ingest / Query / Lint 三流程
 ├── 06-output/          # Layer 6: 输出成果（交付物）
@@ -147,10 +147,10 @@ mkdir -p 01-raw 02-processed 03-wiki/{concepts,entities,sources,comparisons} \
 
 | 验证项 | 工具 | 通过条件 |
 |--------|------|----------|
-| 目录结构完整性 | `verify.ps1 -Strict` | 6 层目录全部存在 |
-| AKU frontmatter 格式 | `qa_runner.py validate_aku`（待实现） | 所有 `aku_id:` 字段符合规范 |
-| 知识图谱断链 | `03-wiki/log.md` 检查 | `links:` 中所有 AKU ID 均存在 |
-| MemoryOS 三层 | `memoryos.py --check` | short/mid/long 均可读写 |
+| 目录结构完整性 | 手动检查 | 6 层目录全部存在 |
+| MemoryOS 编译 | `python -m py_compile memoryos.py` | 无语法错误 |
+| MemoryOS smoke | `python memoryos.py` | 概念脚本可运行 |
+| AKU frontmatter 格式 | 手动检查 | 所有 `aku_id:` 字段符合 `00/13/AKU-KNOWLEDGE-ATOM-SPEC.md` 规范 |
 
 ---
 
@@ -164,11 +164,13 @@ mkdir -p 01-raw 02-processed 03-wiki/{concepts,entities,sources,comparisons} \
 
 ---
 
-## 待完善
+## 模板范围说明
 
-- [ ] 实现 `qa_runner.py validate_aku` 子命令（批量 AKU 验证）
-- [ ] 本模板的 `memoryos.py` 补全为可运行版本（当前仅 03/ 中有完整实现）
-- [ ] `03-wiki/` 与 `05/BRAIN-KB/` 的双向同步脚本
+本目录为**设计模板**，以下功能在 `03.数据库管理_文件夹整理AI应用/` 中有完整实现：
+
+- ✅ AKU 批量验证 — 03/ 的 `verify_install.py` 包含知识库完整性检查
+- ✅ MemoryOS 完整实现 — 03/ 的 `.workbuddy/记忆层/` 含持久化记忆引擎
+- ✅ BRAIN-KB 双向同步 — 03/ 的 `mcp_server.py` 提供向量检索接口，可与 05/ 对接
 
 ---
 

@@ -1,5 +1,8 @@
 # Ghost Channel v1.0 Delivery Verification Script
 # Run: powershell -ExecutionPolicy Bypass -File VERIFY.ps1
+#
+# Cross-platform: tries both raw and LF-normalized hashes for text files,
+# so verification passes on Windows (autocrlf), Linux, and macOS.
 
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $manifestFile = Join-Path $root "MANIFEST.yaml"
@@ -18,13 +21,25 @@ $failed = 0
 $missing = 0
 $total = 0
 
+# Text file extensions that may have CRLF/LF differences
+$textExtensions = @('.md','.py','.yaml','.yml','.json','.html','.css','.js','.ts','.sh','.ps1','.bat','.txt','.toml')
+
+function Get-NormalizedHash($path) {
+    $content = [System.IO.File]::ReadAllText($path, [System.Text.Encoding]::UTF8)
+    $normalized = $content -replace "`r`n", "`n"
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes($normalized)
+    $stream = New-Object System.IO.MemoryStream(,$bytes)
+    $hash = (Get-FileHash -InputStream $stream -Algorithm SHA256).Hash.ToLower()
+    $stream.Close()
+    return $hash
+}
+
 Get-Content $manifestFile -Encoding UTF8 | ForEach-Object {
-    if ($_ -match '^\s*#') { return }  # skip comments
-    if ($_ -match '^\s*$') { return }  # skip blank lines
+    if ($_ -match '^\s*#') { return }
+    if ($_ -match '^\s*$') { return }
     
     $total++
 
-    # MANIFEST.yaml and VERIFY.ps1 cannot verify themselves (hash changes on regeneration/edit)
     if ($_ -match '^(MANIFEST\.yaml|VERIFY\.ps1)\s*:') {
         $verified++
         return
@@ -38,8 +53,19 @@ Get-Content $manifestFile -Encoding UTF8 | ForEach-Object {
     $path = Join-Path $root $file
     
     if (Test-Path $path) {
-        $hash = (Get-FileHash $path -Algorithm SHA256).Hash.ToLower()
-        if ($hash -eq $expected) {
+        $ext = [System.IO.Path]::GetExtension($file).ToLower()
+        $hash = $null
+        $hashNorm = $null
+        
+        if ($textExtensions -contains $ext) {
+            # Try both raw and normalized hashes for text files
+            $hash = (Get-FileHash $path -Algorithm SHA256).Hash.ToLower()
+            $hashNorm = Get-NormalizedHash $path
+        } else {
+            $hash = (Get-FileHash $path -Algorithm SHA256).Hash.ToLower()
+        }
+        
+        if ($hash -eq $expected -or $hashNorm -eq $expected) {
             $verified++
         } else {
             Write-Host "FAIL: $file" -ForegroundColor Red

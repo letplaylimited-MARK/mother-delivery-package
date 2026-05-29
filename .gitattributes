@@ -1,0 +1,38 @@
+# ============================================================
+# Mother Delivery Package - Git Attributes
+# Enforce LF line endings for all text files to ensure
+# cross-platform consistency (manifest hashes, tests, etc.)
+# ============================================================
+
+# Auto-detect text files and normalize to LF on checkout
+* text=auto eol=lf
+
+# Explicitly mark common text file types
+*.md text eol=lf
+*.py text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.sh text eol=lf
+*.ps1 text eol=lf
+*.bat text eol=lf
+
+# Binary files — do not modify
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.db binary
+*.sqlite binary
+*.sqlite3 binary
+*.faiss binary

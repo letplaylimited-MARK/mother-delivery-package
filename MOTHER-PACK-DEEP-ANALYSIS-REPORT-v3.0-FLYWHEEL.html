@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>母交付包深度分析报告 v3.0 - 三轮飞轮沙盘推演</title>
+<style>
+:root{--bg:#fafafa;--card:#fff;--border:#e0e0e0;--text:#1a1a1a;--text2:#666;--accent:#185FA5;--accent2:#0F6E56;--danger:#A32D2D;--warning:#BA7517;--success:#1D9E75;--purple:#534AB7;--coral:#993C1D}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;padding:2rem;max-width:1100px;margin:0 auto}
+h1{font-size:26px;font-weight:700;margin-bottom:.5rem;color:var(--accent)}
+h2{font-size:20px;font-weight:600;margin:2rem 0 1rem;padding-bottom:.5rem;border-bottom:2px solid var(--border)}
+h3{font-size:16px;font-weight:600;margin:1.5rem 0 .75rem}
+h4{font-size:14px;font-weight:600;margin:1rem 0 .5rem}
+.meta{color:var(--text2);font-size:13px;margin-bottom:2rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0}
+.card-purple{border-left:4px solid var(--purple)}.card-blue{border-left:4px solid var(--accent)}.card-green{border-left:4px solid var(--accent2)}.card-red{border-left:4px solid var(--danger)}.card-yellow{border-left:4px solid var(--warning)}.card-coral{border-left:4px solid var(--coral)}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600}
+.badge-p0{background:#FCEBEB;color:var(--danger)}.badge-p1{background:#FAECE7;color:var(--coral)}.badge-p2{background:#FAEEDA;color:var(--warning)}.badge-ok{background:#E1F5EE;color:var(--accent2)}.badge-warn{background:#FAEEDA;color:var(--warning)}.badge-fail{background:#FCEBEB;color:var(--danger)}.badge-new{background:#EEEDFE;color:var(--purple)}
+table{width:100%;border-collapse:collapse;margin:.75rem 0;font-size:13px}
+th{background:#f5f5f5;text-align:left;padding:8px 10px;font-weight:600;border-bottom:2px solid var(--border)}
+td{padding:6px 10px;border-bottom:1px solid #f0f0f0}
+tr:hover{background:#fafafa}
+code{background:#f0f0f0;padding:1px 5px;border-radius:3px;font-size:12px;font-family:'Consolas','Monaco',monospace}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:1rem 0}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.75rem;text-align:center}
+.stat-num{font-size:28px;font-weight:700}.stat-label{font-size:11px;color:var(--text2);margin-top:2px}
+.flow-box{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:1rem 0}
+.flow-step{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px}
+.flow-arrow{color:var(--text2);font-size:14px}
+.toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin:1rem 0}
+.toc a{text-decoration:none;color:var(--accent)}.toc a:hover{text-decoration:underline}
+.toc ol{padding-left:1.5rem}.toc li{margin:.25rem 0}
+.flywheel{background:#f8f9ff;border:2px solid var(--purple);border-radius:16px;padding:1.5rem;margin:1rem 0}
+.round-box{border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin:1rem 0}
+.r1{border-left:4px solid var(--success);background:#f0faf5}
+.r2{border-left:4px solid var(--purple);background:#f5f3ff}
+.r3{border-left:4px solid var(--coral);background:#fef8f5}
+.score-up{display:inline-block;padding:1px 6px;border-radius:3px;font-size:11px;font-weight:600;background:#D4EDDA;color:#155724}
+.dep-graph{background:#1a1a2e;color:#e0e0e0;padding:1rem;border-radius:8px;font-family:'Consolas',monospace;font-size:12px;line-height:1.8;overflow-x:auto;white-space:pre}
+ul,ol{margin-left:1.5rem}li{margin:.25rem 0}
+</style>
+</head>
+<body>
+
+<h1>母交付包深度分析报告 v3.0</h1>
+<p class="meta">
+v1.0: 2026-05-27 | v2.0: 2026-05-29 10:39 | v3.0: 2026-05-29 11:20<br>
+分析引擎：观澜 (Guan Lan) + AI团队 (4 Agent并行)<br>
+分析方法：三轮飞轮沙盘推演 (Flywheel Sandbox Simulation x3)<br>
+分析范围：7子系统 + QCM v3.0 Skill + 协同交付包 | ~1081 文件 | Git: bd5c1aa
+</p>
+
+<nav class="toc">
+<strong>目录</strong>
+<ol>
+<li><a href="#s1">v2.0 核心数据回顾</a></li>
+<li><a href="#s2">AI团队程序化事实核查</a></li>
+<li><a href="#s3">专家名称不一致根因分析</a></li>
+<li><a href="#s4">三轮飞轮沙盘推演</a></li>
+<li><a href="#s5">最佳执行方案</a></li>
+<li><a href="#s6">风险与降级策略</a></li>
+<li><a href="#s7">v2.0 vs v3.0 目标评分</a></li>
+</ol>
+</nav>
+
+<h2 id="s1">一、v2.0 核心数据回顾</h2>
+<div class="stat-grid">
+<div class="stat-box"><div class="stat-num" style="color:var(--success)">6</div><div class="stat-label">已修复</div></div>
+<div class="stat-box"><div class="stat-num" style="color:var(--warning)">3</div><div class="stat-label">已改善</div></div>
+<div class="stat-box"><div class="stat-num" style="color:var(--danger)">6</div><div class="stat-label">未修复</div></div>
+<div class="stat-box"><div class="stat-num" style="color:var(--purple)">15</div><div class="stat-label">总计</div></div>
+</div>
+
+<h3>7维度成熟度 (v2.0)</h3>
+<table>
+<tr><th>维度</th><th>v1.0</th><th>v2.0</th><th>瓶颈</th></tr>
+<tr><td>架构设计</td><td>A</td><td>A</td><td>无</td></tr>
+<tr><td>文档完整度</td><td>A-</td><td>A</td><td>无</td></tr>
+<tr><td>交付就绪度</td><td>C</td><td>A-</td><td>P1-1</td></tr>
+<tr><td>AI可发现性</td><td>D+</td><td>B-</td><td>P0-3+P1-4</td></tr>
+<tr><td>验证覆盖</td><td>C+</td><td>B+</td><td>P2-6</td></tr>
+<tr><td>可执行性</td><td>C+</td><td>B</td><td>P0-3+P1-3+P1-4</td></tr>
+<tr><td>一致性</td><td>C</td><td>C+</td><td>P1-1+P1-2+P1-3</td></tr>
+</table>
+
+<h3>6个未修复问题</h3>
+<table>
+<tr><th>ID</th><th>问题</th><th>工时</th><th>影响维度数</th></tr>
+<tr><td><span class="badge badge-p1">P1-1</span></td><td><strong>37/45专家名称不一致</strong></td><td>2h</td><td>3</td></tr>
+<tr><td><span class="badge badge-p0">P0-3</span></td><td>MASTER引用12而非15/SSP-v3.0</td><td>1h</td><td>3</td></tr>
+<tr><td><span class="badge badge-p1">P1-4</span></td><td>MASTER不引用15模块</td><td>1h</td><td>2</td></tr>
+<tr><td><span class="badge badge-p1">P1-3</span></td><td>LEDGER仅3对象</td><td>1h</td><td>2</td></tr>
+<tr><td><span class="badge badge-p1">P1-2</span></td><td>子代理映射无法对齐</td><td>1h</td><td>2</td></tr>
+<tr><td><span class="badge badge-p2">P2-6</span></td><td>health_check依赖断裂</td><td>30m</td><td>1</td></tr>
+</table>
+
+<h2 id="s2">二、AI团队程序化事实核查</h2>
+<div class="card card-blue">
+<strong>4 Agent并行探索</strong>：report-analyzer + codebase-explorer + validation-auditor + architecture-analyst
+</div>
+
+<h3>验证结论</h3>
+<table>
+<tr><th>问题</th><th>验证方法</th><th>结果</th></tr>
+<tr><td>P1-1</td><td>Python zipfile+yaml+re对比45专家</td><td><span class="badge badge-fail">确认37/45不一致</span></td></tr>
+<tr><td>P1-3</td><td>读取UNIFIED-STATUS-LEDGER.yaml</td><td><span class="badge badge-fail">确认仅3个对象(1GOAL+2AUD)</span></td></tr>
+<tr><td>P1-4</td><td>Grep MASTER-ORCHISTRATOR</td><td><span class="badge badge-fail">确认无15模块引用</span></td></tr>
+<tr><td>P0-3</td><td>同P1-4</td><td><span class="badge badge-fail">确认引用12而非15</span></td></tr>
+<tr><td>P2-6</td><td>Grep health_check.py</td><td><span class="badge badge-fail">确认simple_role不存在</span></td></tr>
+<tr><td>P2-4</td><td>Git log + 读取文件</td><td><span class="badge badge-warn">确认commit数过时</span></td></tr>
+</table>
+
+<div class="card card-green"><strong>结论</strong>：v2.0报告所有6个未修复问题描述100%准确，无虚报、无遗漏。</div>
+
+<h2 id="s3">三、专家名称不一致根因分析</h2>
+<div class="card card-red">
+<strong>关键发现：独立演化，非简单编辑差异</strong>
+<ul>
+<li>8/45匹配 (E01, E03, E07-E10, E17, E36)</li>
+<li>28/45完全重命名 (角色定义根本性改变)</li>
+<li>9/45同类变体 (细微措辞差异)</li>
+<li>偏移假设已排除: Shift+0=17%, Shift+1=4%, Shift+2=2%</li>
+<li>config的"Cognitive Framework Designer"(E02)在SKILL.md中完全不存在</li>
+<li>SKILL.md的"Project Planner"(E02)在config中完全不存在</li>
+</ul>
+</div>
+
+<h3>修复策略</h3>
+<div class="card card-purple">
+<table>
+<tr><th>路径</th><th>方法</th><th>推荐</th></tr>
+<tr><td><strong>A: config为权威</strong></td><td>SKILL.md改名为config.yaml定义。config是V3.0 Single Source of Truth，18 scripts依赖它</td><td><span class="badge badge-ok">采用</span></td></tr>
+<tr><td>B: SKILL为权威</td><td>config.yaml改名。需更新所有scripts</td><td><span class="badge badge-warn">不推荐</span></td></tr>
+<tr><td>C: 用户逐一定义</td><td>最精确但耗45个决策</td><td><span class="badge badge-warn">备选</span></td></tr>
+</table>
+</div>
+
+<h2 id="s4">四、三轮飞轮沙盘推演</h2>
+<div class="flywheel">
+<h3>飞轮机制</h3>
+<div class="flow-box">
+<div class="flow-step" style="border-color:var(--success)">R1: 快速修复</div><span class="flow-arrow">&#x2192;</span>
+<div class="flow-step">门禁验证</div><span class="flow-arrow">&#x2192;</span>
+<div class="flow-step" style="border-color:var(--purple)">R2: 架构优化</div><span class="flow-arrow">&#x2192;</span>
+<div class="flow-step">门禁验证</div><span class="flow-arrow">&#x2192;</span>
+<div class="flow-step" style="border-color:var(--coral)">R3: 巩固飞轮</div><span class="flow-arrow">&#x2192;</span>
+<div class="flow-step">全量验证</div>
+</div>
+</div>
+
+<h3>依赖关系</h3>
+<div class="dep-graph">P2-4(5m), P2-6(30m), P2-3(30m)     [可并行]
+P1-1(2h) --&gt; P1-2(1h)              [串行]
+         |                              |
+         +------------------------------+
+         |                              |
+     R1 门禁验证                       |
+         |                              |
+     ----+------------------------------+
+     |
+P0-3(1h), P1-4(1h), P1-3(1h)       [可并行]
+         |
+     R2 门禁验证
+         |
+R3 全量验证 + 文档 + Git推送</div>
+
+<div class="round-box r1">
+<h3>Round 1: 快速修复 + 高杠杆 (3-4h)</h3>
+<table>
+<tr><th>#</th><th>问题</th><th>操作</th><th>工时</th></tr>
+<tr><td>R1-1</td><td><span class="badge badge-p2">P2-4</span></td><td>AI_PROJECT_CONTEXT commit数 10&#x2192;15</td><td>5m</td></tr>
+<tr><td>R1-2</td><td><span class="badge badge-p2">P2-6</span></td><td>health_check.py simple_role导入修复</td><td>30m</td></tr>
+<tr><td>R1-3</td><td><span class="badge badge-p2">P2-3</span></td><td>BREAKPOINT-REPAIR-MATRIX VERIFIED标记</td><td>30m</td></tr>
+<tr><td>R1-4</td><td><span class="badge badge-p1">P1-1</span><span class="badge badge-new">首要</span></td><td>以config.yaml为权威统一SKILL.md 37处名称</td><td>2h</td></tr>
+<tr><td>R1-5</td><td><span class="badge badge-p1">P1-2</span></td><td>统一子代理SA01-SA05映射 (依赖R1-4)</td><td>1h</td></tr>
+</table>
+<p><strong>门禁</strong>: qa_runner 14PASS/0FAIL + 45/45 expert match + VERIFY-DELIVERY PASS</p>
+</div>
+
+<div class="round-box r2">
+<h3>Round 2: 架构优化 + 入口闭合 (2-3h)</h3>
+<table>
+<tr><th>#</th><th>问题</th><th>操作</th><th>工时</th></tr>
+<tr><td>R2-1</td><td><span class="badge badge-p0">P0-3</span></td><td>MASTER引导链路 12&#x2192;15/SSP-v3.0</td><td>1h</td></tr>
+<tr><td>R2-2</td><td><span class="badge badge-p1">P1-4</span></td><td>MASTER添加15模块+QCM路由</td><td>1h</td></tr>
+<tr><td>R2-3</td><td><span class="badge badge-p1">P1-3</span></td><td>LEDGER扩充至7子系统+QCM+交付包</td><td>1h</td></tr>
+</table>
+<p><strong>门禁</strong>: qa_runner 15PASS/0FAIL/0WARN + consistency 10/10 + 无"12-引导秘书"残留</p>
+</div>
+
+<div class="round-box r3">
+<h3>Round 3: 巩固 + 飞轮效应验证 (1-2h)</h3>
+<table>
+<tr><th>#</th><th>任务</th><th>工时</th></tr>
+<tr><td>R3-1</td><td>全量一致性回归 (qa_runner+consistency+VERIFY-DELIVERY)</td><td>15m</td></tr>
+<tr><td>R3-2</td><td>文档同步 (AI_PROJECT_CONTEXT + 报告v3.0)</td><td>30m</td></tr>
+<tr><td>R3-3</td><td>Git推送 (R1/R2/R3各一commit)</td><td>15m</td></tr>
+<tr><td>R3-4</td><td>飞轮效应度量 (AI模拟7步全流程)</td><td>30m</td></tr>
+<tr><td>R3-5</td><td>CI/CD增强 (validate.yml添加pytest步骤)</td><td>30m</td></tr>
+</table>
+</div>
+
+<h2 id="s5">五、最佳执行方案</h2>
+<div class="stat-grid">
+<div class="stat-box"><div class="stat-num" style="color:var(--success)">6-8h</div><div class="stat-label">总工时</div></div>
+<div class="stat-box"><div class="stat-num" style="color:var(--purple)">13</div><div class="stat-label">执行项</div></div>
+<div class="stat-box"><div class="stat-num" style="color:var(--accent)">3</div><div class="stat-label">轮次</div></div>
+<div class="stat-box"><div class="stat-num" style="color:var(--danger)">7/7</div><div class="stat-label">目标:全A</div></div>
+</div>
+
+<h3>关键决策</h3>
+<div class="card card-coral">
+<ol>
+<li><strong>P1-1路径A</strong>: config.yaml为权威统一SKILL.md名称 + 描述保留不强制修改</li>
+<li><strong>P0-3策略</strong>: 替换引用 + 旧引用保留为HTML注释</li>
+<li><strong>P1-3范围</strong>: 7子系统(00-05)+QCM Skill+协同交付包 = 9个新对象</li>
+</ol>
+</div>
+
+<h2 id="s6">六、风险与降级策略</h2>
+<table>
+<tr><th>风险</th><th>概率</th><th>降级</th></tr>
+<tr><td>P1-1名称与描述语义不匹配</td><td><span class="badge badge-warn">中</span></td><td>仅改名不改描述，标注迁移注释</td></tr>
+<tr><td>MASTER修改破坏引导流程</td><td><span class="badge badge-warn">中</span></td><td>旧引用保留注释 + consistency全维度回归</td></tr>
+<tr><td>LEDGER格式不符合schema</td><td><span class="badge badge-ok">低</span></td><td>严格遵循UNIFIED-STATUS-OBJECT-SPEC.md</td></tr>
+<tr><td>R1引入新一致性问题</td><td><span class="badge badge-ok">低</span></td><td>R1门禁 + R2门禁双重验证</td></tr>
+</table>
+
+<h2 id="s7">七、v2.0 vs v3.0 目标评分</h2>
+<table>
+<tr><th>维度</th><th>v1.0</th><th>v2.0</th><th>v3.0目标</th><th>Total提升</th></tr>
+<tr><td>架构设计</td><td>A</td><td>A</td><td style="color:var(--success);font-weight:600">A</td><td>—</td></tr>
+<tr><td>文档完整度</td><td>A-</td><td>A</td><td style="color:var(--success);font-weight:600">A</td><td>—</td></tr>
+<tr><td>交付就绪度</td><td>C</td><td>A-</td><td style="color:var(--success);font-weight:600">A</td><td><span class="score-up">+1</span></td></tr>
+<tr><td>AI可发现性</td><td>D+</td><td>B-</td><td style="color:var(--success);font-weight:600">A</td><td><span class="score-up">+3</span></td></tr>
+<tr><td>验证覆盖</td><td>C+</td><td>B+</td><td style="color:var(--success);font-weight:600">A</td><td><span class="score-up">+2</span></td></tr>
+<tr><td>可执行性</td><td>C+</td><td>B</td><td style="color:var(--success);font-weight:600">A</td><td><span class="score-up">+2</span></td></tr>
+<tr><td>一致性</td><td>C</td><td>C+</td><td style="color:var(--success);font-weight:600">A</td><td><span class="score-up">+3</span></td></tr>
+</table>
+
+<div class="card card-green">
+<strong>预期成果</strong>
+<ul>
+<li>15/15 问题全部CLOSED（6已修复 + 3已改善 + 6将在R1/R2修复）</li>
+<li>7/7 维度达到A级</li>
+<li>qa_runner: 15+ PASS / 0 FAIL / 0 WARN</li>
+<li>validate_consistency: 10/10 PASS</li>
+<li>344 tests + VAL-04-HEALTH 6/6</li>
+<li>CI/CD覆盖qa_runner + pytest</li>
+</ul>
+</div>
+
+<hr>
+<p style="color:var(--text2);font-size:12px;margin-top:2rem">
+报告版本：v3.0 | 生成时间：2026-05-29 11:20 CST | 分析引擎：观澜 + AI团队<br>
+声明：本报告为三轮飞轮沙盘推演的分析结论，所有评分均为预测值，需执行后验证。
+</p>
+</body>
+</html>

@@ -15,7 +15,7 @@
 | 文件总数 | ~1118 个（排除 cache） |
 | 验证命令 | 18 条（qa_runner.py validate） |
 | 测试用例 | 274+（103 + 25 + 38 + 18 + 31 + 其他） |
-| Git 仓库 | GitHub: letplaylimited-MARK/mother-delivery-package（10 commits） |
+| Git 仓库 | GitHub: letplaylimited-MARK/mother-delivery-package（14 commits） |
 | Python 包依赖 | 6 个核心（cryptography, Flask, numpy, chromadb, pytest, pytest-asyncio） |
 
 ## 核心验证结果（2026-05-28）

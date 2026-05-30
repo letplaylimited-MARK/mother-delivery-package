@@ -341,14 +341,14 @@ R3 全量验证 + 文档 + Git推送</div>
 <tr><td>A15</td><td>一致性</td><td>9/10 PASS, 1 WARN</td><td><strong>10/10 PASS, 0 WARN</strong></td><td><span class="badge badge-ok">已修正</span></td></tr>
 </table>
 <div class="card card-green">
-<strong>审计结论</strong>：15 项断言中 7 项准确、6 项已修正至最新、1 项历史正确、1 项保持原样。无虚报、无伪造。7维度评分已全面刷新，6维度达A/A-，一致性达A级。
+<strong>审计结论</strong>：15 项断言中 7 项准确、6 项已修正至最新、1 项历史正确、1 项保持原样。无虚报、无伪造。7维度评分已全面刷新，7维度全部达A级，一致性达A级。
 </div>
 
 <hr>
 <p style="color:var(--text2);font-size:12px;margin-top:2rem">
-报告版本：v3.3-audit | 更新时间：2026-05-30 09:20 CST | 分析引擎：观澜 + AI团队<br>
-R1: f5fba1c | R2: 219c6d3 | R3: b60edb1 | Post-audit: 550effa, f7c250d, ef79aec, 555017b, 486d26b, 761ef41, b34c4c5, 8546bc7, <strong>29ae21d (v3.3-audit)</strong><br>
-声明：v3.0预测评分已全部执行验证。v3.2-final 对报告中全部可验证断言进行了逐项复验，Session 8/9 完成验证归零。v3.3-audit (Session 10) 再次逐项验证，修正commit数(24→25)、文件数(542→543)、VALIDATION_REGISTRY过时证据等6处不一致，刷新审计结论为7准确/6修正/1历史正确/1保持原样。7维度中6个达A/A-，一致性达A级。15/15问题全CLOSED，0 FAIL，0 WARN，0 MANUAL。
+报告版本：v4.0-final | 更新时间：2026-05-30 18:30 CST | 分析引擎：观澜 + AI团队<br>
+R1: f5fba1c | R2: 219c6d3 | R3: b60edb1 | Post-audit: 550effa, f7c250d, ef79aec, 555017b, 486d26b, 761ef41, b34c4c5, 8546bc7, 29ae21d (v3.3-audit), <strong>a59ec2d (v4.0-final)</strong><br>
+声明：v3.0预测评分已全部执行验证。v3.2-final 对报告中全部可验证断言进行了逐项复验，Session 8/9 完成验证归零。v3.3-audit (Session 10) 再次逐项验证，修正commit数、文件数、VALIDATION_REGISTRY过时证据等6处不一致。v4.0-final (Session 11) 完成3个A-维度升级：AI可发现性补建4个子系统INDEX.md；验证覆盖新增VAL-END-TO-END/VAL-CROSS-INTERFACE/VAL-QCM-CONFIG-SYNC三项端到端验证；可执行性创建test_config_sync.py保障config常量同步。7维度全部达到A级。15/15问题全CLOSED，0 FAIL，0 WARN。
 </p>
 </body>
 </html>

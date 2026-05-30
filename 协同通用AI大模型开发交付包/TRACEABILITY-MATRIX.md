@@ -101,7 +101,7 @@
 
 | ID | 目标/需求 | 任务 | 测试 | 审计 |
 |---|---|---|---|---|
-| G-04-1 | QCM 公式模块从硬编码迁移为 config-driven | T-04-1 扩展 `qcm/config.py` paper_params 段（14 模块，60 常量） | TEST-04-1 VAL-04-QCM-ALL: 173/173 PASS | AUD-04-1 calculator.py/detector.py 因循环依赖保留硬编码，标注来源 |
+| G-04-1 | QCM 公式模块从硬编码迁移为 config-driven | T-04-1 扩展 `qcm/config.py` paper_params 段（14 模块，60 常量） | TEST-04-1 VAL-04-QCM-ALL: 25 PASS + VAL-04-QCM-PAPER: 38 PASS + VAL-04-HEALTH: 6/6 = 69/69 ALL PASS | AUD-04-1 calculator.py/detector.py 因循环依赖保留硬编码，标注来源 |
 | REQ-04-1 | 涌现公式 R > 0.85 可复现（seed=42） | T-04-2 实现 `detector.py` 核心公式 + `test_emergence.py`（38 tests） | TEST-04-2 VAL-04-QCM-PAPER: 38/38 PASS, R=0.8664 | AUD-04-2 公式版本 v6.3，E 惩罚项已移除，R 上限 0.85+ |
 | REQ-04-2 | qa_runner.py 在 sandbox 环境可运行 | T-04-3 修复 `run_cmd()` 添加 `env=os.environ.copy()` | TEST-04-3 `python qa_runner.py validate` 12 PASS / 0 FAIL | AUD-04-3 Markdown fence 检测改用 `re.MULTILINE` 防止 false negative |
 
@@ -150,7 +150,7 @@ REQ: REQ-04-1（参数可配置，来源可追溯）
   ↓
 TASK: T-04-1（config.py paper_params + 12 模块迁移，60 常量）
   ↓
-TEST: TEST-04-1（VAL-04-QCM-ALL 173/173 PASS）
+TEST: TEST-04-1（VAL-04-QCM-ALL 25 PASS + VAL-04-HEALTH 6/6 = 31）
   TEST: TEST-04-2（VAL-04-QCM-PAPER 38/38 PASS）
   ↓
 AUD: AUD-04-1（calculator.py/detector.py 标注硬编码来源，待 Phase 3 解循环依赖）

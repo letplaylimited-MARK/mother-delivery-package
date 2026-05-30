@@ -633,13 +633,13 @@ status_objects:
       items:
       - kind: test
         ref: 04.QCM-MVP-Emergence/tests/
-        summary: 173/173 tests passed
+        summary: 63/63 QCM tests + 6/6 health checks = 69/69 ALL PASS
     validation:
       validation_refs:
       - VAL-04-QCM-ALL
       - VAL-04-QCM-PAPER
       required_before_close:
-      - 173/173 tests PASS
+      - 63/63 QCM tests PASS (25 qcm_all + 38 pytest)
       - health_check 6/6 PASS
       current_status: verified_current
     memory:

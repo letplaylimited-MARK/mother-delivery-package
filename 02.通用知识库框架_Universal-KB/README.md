@@ -101,9 +101,10 @@ cd mother-delivery-package
 # 进入 03 实现版
 cd "03.数据库管理_文件夹整理AI应用"
 
-# 创建 Python venv（使用 managed Python）
-C:/Users/wanwa/.workbuddy/binaries/python/versions/3.13.12/python.exe -m venv .venv
-.venv/Scripts/activate
+# 创建 Python venv（使用系统 Python 3.10+）
+python -m venv .venv
+.venv/Scripts/activate  # Windows
+# source .venv/bin/activate  # Linux/macOS
 
 # 安装依赖
 pip install -r requirements.txt

@@ -106,7 +106,7 @@ validations:
     command: "python verify-integration.py"
     expected: "All checks OK."
     current_status: "verified_current"
-    evidence: "Current rerun: 31/31 OK after fixes — _HANDOFF check downgraded to warn (runtime-generated, git-ignored), ChromaDB installed, VS module imports OK."
+    evidence: "Current rerun: 31/31 structural checks OK — _HANDOFF check downgraded to warn (runtime-generated, git-ignored), ChromaDB installed, VS module imports OK. NOTE: These are structural/existence checks, not runtime integration tests."
 
   - id: "VAL-05-STATUS"
     scope: "P05_QSPECTRUM"
@@ -135,3 +135,24 @@ validations:
     expected: "10/10 checks PASS (WARN allowed for C5 routing matrix coverage)."
     current_status: "verified_current"
     evidence: "qa_runner.py consistency runs validate_consistency.py (10 dimensions). All 10/10 PASS, 0 WARN. C5 routing matrix now includes USER_PACK entry."
+
+  - id: "VAL-END-TO-END"
+    scope: "ROOT"
+    command: "python qa_runner.py validate && python qa_runner.py consistency && python 01*/VERIFY.ps1"
+    expected: "18/18 PASS + 10/10 PASS + VERIFY.ps1 299/0/0/0"
+    current_status: "verified_current"
+    evidence: "End-to-end delivery chain verified: qa_runner validate 18/18 PASS, consistency 10/10 PASS, VERIFY.ps1 source 299/0/0/0, workspace 295/0/0/4(SKIP). All three verification layers confirm delivery integrity."
+
+  - id: "VAL-CROSS-INTERFACE"
+    scope: "ROOT"
+    command: "python qa_runner.py validate  # includes VAL-ROOT-HARDCODE-PATH which scans cross-submodule paths"
+    expected: "No hardcoded cross-submodule paths detected; config values synchronized with constants."
+    current_status: "verified_current"
+    evidence: "Cross-subsystem interface checks: 04 QCM calculator.py/detector.py constants match qcm/config.py DEFAULT_CONFIG (sync assertion test added); 02 README no hardcoded machine paths; 01 SDK version embedded in 04 is snapshot not live reference (documented as known limitation)."
+
+  - id: "VAL-QCM-CONFIG-SYNC"
+    scope: "P04_QCM"
+    command: "python 02-代码编写/test_config_sync.py"
+    expected: "All config-constant pairs match."
+    current_status: "verified_current"
+    evidence: "Sync assertion test verifies W_K, W_C, W_I, W_E, F_0, THRESHOLD_* values in calculator.py and detector.py match qcm/config.py DEFAULT_CONFIG. Any drift will trigger assertion failure."

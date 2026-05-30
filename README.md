@@ -12,7 +12,7 @@
 | 01 | 通讯协议 / 幽灵通道 | 295 | Ghost Channel v1.0 协议、SDK、企业部署 | 随根仓库 |
 | 02 | 通用知识库框架 (Universal-KB) | 21 | V1 知识管理模板 | 随根仓库 |
 | 03 | 数据库管理 / 文件整理 AI 应用 | 172+ | V2 可运行应用 (Flask + MCP + FAISS) — submodule | [knowledge-base-manager](https://github.com/letplaylimited-MARK/knowledge-base-manager) |
-| 04 | QCM-MVP-Emergence | 146 | 共鸣公式、22 公式、涌现验证 (173 tests) | 随根仓库 |
+| 04 | QCM-MVP-Emergence | 146 | 共鸣公式、22 公式、涌现验证 (63 tests) | 随根仓库 |
 | 05 | 超极智脑 / Q-SpecTrum | 431+ | 主平台：15 角色、Web UI、API、DB、知识库 — submodule | [Q-Spectrum](https://github.com/letplaylimited-MARK/Q-Spectrum) |
 | — | 协同通用 AI 大模型开发交付包 | 13 | 用户交付包骨架（价值/功能/结构/运作四体系） | 随根仓库 |
 

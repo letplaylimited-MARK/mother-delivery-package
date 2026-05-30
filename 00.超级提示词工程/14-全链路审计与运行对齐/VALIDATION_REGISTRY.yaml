@@ -13,9 +13,9 @@ validations:
   - id: "VAL-ROOT-FILE-COUNT"
     scope: "ROOT"
     command: "PowerShell Get-ChildItem recursive file count with excludes including .pytest_cache"
-    expected: "00=52; 01=295; 02=21; 03=172+; 04=146; 05=431+; user pack=13; root tracked=542; full expanded~1082"
+    expected: "00=52; 01=295; 02=21; 03=172+; 04=146; 05=431+; user pack=13; root tracked=543; full expanded~1083"
     current_status: "verified_current"
-    evidence: "Re-audited with unified methodology. Per-subsystem counts from git ls-files (root repo tracked only): 00=52, 01=295, 02=21, 04=146, user pack=13, root total=542. Submodules 03 (172+) and 05 (431+) tracked as pointer files; full expansion ~1082. Original disk count 1118 included .gitignore-excluded items and has been superseded."
+    evidence: "Re-audited with unified methodology. Per-subsystem counts from git ls-files (root repo tracked only): 00=52, 01=295, 02=21, 04=146, user pack=13, root total=543. Submodules 03 (172+) and 05 (431+) tracked as pointer files; full expansion ~1083. Original disk count 1118 included .gitignore-excluded items and has been superseded."
 
   - id: "VAL-ROOT-HARDCODE-PATH"
     scope: "ROOT"
@@ -50,7 +50,7 @@ validations:
     command: "powershell -ExecutionPolicy Bypass -File .\\VERIFY.ps1"
     expected: "Manifest/integrity verification passes; this is not the SDK full test suite."
     current_status: "verified_current"
-    evidence: "Current rerun: 299 files checked, 299 verified, 0 failed, 0 missing. VERIFY.ps1 now supports dual-hash (raw + LF-normalized) for cross-platform compatibility; root .gitattributes enforces LF line endings."
+    evidence: "Current rerun: 299 files checked, 299 verified, 0 failed, 0 missing. VERIFY.ps1 upgraded to binary patterns regex approach ($binaryPatterns) for cross-platform compatibility; root .gitattributes enforces LF line endings; BOM-aware LF-normalized hashing for text files."
 
   - id: "VAL-01-SDK-TESTS"
     scope: "P01_GHOST_CHANNEL"
@@ -134,4 +134,4 @@ validations:
     command: "python qa_runner.py consistency"
     expected: "10/10 checks PASS (WARN allowed for C5 routing matrix coverage)."
     current_status: "verified_current"
-    evidence: "qa_runner.py consistency runs validate_consistency.py (10 dimensions). Baseline: 9 PASS, 1 WARN (C5: USER_PACK not in routing matrix)."
+    evidence: "qa_runner.py consistency runs validate_consistency.py (10 dimensions). All 10/10 PASS, 0 WARN. C5 routing matrix now includes USER_PACK entry."

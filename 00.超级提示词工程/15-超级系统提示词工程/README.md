@@ -17,6 +17,7 @@
 | `SUPER-SYSTEM-PROMPT-v3.0-AWAKENING.md` | **当前核心交付物**：可复制到 System Prompt 的唤醒版超级系统提示词 |
 | `FIRST-DIALOG-BOOTSTRAP-PROMPT.md` | **普通聊天框首条消息**：当没有 System Prompt 输入框时, 用于新 AI 冷启动接手 |
 | `FIRST-DIALOG-COLD-START-DECONSTRUCTION.md` | fresh clone 模拟反推文档：解释首条提示词的 6 阶段门、失败模式和字段设计 |
+| `../14-全链路审计与运行对齐/SANDBOX-RUN-20260531-AI-COLLABORATION-COLD-START-SIMULATION.md` | 第二次全新冷启动模拟：验证通用 AI 协同开发控制面、DIRECT/verified_current/USER_PACK 边界 |
 | `SUPER-SYSTEM-PROMPT.md` | 历史核心提示词本体, 保留为兼容参考 |
 | `启动验证命令集.md` | 全系统验证命令集，按子系统组织 |
 

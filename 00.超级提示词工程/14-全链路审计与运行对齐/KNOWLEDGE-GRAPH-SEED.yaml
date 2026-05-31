@@ -1,5 +1,5 @@
 schema_version: '0.1'
-generated_at: '2026-05-31T23:13:23'
+generated_at: '2026-05-31T23:50:07'
 purpose: Seed graph connecting projects, capabilities, artifacts, validations, memory
   sources, inventory buckets, and QCM skill package.
 inventory_ref: 00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY.jsonl
@@ -191,6 +191,11 @@ nodes:
   type: Artifact
   owner: P00_SUPER_PROMPT
   path: 00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260531-FRESH-CLONE-DEVELOPER-SIMULATION.md
+  artifact_type: doc
+- id: ART-00-AI-COLLAB-COLD-START-SIM
+  type: Artifact
+  owner: P00_SUPER_PROMPT
+  path: 00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260531-AI-COLLABORATION-COLD-START-SIMULATION.md
   artifact_type: doc
 - id: ART-00-FIRST-DIALOG-DECONSTRUCTION
   type: Artifact
@@ -573,7 +578,7 @@ nodes:
 - id: INV:P00_SUPER_PROMPT
   type: InventoryBucket
   subsystem: P00_SUPER_PROMPT
-  file_count: 77
+  file_count: 78
 - id: INV:P01_GHOST_CHANNEL
   type: InventoryBucket
   subsystem: P01_GHOST_CHANNEL
@@ -972,6 +977,12 @@ edges:
   type: owns
 - from: ART-00-FRESH-CLONE-DEVELOPER-SIM
   to: FILE:00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260531-FRESH-CLONE-DEVELOPER-SIMULATION.md
+  type: points_to
+- from: P00_SUPER_PROMPT
+  to: ART-00-AI-COLLAB-COLD-START-SIM
+  type: owns
+- from: ART-00-AI-COLLAB-COLD-START-SIM
+  to: FILE:00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260531-AI-COLLABORATION-COLD-START-SIMULATION.md
   type: points_to
 - from: P00_SUPER_PROMPT
   to: ART-00-FIRST-DIALOG-DECONSTRUCTION

@@ -46,7 +46,7 @@ Q-SpecTrum 智脑平台
 
 | 目录 | 当前状态 | 定位 | 关键入口 |
 |---|---:|---|---|
-| `00.超级提示词工程` | 77 文件 | 跨项目 AI 协同的提示词操作系统与审计控制平面：总控启动、引导秘书、使命记忆唤醒、SpecForge、Skill Gate、源提示词吸收、全链路审计、机器可读注册表、统一状态对象、知识结晶、沙盘记录、首次对话冷启动 | `README.md`, `01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md`, `12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md`, `15-超级系统提示词工程/FIRST-DIALOG-BOOTSTRAP-PROMPT.md`, `15-超级系统提示词工程/FIRST-DIALOG-COLD-START-DECONSTRUCTION.md`, `14-全链路审计与运行对齐/VALIDATION_REGISTRY.yaml`, `14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` |
+| `00.超级提示词工程` | 78 文件 | 跨项目 AI 协同的提示词操作系统与审计控制平面：总控启动、引导秘书、使命记忆唤醒、SpecForge、Skill Gate、源提示词吸收、全链路审计、机器可读注册表、统一状态对象、知识结晶、沙盘记录、首次对话冷启动 | `README.md`, `01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md`, `12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md`, `15-超级系统提示词工程/FIRST-DIALOG-BOOTSTRAP-PROMPT.md`, `15-超级系统提示词工程/FIRST-DIALOG-COLD-START-DECONSTRUCTION.md`, `14-全链路审计与运行对齐/SANDBOX-RUN-20260531-AI-COLLABORATION-COLD-START-SIMULATION.md`, `14-全链路审计与运行对齐/VALIDATION_REGISTRY.yaml`, `14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` |
 | `01.通讯协议_幽灵通道` | 296 文件 | Ghost Channel v1.0 协议、SDK、部署与商业交付包 | `README.md`, `INDEX.md`, `00_总览/PROJECT_HANDOFF.md`, `VERIFY.ps1` |
 | `02.通用知识库框架_Universal-KB` | 28 文件 | Universal-KB 通用知识库模板；完整可运行知识库应用以 03 为准 | `README.md`, `INDEX.md`, `04-memory/memoryos.py`, `05-agents/AGENTS.md` |
 | `03.数据库管理_文件夹整理AI应用` | 153 文件 | V2 知识库应用：Flask + MCP + 文件整理 + 向量检索（子工作区） | `README.md`, `AGENTS.md`, `app.py`, `mcp_server.py`, `verify_install.py` |
@@ -54,7 +54,7 @@ Q-SpecTrum 智脑平台
 | `05.超极智脑_Q-SpecTrum` | 423 文件 | 主平台：15 角色、Web UI、API、MCP、DB、知识库、验证门（子工作区） | `README.md`, `INDEX.md`, `AGENTS.md`, `智腦協議-BRAIN-PROTOCOL.md`, `run.py`, `api_server.py`, `qspectrum_mcp_server.py` |
 | `协同通用AI大模型开发交付包` | 14 文件 | 开发者完成具体项目后交给最终用户的交付包骨架，承载价值/功能/结构/运作四体系，并提供普通/Strict 两种交付验证模式 | `README.md`, `AI_PROJECT_CONTEXT.md`, `HANDOFF.md`, `VALIDATION_REPORT.md`, `TRACEABILITY-MATRIX.md`, `VERIFY-DELIVERY.ps1` |
 
-统计口径：以上采用 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 当前审计口径，排除 `.git`、`__pycache__`、`.pytest_cache`、`node_modules`、`dist/build/coverage` 等运行缓存；当前全量展开为 1153 文件。
+统计口径：以上采用 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 当前审计口径，排除 `.git`、`__pycache__`、`.pytest_cache`、`node_modules`、`dist/build/coverage` 等运行缓存；当前全量展开为 1154 文件。
 
 ## 2. 子系统理解
 

@@ -64,6 +64,8 @@ awakening_check:
 
 普通聊天框模式下, AI 必须先输出带 `phase_gates`、`command_evidence`、`route_feedback` 和 `execution_eligibility` 的 `cold_start_report`, 再进入 `awakening_check` 或任务路由。
 
+注意: `awakening_check` 成功、`qa_runner.py route` 输出 `DIRECT`、或注册表显示 `verified_current`, 都不等于允许写文件。写入前必须满足 P4 execution eligibility: 当前命令证据为绿灯、任务边界清楚、验证锚点存在、目标仓库分支可编辑。`USER_PACK -Strict` 通过代表交付包结构卫生; 只有绑定真实项目实例和项目级 smoke/test 后, 才能称为最终交付完成。
+
 看到这个YAML → 激活成功。现在可以正常进行项目开发协作。
 
 ### 常见问题

@@ -115,3 +115,24 @@ decision:
     - "python qa_runner.py validate --scope P00_SUPER_PROMPT"
     - "python qa_runner.py consistency"
 ```
+
+## 7. Second Simulation Addendum
+
+`SANDBOX-RUN-20260531-AI-COLLABORATION-COLD-START-SIMULATION.md` added a stricter conclusion:
+
+```yaml
+second_simulation_learning:
+  control_plane_ready: true
+  full_real_project_instance_done: false
+  direct_route_is_write_permission: false
+  registry_verified_current_is_current_command_evidence: false
+  user_pack_strict_is_final_delivery_by_itself: false
+  submodule_detached_head_is_editable: false
+```
+
+Therefore the first-dialog prompt must make four boundaries explicit:
+
+- `DIRECT` means the route is clear; it does not bypass P4 execution eligibility.
+- `verified_current` in registries is not the same thing as a command rerun in the current session.
+- `USER_PACK -Strict` proves package hygiene unless it is tied to a real project instance and business smoke/test.
+- 03/05 detached HEAD is acceptable for reading and validation, but blocks editing until the correct branch is checked out.

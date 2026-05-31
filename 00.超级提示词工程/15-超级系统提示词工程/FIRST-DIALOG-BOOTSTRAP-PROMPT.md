@@ -18,7 +18,7 @@
 
 ## 设计依据
 
-本提示词已根据 `FIRST-DIALOG-COLD-START-DECONSTRUCTION.md` 和 `SANDBOX-RUN-20260531-FRESH-CLONE-DEVELOPER-SIMULATION.md` 调整为 6 阶段门:
+本提示词已根据 `FIRST-DIALOG-COLD-START-DECONSTRUCTION.md`、`SANDBOX-RUN-20260531-FRESH-CLONE-DEVELOPER-SIMULATION.md` 和 `SANDBOX-RUN-20260531-AI-COLLABORATION-COLD-START-SIMULATION.md` 调整为 6 阶段门:
 
 ```text
 P0 Boundary -> P1 Integrity -> P2 Validation -> P3 Routing -> P4 Execution Eligibility -> P5 Handoff
@@ -82,6 +82,10 @@ git checkout master
 
 git status --short --branch
 git submodule status
+git -C "03.数据库管理_文件夹整理AI应用" status --short --branch
+git -C "03.数据库管理_文件夹整理AI应用" branch --show-current
+git -C "05.超极智脑_Q-SpecTrum" status --short --branch
+git -C "05.超极智脑_Q-SpecTrum" branch --show-current
 python qa_runner.py validate
 python qa_runner.py status
 python qa_runner.py consistency
@@ -112,13 +116,17 @@ cold_start_report:
     - command: "<实际运行命令>"
       exit_code: "<0|非0|not_run>"
       summary: "<观察到的关键结果>"
+      source: "current_command|registry_claim|not_run"
+      side_effects: "none|writes_runtime_cache|starts_local_service|unknown"
   validation:
     qa_validate: "PASS|FAIL|NOT_RUN"
     qa_status: "PASS|FAIL|NOT_RUN"
     qa_consistency: "PASS|FAIL|NOT_RUN"
+    evidence_rule: "current_command 优先于 registry_claim; registry 中的 verified_current 不等于本轮已经重跑"
   route_probe:
     command: "python qa_runner.py route \"<用户意图或探针>\""
     decision: "DIRECT|CONFIRM|CLARIFY|BLOCKED|NOT_RUN"
+    decision_rule: "DIRECT 只代表路由明确, 不代表允许写文件"
     validation_refs:
       - "<验证引用>"
   inferred_user_intent: "<从我首条消息推断>"
@@ -135,6 +143,7 @@ cold_start_report:
     reason: "<为什么允许或阻止>"
     required_before_edit:
       - "<例如: 03 切到 main / 05 切到 master / 运行指定验证>"
+  delivery_instance_state: "template|project_instance|final_delivery|not_applicable"
   stop_lines:
     - "<如果没有阻塞则为空列表>"
   next_action: "<下一步建议或准备执行的动作>"
@@ -158,6 +167,10 @@ cold_start_report:
 6. 不要为了“更完善”无限扩写; 以可运行、可验证、可交接为完成标准。
 7. 如果只是阅读、路由或验证, submodule detached HEAD 可接受; 如果要编辑 03/05, detached HEAD 是停止线, 必须先切换到对应分支。
 8. P4_execution_eligibility 为 BLOCKED 时, 不要写文件; 只输出阻塞原因和解除条件。
+9. `DIRECT` 只表示路线明确; 若缺少 requirement/spec/task_boundary/verification_anchor/git_branch_state, P4 仍必须降级为 read_only、clarify 或 blocked。
+10. `qa_runner.py status` 或注册表里的 `verified_current` 是状态声明; 只有本轮 `command_evidence.source=current_command` 才能作为本次验收证据。
+11. USER_PACK strict 通过只证明交付包结构卫生; 只有绑定真实项目实例、业务 smoke/test 和验证报告后, 才能称为 final_delivery。
+12. 若全量验证中出现瞬时失败, 先记录失败, 再重跑失败 scope, 最后重跑全量验证; 不要直接抹掉第一次失败, 也不要在最终绿灯前继续开发。
 
 现在请执行冷启动接手验证, 先输出 cold_start_report, 再等待或继续执行我给出的具体任务。
 ```

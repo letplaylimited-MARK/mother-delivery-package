@@ -13,6 +13,7 @@
 - 母交付包文件夹(已解压), 或 GitHub 仓库地址
 - 一个 AI 对话窗口: 支持 System Prompt 最好; 只支持普通聊天也可以
 - 新环境必须使用 `git clone --recurse-submodules` 或 `git submodule update --init --recursive`
+- 若要修改 `03` 或 `05` 子仓库, fresh clone 后需先在子仓库内切换分支: `03 -> main`, `05 -> master`
 
 ### Step 1: 选择启动模式
 
@@ -73,6 +74,7 @@ awakening_check:
 | AI没有主动输出awakening_check | 第一步消息不对 | 重新发送: "请读取MOTHER-PACK-ACTIVATION-GUIDE.md并完成唤醒激活" |
 | AI工具没有System Prompt输入框 | 启动模式不匹配 | 使用 `FIRST-DIALOG-BOOTSTRAP-PROMPT.md` 的可复制首条消息 |
 | 新 clone 后 03/05 目录为空或缺文件 | submodule 未初始化 | 运行 `git submodule update --init --recursive` |
+| 03/05 显示 `HEAD (no branch)` | submodule 默认 detached HEAD | 只读/验证可接受；要开发时先 `cd 03... && git checkout main` 或 `cd 05... && git checkout master` |
 | AI开发过程中出现路径幻觉 | SSP的L10反幻觉规则未被遵循 | 发送"请重新执行L1系统检查, 输出当前根目录Test-Path结果" |
 
 ---

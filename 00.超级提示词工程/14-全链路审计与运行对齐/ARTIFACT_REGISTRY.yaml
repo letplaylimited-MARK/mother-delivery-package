@@ -142,6 +142,13 @@ artifacts:
     role: "Six-round sandbox/flywheel run for deep audit bootstrap and next-step gate."
     read_priority: "P0 before continuing QCM-style sandbox work"
 
+  - id: "ART-00-FRESH-CLONE-DEVELOPER-SIM"
+    type: "doc"
+    path: "00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260531-FRESH-CLONE-DEVELOPER-SIMULATION.md"
+    owner_project: "P00_SUPER_PROMPT"
+    role: "Fresh GitHub clone simulation report proving developer/AI cold-start, validation, routing, and submodule branch guardrails."
+    read_priority: "P0 before claiming new developer handoff readiness"
+
   - id: "ART-01-SUBSYSTEM-CRYSTAL"
     type: "doc"
     path: "00.超级提示词工程/14-全链路审计与运行对齐/SUBSYSTEM-CRYSTAL-P01-GHOST-CHANNEL.md"

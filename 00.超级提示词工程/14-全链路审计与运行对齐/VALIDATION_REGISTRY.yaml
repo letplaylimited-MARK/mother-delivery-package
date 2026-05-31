@@ -15,7 +15,7 @@ validations:
     command: "PowerShell Get-ChildItem recursive file count with excludes including .pytest_cache"
     expected: "Root tracked counts stable; full expanded count may move with ignored runtime DB/cache files and submodule-generated state."
     current_status: "verified_current"
-    evidence: "Current auto inventory baseline=1151 after adding the first-dialog bootstrap prompt. qa_runner excludes directory parts .git, node_modules, build/dist/coverage, __pycache__, .pytest_cache, and excludes the generated inventory file itself."
+    evidence: "Current auto inventory baseline=1152 after adding the fresh-clone developer simulation report. qa_runner excludes directory parts .git, node_modules, build/dist/coverage, __pycache__, .pytest_cache, and excludes the generated inventory file itself."
 
   - id: "VAL-ROOT-HARDCODE-PATH"
     scope: "ROOT"
@@ -57,7 +57,7 @@ validations:
     command: "python qa_runner.py validate --scope P00_SUPER_PROMPT"
     expected: "Atomic inventory JSONL parses, contains required fields, has >1000 records; knowledge graph seed parses and has nodes/edges; Codex charter and scenario matrix exist."
     current_status: "verified_current"
-    evidence: "Current auto validation parses atomic inventory (1151 records), knowledge graph seed (131 nodes / 247 edges), Codex execution charter, and scenario acceptance matrix with B7 results."
+    evidence: "Current auto validation parses atomic inventory (1152 records), knowledge graph seed (132 nodes / 249 edges), Codex execution charter, and scenario acceptance matrix with B7 results."
 
   - id: "VAL-01-GHOST-VERIFY"
     scope: "P01_GHOST_CHANNEL"

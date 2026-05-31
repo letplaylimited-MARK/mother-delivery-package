@@ -31,6 +31,7 @@ https://github.com/letplaylimited-MARK/mother-delivery-package
 3. 不要声称“已加载长期记忆”或“已完整理解全仓库”, 除非你列出实际读取的文件、命令和证据。
 4. 不要要求我在聊天中明文发送 GitHub token、密码或 2FA。若需要认证, 指导我在本机完成授权。
 5. 修改前先确认 Git 状态; 修改 03 或 05 子仓库时, 必须先在子仓库 commit/push, 再回根仓库更新 submodule 指针。
+6. fresh clone 后 03/05 作为 submodule 通常处于 detached HEAD; 如果需要修改子仓库, 先进入对应目录并切到真实分支: 03 使用 `git checkout main`, 05 使用 `git checkout master`。
 
 如果你当前还没有本地仓库, 请使用:
 
@@ -40,6 +41,14 @@ cd mother-delivery-package
 如果已经 clone 但 submodule 未初始化, 请使用:
 
 git submodule update --init --recursive
+
+如果本次任务需要修改 03 或 05 子仓库, 请在进入子仓库后先切换分支:
+
+cd 03.数据库管理_文件夹整理AI应用
+git checkout main
+
+cd ..\05.超极智脑_Q-SpecTrum
+git checkout master
 
 冷启动读取顺序:
 1. README.md
@@ -65,6 +74,7 @@ cold_start_report:
   repo_root_confirmed: true|false
   clone_mode: "fresh_clone|existing_checkout|not_available"
   submodules_ready: true|false
+  submodule_branch_state: "detached_clean|on_branch|not_checked|not_available"
   boot_files_read:
     - "<实际读取文件>"
   validation:
@@ -101,6 +111,7 @@ cold_start_report:
 4. 每次编辑后必须运行相关验证; 不能运行时要把原因标为 GAP。
 5. 只修复与当前任务、失败验证、过期权威文档或具体交付阻塞相关的问题。
 6. 不要为了“更完善”无限扩写; 以可运行、可验证、可交接为完成标准。
+7. 如果只是阅读、路由或验证, submodule detached HEAD 可接受; 如果要编辑 03/05, detached HEAD 是停止线, 必须先切换到对应分支。
 
 现在请执行冷启动接手验证, 先输出 cold_start_report, 再等待或继续执行我给出的具体任务。
 ```

@@ -1,5 +1,5 @@
 schema_version: '0.1'
-generated_at: '2026-06-01T01:29:16'
+generated_at: '2026-06-01T02:35:17'
 purpose: Seed graph connecting projects, capabilities, artifacts, validations, memory
   sources, inventory buckets, and QCM skill package.
 inventory_ref: 00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY.jsonl
@@ -31,6 +31,10 @@ nodes:
 - id: P05_QSPECTRUM
   type: Project
   path: 05.超极智脑_Q-SpecTrum
+  status: active
+- id: REFERENCE_PROJECT
+  type: Project
+  path: _reference_projects/minimal-ai-collab-taskboard
   status: active
 - id: USER_PACK
   type: Project
@@ -88,6 +92,14 @@ nodes:
   type: Capability
   owner: P05_QSPECTRUM
   status: active
+- id: CAP-MOTHER-PACK-ACCEPTANCE
+  type: Capability
+  owner: ROOT
+  status: active
+- id: CAP-REFERENCE-PROJECT-PROOF
+  type: Capability
+  owner: REFERENCE_PROJECT
+  status: active
 - id: CAP-USER-PACK-ASSEMBLY
   type: Capability
   owner: USER_PACK
@@ -101,6 +113,16 @@ nodes:
   type: Artifact
   owner: ROOT
   path: AI_PROJECT_CONTEXT.md
+  artifact_type: doc
+- id: ART-ROOT-VERIFY-MOTHER-PACK
+  type: Artifact
+  owner: ROOT
+  path: VERIFY-MOTHER-PACK.ps1
+  artifact_type: validation
+- id: ART-ROOT-PROJECT-REVIEW-SCORECARD
+  type: Artifact
+  owner: ROOT
+  path: PROJECT-REVIEW-SCORECARD.md
   artifact_type: doc
 - id: ART-DEVELOPER-GUIDE
   type: Artifact
@@ -207,6 +229,11 @@ nodes:
   owner: P00_SUPER_PROMPT
   path: 00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260601-FINAL-FRESH-CLONE-AI-DEVELOPER-ACCEPTANCE.md
   artifact_type: doc
+- id: ART-REFERENCE-PROJECT-TASKBOARD
+  type: Artifact
+  owner: REFERENCE_PROJECT
+  path: _reference_projects/minimal-ai-collab-taskboard/README.md
+  artifact_type: template
 - id: ART-00-FIRST-DIALOG-DECONSTRUCTION
   type: Artifact
   owner: P00_SUPER_PROMPT
@@ -500,6 +527,10 @@ nodes:
   type: Validation
   scope: USER_PACK
   status: verified_current
+- id: VAL-REFERENCE-PROJECT-SMOKE
+  type: Validation
+  scope: ROOT/REFERENCE_PROJECT
+  status: verified_current
 - id: VAL-00-CROSS-DOC-CONSISTENCY
   type: Validation
   scope: P00_SUPER_PROMPT
@@ -584,7 +615,7 @@ nodes:
 - id: INV:ROOT
   type: InventoryBucket
   subsystem: ROOT
-  file_count: 13
+  file_count: 15
 - id: INV:P00_SUPER_PROMPT
   type: InventoryBucket
   subsystem: P00_SUPER_PROMPT
@@ -609,6 +640,10 @@ nodes:
   type: InventoryBucket
   subsystem: P05_QSPECTRUM
   file_count: 423
+- id: INV:REFERENCE_PROJECT
+  type: InventoryBucket
+  subsystem: REFERENCE_PROJECT
+  file_count: 16
 - id: INV:QCM_SKILL
   type: InventoryBucket
   subsystem: QCM_SKILL
@@ -624,6 +659,9 @@ nodes:
 edges:
 - from: ROOT
   to: P00_SUPER_PROMPT
+  type: routes_or_delivers_to
+- from: ROOT
+  to: REFERENCE_PROJECT
   type: routes_or_delivers_to
 - from: ROOT
   to: USER_PACK
@@ -693,6 +731,12 @@ edges:
   type: routes_or_delivers_to
 - from: P05_QSPECTRUM
   to: USER_PACK
+  type: routes_or_delivers_to
+- from: REFERENCE_PROJECT
+  to: future_project_templates
+  type: routes_or_delivers_to
+- from: REFERENCE_PROJECT
+  to: external_review_demo
   type: routes_or_delivers_to
 - from: USER_PACK
   to: final_user
@@ -856,6 +900,39 @@ edges:
 - from: CAP-QSPECTRUM-RUNTIME
   to: FILE:05.超极智脑_Q-SpecTrum/verify-integration.py
   type: implemented_or_defined_by
+- from: ROOT
+  to: CAP-MOTHER-PACK-ACCEPTANCE
+  type: owns
+- from: CAP-MOTHER-PACK-ACCEPTANCE
+  to: FILE:VERIFY-MOTHER-PACK.ps1
+  type: implemented_or_defined_by
+- from: CAP-MOTHER-PACK-ACCEPTANCE
+  to: FILE:qa_runner.py
+  type: implemented_or_defined_by
+- from: CAP-MOTHER-PACK-ACCEPTANCE
+  to: FILE:PROJECT-REVIEW-SCORECARD.md
+  type: implemented_or_defined_by
+- from: CAP-MOTHER-PACK-ACCEPTANCE
+  to: FILE:00.超级提示词工程/14-全链路审计与运行对齐/VALIDATION_REGISTRY.yaml
+  type: implemented_or_defined_by
+- from: REFERENCE_PROJECT
+  to: CAP-REFERENCE-PROJECT-PROOF
+  type: owns
+- from: CAP-REFERENCE-PROJECT-PROOF
+  to: FILE:_reference_projects/minimal-ai-collab-taskboard/README.md
+  type: implemented_or_defined_by
+- from: CAP-REFERENCE-PROJECT-PROOF
+  to: FILE:_reference_projects/minimal-ai-collab-taskboard/docs/PRD.md
+  type: implemented_or_defined_by
+- from: CAP-REFERENCE-PROJECT-PROOF
+  to: FILE:_reference_projects/minimal-ai-collab-taskboard/docs/SPEC.md
+  type: implemented_or_defined_by
+- from: CAP-REFERENCE-PROJECT-PROOF
+  to: FILE:_reference_projects/minimal-ai-collab-taskboard/tasks/TASKS.md
+  type: implemented_or_defined_by
+- from: CAP-REFERENCE-PROJECT-PROOF
+  to: FILE:_reference_projects/minimal-ai-collab-taskboard/tests/test_smoke.py
+  type: implemented_or_defined_by
 - from: USER_PACK
   to: CAP-USER-PACK-ASSEMBLY
   type: owns
@@ -879,6 +956,18 @@ edges:
   type: owns
 - from: ART-AI-PROJECT-CONTEXT
   to: FILE:AI_PROJECT_CONTEXT.md
+  type: points_to
+- from: ROOT
+  to: ART-ROOT-VERIFY-MOTHER-PACK
+  type: owns
+- from: ART-ROOT-VERIFY-MOTHER-PACK
+  to: FILE:VERIFY-MOTHER-PACK.ps1
+  type: points_to
+- from: ROOT
+  to: ART-ROOT-PROJECT-REVIEW-SCORECARD
+  type: owns
+- from: ART-ROOT-PROJECT-REVIEW-SCORECARD
+  to: FILE:PROJECT-REVIEW-SCORECARD.md
   type: points_to
 - from: ROOT
   to: ART-DEVELOPER-GUIDE
@@ -1005,6 +1094,12 @@ edges:
   type: owns
 - from: ART-00-FINAL-FRESH-CLONE-ACCEPTANCE
   to: FILE:00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260601-FINAL-FRESH-CLONE-AI-DEVELOPER-ACCEPTANCE.md
+  type: points_to
+- from: REFERENCE_PROJECT
+  to: ART-REFERENCE-PROJECT-TASKBOARD
+  type: owns
+- from: ART-REFERENCE-PROJECT-TASKBOARD
+  to: FILE:_reference_projects/minimal-ai-collab-taskboard/README.md
   type: points_to
 - from: P00_SUPER_PROMPT
   to: ART-00-FIRST-DIALOG-DECONSTRUCTION
@@ -1309,6 +1404,9 @@ edges:
 - from: VAL-USER-PACK-DELIVERY-STRICT
   to: USER_PACK
   type: validates
+- from: VAL-REFERENCE-PROJECT-SMOKE
+  to: ROOT
+  type: validates
 - from: VAL-00-CROSS-DOC-CONSISTENCY
   to: P00_SUPER_PROMPT
   type: validates
@@ -1380,6 +1478,9 @@ edges:
   type: has_inventory_bucket
 - from: P05_QSPECTRUM
   to: INV:P05_QSPECTRUM
+  type: has_inventory_bucket
+- from: REFERENCE_PROJECT
+  to: INV:REFERENCE_PROJECT
   type: has_inventory_bucket
 - from: QCM_SKILL
   to: INV:QCM_SKILL

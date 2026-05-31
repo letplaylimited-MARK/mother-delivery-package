@@ -1,6 +1,6 @@
 # Atomic File Inventory Summary
 
-> Generated at: 2026-06-01T01:29:16
+> Generated at: 2026-06-01T02:35:17
 > Inventory: `ATOMIC-FILE-INVENTORY.jsonl`
 > Scope: excludes `.git`, `__pycache__`, `.pytest_cache`, `node_modules`, `dist`, `build`, `coverage`.
 
@@ -8,9 +8,9 @@
 
 | Metric | Value |
 |---|---:|
-| Files inventoried | 1156 |
-| Bytes inventoried | 22952598 |
-| Text lines counted | 236740 |
+| Files inventoried | 1174 |
+| Bytes inventoried | 23941796 |
+| Text lines counted | 237626 |
 | QCM skill internal files | 43 |
 
 ## By Subsystem
@@ -24,7 +24,8 @@
 | `P04_QCM` | 148 |
 | `P05_QSPECTRUM` | 423 |
 | `QCM_SKILL` | 1 |
-| `ROOT` | 13 |
+| `REFERENCE_PROJECT` | 16 |
+| `ROOT` | 15 |
 | `USER_PACK` | 14 |
 
 ## By Kind
@@ -32,19 +33,19 @@
 | 项 | 数量 |
 |---|---:|
 | `archive` | 3 |
-| `code` | 347 |
+| `code` | 353 |
 | `config` | 11 |
-| `data` | 160 |
-| `doc` | 596 |
+| `data` | 161 |
+| `doc` | 607 |
 | `other` | 39 |
 
 ## By Priority
 
 | 项 | 数量 |
 |---|---:|
-| `P0` | 43 |
-| `P1` | 569 |
-| `P2` | 544 |
+| `P0` | 45 |
+| `P1` | 576 |
+| `P2` | 553 |
 
 ## Audit State
 

@@ -3,7 +3,7 @@
 Mother Delivery Package - QA Runner (三环集成内核)
 =====================================================
 统一入口脚本，覆盖4条子命令：
-  validate     Validation环 — 执行VALIDATION_REGISTRY 16条验证命令
+  validate     Validation环 — 执行VALIDATION_REGISTRY 注册验证命令
   status       Status环 — 读取4注册表+LEDGER，输出系统全貌
   consistency  Consistency环 — 10维度跨文档一致性检查
   route        Routing环 — Guide Secretary意图匹配与路由
@@ -18,6 +18,7 @@ Phase 1-3 可执行脚本（GUIDE-SECRETARY-PROTOCOL.md §14）
 """
 
 import argparse
+import shlex
 import json
 import os
 import re
@@ -77,6 +78,7 @@ VALIDATION_SCOPE_MAP = {
     "P04_QCM": "04.QCM-MVP-Emergence",
     "P05_QSPECTRUM": "05.超极智脑_Q-SpecTrum",
     "USER_PACK": "协同通用AI大模型开发交付包",
+    "REFERENCE_PROJECT": "_reference_projects/minimal-ai-collab-taskboard",
 }
 
 INTENT_REGISTRY = {
@@ -246,6 +248,26 @@ def _reroute_python(cmd: str) -> str:
         r'\bpython(?=\s)', venv_str, cmd, count=1
     )
     return cmd
+
+
+def _powershell_exe() -> str | None:
+    """Return a PowerShell executable available on the current platform."""
+    return shutil.which("pwsh") or shutil.which("powershell")
+
+
+def _powershell_file_cmd(script: str, *args: str) -> str | None:
+    """Build a cross-platform PowerShell file invocation for run_cmd."""
+    ps = _powershell_exe()
+    if not ps:
+        return None
+    parts = [ps, "-NoProfile"]
+    if Path(ps).name.lower().startswith("powershell"):
+        parts.extend(["-ExecutionPolicy", "Bypass"])
+    parts.extend(["-File", script])
+    parts.extend(args)
+    if os.name == "nt":
+        return subprocess.list2cmdline([str(part) for part in parts])
+    return " ".join(shlex.quote(str(part)) for part in parts)
 
 
 def run_cmd(cmd: str, cwd: Path | None = None, timeout: int = 120) -> dict:
@@ -516,8 +538,17 @@ def _auto_scenario_matrix_gate() -> dict:
 
 def _auto_user_pack_strict() -> dict:
     user_pack = MOTHER_ROOT / "协同通用AI大模型开发交付包"
-    r = run_cmd('powershell -ExecutionPolicy Bypass -File .\\VERIFY-DELIVERY.ps1 -Strict',
-                cwd=user_pack, timeout=120)
+    cmd = _powershell_file_cmd("./VERIFY-DELIVERY.ps1", "-Strict")
+    if cmd is None:
+        return {
+            "id": "VAL-USER-PACK-STRICT-META",
+            "scope": "USER_PACK",
+            "status": "FAIL",
+            "detail": "PowerShell executable not found; cannot run VERIFY-DELIVERY.ps1 -Strict",
+            "command": "VERIFY-DELIVERY.ps1 -Strict",
+            "auto": True,
+        }
+    r = run_cmd(cmd, cwd=user_pack, timeout=120)
     return {
         "id": "VAL-USER-PACK-STRICT-META",
         "scope": "USER_PACK",
@@ -543,6 +574,29 @@ def _auto_qcm_config_sync_meta() -> dict:
     }
 
 
+def _auto_reference_project_smoke() -> dict:
+    test_script = MOTHER_ROOT / "_reference_projects" / "minimal-ai-collab-taskboard" / "tests" / "test_smoke.py"
+    if not test_script.exists():
+        return {
+            "id": "VAL-REFERENCE-PROJECT-SMOKE",
+            "scope": "ROOT/REFERENCE_PROJECT",
+            "status": "FAIL",
+            "detail": f"Missing reference project smoke: {test_script}",
+            "command": "python _reference_projects/minimal-ai-collab-taskboard/tests/test_smoke.py",
+            "auto": True,
+        }
+    r = run_cmd(f'python "{test_script}"', cwd=MOTHER_ROOT, timeout=60)
+    combined = f"{r['stdout']}\n{r['stderr']}"
+    return {
+        "id": "VAL-REFERENCE-PROJECT-SMOKE",
+        "scope": "ROOT/REFERENCE_PROJECT",
+        "status": "PASS" if r["exit_code"] == 0 and "REFERENCE_PROJECT_SMOKE=PASS" in combined else "FAIL",
+        "detail": combined[-300:].strip(),
+        "command": "python _reference_projects/minimal-ai-collab-taskboard/tests/test_smoke.py",
+        "auto": True,
+    }
+
+
 def _auto_end_to_end_meta() -> dict:
     checks = [
         ("audit_assets", _auto_audit_assets()),
@@ -550,6 +604,7 @@ def _auto_end_to_end_meta() -> dict:
         ("route_smoke", _auto_route_smoke()),
         ("consistency", _auto_consistency_check()),
         ("user_pack_strict", _auto_user_pack_strict()),
+        ("reference_project", _auto_reference_project_smoke()),
     ]
     return _aggregate_auto_results("VAL-END-TO-END", checks)
 
@@ -736,6 +791,8 @@ def _try_auto_execute(vid: str, cmd_str: str, cwd: Path | None) -> dict | None:
         result = _auto_p05_api_smoke(cwd)
     elif vid == "VAL-05-MCP-SMOKE":
         result = _auto_p05_mcp_smoke(cwd)
+    elif vid == "VAL-REFERENCE-PROJECT-SMOKE":
+        result = _auto_reference_project_smoke()
     elif vid == "VAL-03-TESTS":
         # pytest with UTF-8 (Windows-compatible)
         env_cmd = 'pytest tests/ -q'
@@ -1211,7 +1268,7 @@ def _auto_file_count() -> dict:
             by_subsystem[top] = by_subsystem.get(top, 0) + 1
     # Note: submodule dirs (03, 05) may show different counts locally vs in-tree
     status = "PASS" if total >= 1050 else "WARN"
-    detail_parts = [f"total={total} (current inventory baseline=1156, submodule differences normal)"]
+    detail_parts = [f"total={total} (current inventory baseline=1174, submodule differences normal)"]
     for k in sorted(by_subsystem):
         detail_parts.append(f"{k[:20]}={by_subsystem[k]}")
     return {
@@ -1246,11 +1303,13 @@ def _auto_run_script(cmd_str: str, cwd: Path | None) -> dict | None:
             }
         # Check for -Strict flag
         strict = "-Strict" in cmd_str
-        strict_arg = " -Strict" if strict else ""
-        # PowerShell with UTF-8 output encoding (fixes Windows GBK garbling)
-        ps_cmd = (f'powershell -ExecutionPolicy Bypass '
-                  f'-Command "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; '
-                  f'& \\".\\{ps_script}\\"{strict_arg}"')
+        ps_cmd = _powershell_file_cmd(f"./{ps_script}", *(["-Strict"] if strict else []))
+        if ps_cmd is None:
+            return {
+                "id": "", "scope": "", "status": "FAIL",
+                "detail": "PowerShell executable not found",
+                "command": cmd_str, "auto": True,
+            }
         r = run_cmd(ps_cmd, cwd=cwd, timeout=120)
         status = "PASS" if r["exit_code"] == 0 else "FAIL"
         return {

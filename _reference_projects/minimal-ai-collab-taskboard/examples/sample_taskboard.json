@@ -1,0 +1,20 @@
+[
+  {
+    "id": "TASK-001",
+    "title": "Establish cold-start route",
+    "owner": "AI+developer",
+    "route": "ROOT -> 00",
+    "status": "done",
+    "validation_refs": ["VAL-ROOT-ROUTE-SMOKE"],
+    "stop_line": "Do not edit before route_feedback and validation_refs exist."
+  },
+  {
+    "id": "TASK-002",
+    "title": "Verify reference project smoke",
+    "owner": "AI+developer",
+    "route": "REFERENCE_PROJECT",
+    "status": "done",
+    "validation_refs": ["VAL-REFERENCE-PROJECT-SMOKE"],
+    "stop_line": "Do not claim delivery without a deterministic smoke result."
+  }
+]

@@ -1,5 +1,5 @@
 schema_version: "0.1"
-generated_at: "2026-05-31"
+generated_at: "2026-06-01"
 purpose: "Register validation commands, evidence expectations, and current known status."
 status_legend:
   verified_previous: "Known from prior validation in this workspace; not rerun in the current audit step."
@@ -15,7 +15,7 @@ validations:
     command: "PowerShell Get-ChildItem recursive file count with excludes including .pytest_cache"
     expected: "Root tracked counts stable; full expanded count may move with ignored runtime DB/cache files and submodule-generated state."
     current_status: "verified_current"
-    evidence: "Current auto inventory baseline=1156 after adding the final fresh-clone AI/developer acceptance run artifact. qa_runner excludes directory parts .git, node_modules, build/dist/coverage, __pycache__, .pytest_cache, and excludes the generated inventory file itself."
+    evidence: "Current auto inventory baseline=1174 after adding productization assets: GitHub Actions CI, VERIFY-MOTHER-PACK.ps1, PROJECT-REVIEW-SCORECARD.md, and the minimal reference project. qa_runner excludes directory parts .git, node_modules, build/dist/coverage, __pycache__, .pytest_cache, and excludes the generated inventory file itself."
 
   - id: "VAL-ROOT-HARDCODE-PATH"
     scope: "ROOT"
@@ -57,7 +57,7 @@ validations:
     command: "python qa_runner.py validate --scope P00_SUPER_PROMPT"
     expected: "Atomic inventory JSONL parses, contains required fields, has >1000 records; knowledge graph seed parses and has nodes/edges; Codex charter and scenario matrix exist."
     current_status: "verified_current"
-    evidence: "Current auto validation parses atomic inventory (1156 records), knowledge graph seed (136 nodes / 257 edges), Codex execution charter, scenario acceptance matrix with B7 results, the self-bootstrap spec-and-run artifact, and the final fresh-clone acceptance run."
+    evidence: "Current auto validation parses atomic inventory (1174 records), knowledge graph seed (144 nodes / 279 edges), Codex execution charter, scenario acceptance matrix with B7 results, the self-bootstrap spec-and-run artifact, the final fresh-clone acceptance run, and the reference project productization proof."
 
   - id: "VAL-01-GHOST-VERIFY"
     scope: "P01_GHOST_CHANNEL"
@@ -199,6 +199,13 @@ validations:
     current_status: "verified_current"
     evidence: "Current strict rerun scanned 14 files / 12 Markdown files with 0 warnings and 0 failures."
 
+  - id: "VAL-REFERENCE-PROJECT-SMOKE"
+    scope: "ROOT/REFERENCE_PROJECT"
+    command: "python _reference_projects/minimal-ai-collab-taskboard/tests/test_smoke.py"
+    expected: "Minimal AI collaboration taskboard reference project loads the sample, validates traceability fields, and prints REFERENCE_PROJECT_SMOKE=PASS."
+    current_status: "verified_current"
+    evidence: "Current reference project smoke validates the first real minimal project instance outside USER_PACK and prints REFERENCE_PROJECT_SMOKE=PASS."
+
   - id: "VAL-00-CROSS-DOC-CONSISTENCY"
     scope: "P00_SUPER_PROMPT"
     command: "python qa_runner.py consistency"
@@ -209,16 +216,16 @@ validations:
   - id: "VAL-END-TO-END"
     scope: "ROOT"
     command: "python qa_runner.py validate  # includes VAL-END-TO-END meta gate without recursive full-validate"
-    expected: "Meta gate passes audit assets, B7 scenario matrix, route smoke, consistency, and USER_PACK strict verification."
+    expected: "Meta gate passes audit assets, B7 scenario matrix, route smoke, consistency, USER_PACK strict verification, and the minimal reference project smoke."
     current_status: "verified_current"
-    evidence: "Final fresh GitHub clone acceptance run on 2026-06-01 reported full qa_runner validate: 31 total, 31 PASS, 0 FAIL/WARN/SKIP, automatic 31/31. This meta gate auto-checks audit inventory/graph, GS-01..GS-08 scenario results plus SELF_BOOTSTRAP_PROJECT route smoke, consistency 10/10, and USER_PACK strict 0 failures."
+    evidence: "Current productization release gate on 2026-06-01 added the reference project smoke to the end-to-end meta gate and passed full validation: 32 total, 32 PASS, 0 FAIL/WARN/SKIP, automatic 32/32. The mother package now proves at least one real minimal project instance."
 
   - id: "VAL-CROSS-INTERFACE"
     scope: "ROOT"
     command: "python qa_runner.py validate  # includes VAL-CROSS-INTERFACE meta gate"
     expected: "Meta gate passes route smoke, P03 HTTP search/memory, QCM config sync, P05 API/MCP smoke, and USER_PACK strict verification."
     current_status: "verified_current"
-    evidence: "Final fresh GitHub clone acceptance run on 2026-06-01 exposed a cold-clone p03_http warmup gap; qa_runner now rebuilds the P03 search index and retries when the first search returns zero results. Current ROOT and full qa_runner validate pass 31/31. This meta gate links core intents to validation_refs and USO IDs, verifies P03 /memory and /api/search, checks QCM config constants, verifies P05 API and MCP bridges, and reruns USER_PACK strict."
+    evidence: "Final fresh GitHub clone acceptance run on 2026-06-01 exposed a cold-clone p03_http warmup gap; qa_runner now rebuilds the P03 search index and retries when the first search returns zero results. Current productization release gate passed full qa_runner validate 32/32. This meta gate links core intents to validation_refs and USO IDs, verifies P03 /memory and /api/search, checks QCM config constants, verifies P05 API and MCP bridges, and reruns USER_PACK strict."
 
   - id: "VAL-QCM-CONFIG-SYNC"
     scope: "P04_QCM"

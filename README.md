@@ -14,9 +14,10 @@
 | 03 | 数据库管理 / 文件整理 AI 应用 | 153 | V2 可运行应用 (Flask + MCP + 文件整理 + 向量检索) — submodule | [knowledge-base-manager](https://github.com/letplaylimited-MARK/knowledge-base-manager) |
 | 04 | QCM-MVP-Emergence | 148 | 共鸣公式、22 公式、涌现验证、角色/沙盘/飞轮 | 随根仓库 |
 | 05 | 超极智脑 / Q-SpecTrum | 423 | 主平台：15 角色、Web UI、API、MCP、DB、知识库 — submodule | [Q-Spectrum](https://github.com/letplaylimited-MARK/Q-Spectrum) |
+| — | 参考项目 / minimal-ai-collab-taskboard | 16 | 母包自举后的最小真实项目实例：PRD/SPEC/TASK/TEST/验证报告 | 随根仓库 |
 | — | 协同通用 AI 大模型开发交付包 | 14 | 用户交付包骨架（价值/功能/结构/运作四体系） | 随根仓库 |
 
-> **统计口径**：以上采用 `AI_PROJECT_CONTEXT.md` 与 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 的当前审计口径；排除 `.git`、`__pycache__`、`.pytest_cache`、`node_modules`、`dist/build/coverage` 等运行缓存。当前全量展开为 1156 文件，03/05 为独立 submodule，根仓库跟踪其指针。
+> **统计口径**：以上采用 `AI_PROJECT_CONTEXT.md` 与 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 的当前审计口径；排除 `.git`、`__pycache__`、`.pytest_cache`、`node_modules`、`dist/build/coverage` 等运行缓存。当前全量展开为 1174 文件，03/05 为独立 submodule，根仓库跟踪其指针。
 
 ## 快速开始
 
@@ -31,13 +32,20 @@ git submodule update --init --recursive
 
 ## 验证
 
-根目录提供 `qa_runner.py` 统一验证工具。当前验证注册表为 31 项，最近一次审计结果为 31/31 自动 PASS，0 FAIL / 0 WARN / 0 SKIP，0 manual-current：
+根目录提供 `qa_runner.py` 统一验证工具。当前验证注册表为 32 项，最近一次审计结果为 32/32 自动 PASS，0 FAIL / 0 WARN / 0 SKIP，0 manual-current：
 
 ```bash
 python qa_runner.py validate    # 运行全量验证
 python qa_runner.py status      # 查看验证状态
 python qa_runner.py consistency # 跨文档一致性检查
 python qa_runner.py route       # 路由矩阵分析
+```
+
+一键母包验收（需 PowerShell）：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\VERIFY-MOTHER-PACK.ps1
+powershell -ExecutionPolicy Bypass -File .\VERIFY-MOTHER-PACK.ps1 -Full
 ```
 
 用户交付包验证（需 PowerShell）：
@@ -58,9 +66,11 @@ powershell -ExecutionPolicy Bypass -File .\VERIFY-DELIVERY.ps1 -Strict # 严格�
 | `LICENSE` | MIT 开源许可证 |
 | `MISSION-MEMORY.md` | 母包使命、边界、AI 唤醒锚点 |
 | `MOTHER-PACK-ACTIVATION-GUIDE.md` | **唯一权威 AI 启动协议**，覆盖 System Prompt 与普通聊天框两种启动 |
+| `PROJECT-REVIEW-SCORECARD.md` | 对外评审评分模型、竞争力定位、路线图与 release gates |
 | `开发者母交付包使用说明.md` | 面向 zip 包接收者的完整使用指引（交付流程、子系统定位、验证步骤） |
 | `qa_runner.py` | 全量验证工具（validate / status / consistency / route） |
 | `qcm-universal-ai-system-v3.0.skill` | QCM 质量评估框架（ZIP，45 角色 / 9 阶段 / 24 维） |
+| `VERIFY-MOTHER-PACK.ps1` | 母包一键验收入口：submodule、路由、P00/ROOT、参考项目、USER_PACK、全量验证 |
 | `MOTHER-PACK-DEEP-ANALYSIS-REPORT-v3.0-FLYWHEEL.html` | 飞轮审计最终报告（R1 / R2 / R3 完整记录） |
 | `V1_TO_V2_MIGRATION.md` | V1（模板）→ V2（可运行应用）迁移历史参考 |
 

@@ -1,5 +1,5 @@
 schema_version: "0.1"
-generated_at: "2026-05-26"
+generated_at: "2026-06-01"
 purpose: "Register mother-package subsystems and child-package boundary for future AI collaboration."
 path_convention:
   mother_root: "<母交付包根目录>"
@@ -18,15 +18,17 @@ projects:
     entrypoints:
       - "MISSION-MEMORY.md"
       - "AI_PROJECT_CONTEXT.md"
+      - "VERIFY-MOTHER-PACK.ps1"
+      - "PROJECT-REVIEW-SCORECARD.md"
       - "开发者母交付包使用说明.md"
     upstream: ["user_natural_language"]
-    downstream: ["P00_SUPER_PROMPT", "USER_PACK"]
+    downstream: ["P00_SUPER_PROMPT", "REFERENCE_PROJECT", "USER_PACK"]
     memory_sources: ["MISSION-MEMORY.md", "AI_PROJECT_CONTEXT.md"]
     validation:
       - "path_hardcode_scan"
       - "markdown_fence_check"
     risks:
-      - "No GitHub remote configured; local-only repo with 5 commits on main branch (49e364f)."
+      - "03 and 05 are independent submodules; commit/push child changes first, then update the root submodule pointer."
 
   - id: "P00_SUPER_PROMPT"
     path: "00.超级提示词工程"
@@ -106,7 +108,7 @@ projects:
       - "python verify_install.py"
       - "pytest tests/ -v"
     risks:
-      - "Independent git repo has pre-existing uncommitted changes."
+      - "Independent git repo/submodule; verify child status before edits and push child commits before root pointer updates."
       - ".env missing affects advanced AI/API calls but not basic run."
 
   - id: "P04_QCM"
@@ -150,8 +152,30 @@ projects:
       - "python verify-integration.py"
       - "$env:PYTHONUTF8='1'; python run.py --status"
     risks:
-      - "Independent git repo has pre-existing uncommitted changes."
+      - "Independent git repo/submodule; verify child status before edits and push child commits before root pointer updates."
       - "requirements.txt and pyproject.toml dependency story needs unification."
+
+  - id: "REFERENCE_PROJECT"
+    path: "_reference_projects/minimal-ai-collab-taskboard"
+    role: "母包自举后的第一个最小真实项目实例：从意图到 PRD/SPEC/TASK/TEST/验证报告的可复用样板"
+    status: "active"
+    entrypoints:
+      - "README.md"
+      - "AI_PROJECT_CONTEXT.md"
+      - "HANDOFF.md"
+      - "docs/PRD.md"
+      - "docs/SPEC.md"
+      - "tasks/TASKS.md"
+      - "tests/TEST_PLAN.md"
+      - "tests/test_smoke.py"
+      - "VERIFY-DELIVERY.ps1"
+    upstream: ["ROOT", "P00_SUPER_PROMPT", "USER_PACK"]
+    downstream: ["future_project_templates", "external_review_demo"]
+    validation:
+      - "python _reference_projects/minimal-ai-collab-taskboard/tests/test_smoke.py"
+      - "powershell -ExecutionPolicy Bypass -File .\\VERIFY-DELIVERY.ps1"
+    risks:
+      - "It is deliberately minimal; it proves the mother-package method, not market demand or full product UX."
 
   - id: "USER_PACK"
     path: "协同通用AI大模型开发交付包"

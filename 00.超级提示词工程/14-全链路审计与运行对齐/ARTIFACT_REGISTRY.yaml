@@ -1,5 +1,5 @@
 schema_version: "0.1"
-generated_at: "2026-05-26"
+generated_at: "2026-06-01"
 purpose: "Register important documents, code entrypoints, data stores, and delivery artifacts."
 artifact_types:
   doc: "Protocol, README, handoff, or guide."
@@ -22,6 +22,20 @@ artifacts:
     owner_project: "ROOT"
     role: "Global map, subsystem status, startup flow, known risks."
     read_priority: "P0"
+
+  - id: "ART-ROOT-VERIFY-MOTHER-PACK"
+    type: "validation"
+    path: "VERIFY-MOTHER-PACK.ps1"
+    owner_project: "ROOT"
+    role: "One-command local acceptance script for clone/submodule, route probes, P00 audit, ROOT validation, reference project smoke, USER_PACK strict, and optional full validation."
+    read_priority: "P0 before release or handoff"
+
+  - id: "ART-ROOT-PROJECT-REVIEW-SCORECARD"
+    type: "doc"
+    path: "PROJECT-REVIEW-SCORECARD.md"
+    owner_project: "ROOT"
+    role: "Fixed scoring rubric, benchmark frame, competitive gaps, roadmap, and release gates for external review."
+    read_priority: "P0 before productization review"
 
   - id: "ART-DEVELOPER-GUIDE"
     type: "doc"
@@ -169,6 +183,13 @@ artifacts:
     owner_project: "P00_SUPER_PROMPT"
     role: "Final fresh GitHub clone acceptance run proving new AI/developer cold-start, submodule readiness, route probes, transient failure handling, subsystem validation, P05 API/MCP/E2E, and full 31/31 validation."
     read_priority: "P0 before claiming final audit-review readiness"
+
+  - id: "ART-REFERENCE-PROJECT-TASKBOARD"
+    type: "template"
+    path: "_reference_projects/minimal-ai-collab-taskboard/README.md"
+    owner_project: "REFERENCE_PROJECT"
+    role: "Minimal real project instance proving the mother package can turn a user intent into PRD/SPEC/TASK/TEST/traceability/validation without polluting USER_PACK."
+    read_priority: "P0 before claiming productization readiness"
 
   - id: "ART-00-FIRST-DIALOG-DECONSTRUCTION"
     type: "doc"

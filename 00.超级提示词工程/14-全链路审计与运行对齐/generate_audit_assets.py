@@ -37,6 +37,7 @@ SUBSYSTEM_PREFIX = {
     "03.数据库管理_文件夹整理AI应用": "P03_WORKBUDDY_KB",
     "04.QCM-MVP-Emergence": "P04_QCM",
     "05.超极智脑_Q-SpecTrum": "P05_QSPECTRUM",
+    "_reference_projects": "REFERENCE_PROJECT",
     "协同通用AI大模型开发交付包": "USER_PACK",
 }
 
@@ -91,6 +92,8 @@ def priority_for(rel: str, kind: str) -> str:
         "MISSION-MEMORY.md",
         "AI_PROJECT_CONTEXT.md",
         "MOTHER-PACK-ACTIVATION-GUIDE.md",
+        "PROJECT-REVIEW-SCORECARD.md",
+        "VERIFY-MOTHER-PACK.ps1",
         "qa_runner.py",
         "qcm-universal-ai-system-v3.0.skill",
     }

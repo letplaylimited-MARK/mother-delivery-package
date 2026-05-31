@@ -1,5 +1,5 @@
 schema_version: "0.1"
-generated_at: "2026-05-26"
+generated_at: "2026-06-01"
 purpose: "Register usable AI collaboration capabilities, tools, protocols, and gates."
 permission_legend:
   P0_READ: "Read-only context or analysis."
@@ -227,6 +227,43 @@ capabilities:
     permission: "P3_EXECUTE"
     output: "web/api/mcp responses, system status, role routing, project memory"
     validation: "python verify-integration.py; $env:PYTHONUTF8='1'; python run.py --status"
+    status: "active"
+
+  - id: "CAP-MOTHER-PACK-ACCEPTANCE"
+    name: "母包一键验收与评分门"
+    type: "validation_workflow"
+    owner_project: "ROOT"
+    source_files:
+      - "VERIFY-MOTHER-PACK.ps1"
+      - "qa_runner.py"
+      - "PROJECT-REVIEW-SCORECARD.md"
+      - "00.超级提示词工程/14-全链路审计与运行对齐/VALIDATION_REGISTRY.yaml"
+    trigger_examples:
+      - "交付前最后验收"
+      - "确认是否可以推送 GitHub"
+      - "评分与竞争力评估"
+    permission: "P3_EXECUTE"
+    output: "release gate result, scorecard, validation evidence"
+    validation: "Run VERIFY-MOTHER-PACK.ps1; use -Full before final release when dependencies are available."
+    status: "active"
+
+  - id: "CAP-REFERENCE-PROJECT-PROOF"
+    name: "最小真实项目实例证明"
+    type: "reference_project"
+    owner_project: "REFERENCE_PROJECT"
+    source_files:
+      - "_reference_projects/minimal-ai-collab-taskboard/README.md"
+      - "_reference_projects/minimal-ai-collab-taskboard/docs/PRD.md"
+      - "_reference_projects/minimal-ai-collab-taskboard/docs/SPEC.md"
+      - "_reference_projects/minimal-ai-collab-taskboard/tasks/TASKS.md"
+      - "_reference_projects/minimal-ai-collab-taskboard/tests/test_smoke.py"
+    trigger_examples:
+      - "给我一个真实参考项目"
+      - "模拟开发者首次使用母包"
+      - "验证从意图到交付报告的最小闭环"
+    permission: "P3_EXECUTE"
+    output: "PRD/SPEC/TASK/TEST/traceability/validation reference package"
+    validation: "python _reference_projects/minimal-ai-collab-taskboard/tests/test_smoke.py"
     status: "active"
 
   - id: "CAP-USER-PACK-ASSEMBLY"

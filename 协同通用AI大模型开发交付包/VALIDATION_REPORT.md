@@ -1,15 +1,15 @@
 # Validation Report
 
 > 用途：项目验证报告，记录所有验证命令的执行结果。
-> 生成时间：2026-05-31。
+> 生成时间：2026-06-01。
 > 执行环境：Windows, Python 3.14.4, Git submodule managed。
 
 ## 总览
 
 | 指标 | 数值 |
 |---|---|
-| 验证项总数 | 31 |
-| 自动验证 PASS | 31 |
+| 验证项总数 | 32 |
+| 自动验证 PASS | 32 |
 | FAIL | 0 |
 | WARN | 0 |
 | SKIP | 0 |
@@ -18,17 +18,17 @@
 
 ## 详细结果
 
-### 自动 PASS（31 项）
+### 自动 PASS（32 项）
 
 | ID | 名称 | 关键指标 |
 |---|---|---|
-| VAL-ROOT-FILE-COUNT | 根目录文件计数 | 1150 文件；submodule/runtime 差异正常 |
+| VAL-ROOT-FILE-COUNT | 根目录文件计数 | 1174 文件；submodule/runtime 差异正常 |
 | VAL-ROOT-HARDCODE-PATH | 硬编码路径检查 | 无本机绝对路径泄漏 |
 | VAL-ROOT-MARKDOWN-FENCES | Markdown 围栏检查 | 541 文件全通过 |
 | VAL-ROOT-YAML-PARSE | YAML 解析检查 | 8 文件全通过 |
-| VAL-ROOT-ROUTE-SMOKE | Guide Secretary 路由 | 8/8 黄金路径场景通过，覆盖 route_decision / platform / confidence / validation_refs |
+| VAL-ROOT-ROUTE-SMOKE | Guide Secretary 路由 | 9/9 黄金路径场景通过，覆盖 route_decision / platform / confidence / validation_refs |
 | VAL-00-MEMORY-SOURCE-INDEX | 记忆源索引 | 13 条目字段合规 |
-| VAL-00-AUDIT-ASSETS | 深度审计资产 | inventory 1150；graph 131 nodes / 247 edges |
+| VAL-00-AUDIT-ASSETS | 深度审计资产 | inventory 1174；graph 144 nodes / 279 edges |
 | VAL-01-GHOST-VERIFY | Ghost Channel 完整性 | 299 checked；295 verified；4 optional binaries skipped |
 | VAL-01-SDK-TESTS | SDK 单元测试 | 184 passed（Python 三组 SDK + TypeScript） |
 | VAL-02-TEMPLATE-REVIEW | Universal-KB 模板 smoke | py_compile + smoke OK |
@@ -50,8 +50,9 @@
 | VAL-05-MCP-SMOKE | Q-SpecTrum MCP 烟测 | 18 tools，JSON-RPC stdout clean |
 | VAL-USER-PACK-DELIVERY | 交付包基础验证 | 0 failures / 0 warnings |
 | VAL-USER-PACK-DELIVERY-STRICT | 交付包严格验证 | 0 failures / 0 warnings |
+| VAL-REFERENCE-PROJECT-SMOKE | 参考项目烟测 | minimal-ai-collab-taskboard 输出 REFERENCE_PROJECT_SMOKE=PASS |
 | VAL-00-CROSS-DOC-CONSISTENCY | 跨文档一致性 | 10/10 PASS |
-| VAL-END-TO-END | 端到端链路元验证 | audit assets / scenario matrix / route smoke / consistency / USER_PACK strict 全通过 |
+| VAL-END-TO-END | 端到端链路元验证 | audit assets / scenario matrix / route smoke / consistency / USER_PACK strict / reference project 全通过 |
 | VAL-CROSS-INTERFACE | 跨子系统接口元验证 | route smoke / P03 HTTP / QCM config / P05 API+MCP / USER_PACK strict 全通过 |
 
 ### MANUAL/CURRENT（0 项）
@@ -78,6 +79,7 @@
 | 2026-05-31 | 深度审计资产落地 | 无原子文件清单/图谱/场景矩阵验证门 | VAL-00-AUDIT-ASSETS PASS |
 | 2026-05-31 | P03/P05/B6 当前事实刷新 | 交付包文档仍引用旧测试数、旧 PASS 快照和 2026-05-28 状态 | 文档对齐到当前 P03/P05/验证注册证据与 B6 严格门禁 |
 | 2026-05-31 | B7 验证元门与交付包口径刷新 | 交付包仍引用 30 项、28 自动 PASS、2 manual-current 与 1148 inventory | 文档对齐到 31/31 automatic PASS、1150 inventory、ROOT route smoke 8/8 与 0 manual-current |
+| 2026-06-01 | 产品化验收门补强 | 缺 GitHub Actions 分层 CI、一键母包验收、真实参考项目、对外评分模型 | 文档对齐到 32/32 automatic PASS、1174 inventory、ROOT route smoke 9/9、参考项目 smoke 与评分 release gate |
 
 ## 下一步
 

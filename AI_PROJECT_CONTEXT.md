@@ -23,7 +23,7 @@ Q-SpecTrum 智脑平台
 
 根目录还包含核心方法论技能文件 `qcm-universal-ai-system-v3.0.skill`（ZIP，45角色/9阶段/24维/5子代理），这是QCM质量评估框架的完整定义，AI在深度模式下按阶段激活角色子集。
 
-根目录新增 `MISSION-MEMORY.md`，作为母交付包长期使命、身份边界、自然语言唤醒握手和记忆写入原则的第一入口。根目录 `MOTHER-PACK-ACTIVATION-GUIDE.md` 是**唯一的权威AI启动协议**，所有其他文档中的启动步骤均为其扩展或简化版本。未来 AI 进入母包时，应先读 `MISSION-MEMORY.md`，再读本文件。
+根目录新增 `MISSION-MEMORY.md`，作为母交付包长期使命、身份边界、自然语言唤醒握手和记忆写入原则的第一入口。根目录 `MOTHER-PACK-ACTIVATION-GUIDE.md` 是**唯一的权威AI启动协议**，所有其他文档中的启动步骤均为其扩展或简化版本。`VERIFY-MOTHER-PACK.ps1` 是母包级一键验收入口，`PROJECT-REVIEW-SCORECARD.md` 是对外评审评分模型。未来 AI 进入母包时，应先读 `MISSION-MEMORY.md`，再读本文件。
 
 ## 0.1 交付包边界
 
@@ -52,9 +52,10 @@ Q-SpecTrum 智脑平台
 | `03.数据库管理_文件夹整理AI应用` | 153 文件 | V2 知识库应用：Flask + MCP + 文件整理 + 向量检索（子工作区） | `README.md`, `AGENTS.md`, `app.py`, `mcp_server.py`, `verify_install.py` |
 | `04.QCM-MVP-Emergence` | 148 文件 | QCM 共鸣/涌现 MVP，22 公式实现、角色/沙盘/飞轮与运行入口 | `README.md`, `PROJECT_HANDOFF-QCM.md`, `qcm/main.py`, `health_check.py` |
 | `05.超极智脑_Q-SpecTrum` | 423 文件 | 主平台：15 角色、Web UI、API、MCP、DB、知识库、验证门（子工作区） | `README.md`, `INDEX.md`, `AGENTS.md`, `智腦協議-BRAIN-PROTOCOL.md`, `run.py`, `api_server.py`, `qspectrum_mcp_server.py` |
+| `_reference_projects/minimal-ai-collab-taskboard` | 16 文件 | 母包自举后的第一个最小真实项目实例，证明“自然语言意图 → PRD/SPEC/TASK/TEST/验证报告”的闭环可运行 | `README.md`, `AI_PROJECT_CONTEXT.md`, `docs/PRD.md`, `docs/SPEC.md`, `tasks/TASKS.md`, `tests/test_smoke.py`, `VERIFY-DELIVERY.ps1` |
 | `协同通用AI大模型开发交付包` | 14 文件 | 开发者完成具体项目后交给最终用户的交付包骨架，承载价值/功能/结构/运作四体系，并提供普通/Strict 两种交付验证模式 | `README.md`, `AI_PROJECT_CONTEXT.md`, `HANDOFF.md`, `VALIDATION_REPORT.md`, `TRACEABILITY-MATRIX.md`, `VERIFY-DELIVERY.ps1` |
 
-统计口径：以上采用 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 当前审计口径，排除 `.git`、`__pycache__`、`.pytest_cache`、`node_modules`、`dist/build/coverage` 等运行缓存；当前全量展开为 1156 文件。
+统计口径：以上采用 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 当前审计口径，排除 `.git`、`__pycache__`、`.pytest_cache`、`node_modules`、`dist/build/coverage` 等运行缓存；当前全量展开为 1174 文件。
 
 ## 2. 子系统理解
 
@@ -311,8 +312,9 @@ python run.py --web
 
 GitHub Actions 工作流位于 `.github/workflows/validate.yml`，每次 push 到 main 或 PR 时自动运行：
 
-- **validate Job** (ubuntu-latest, Python 3.13/3.14)：qa_runner.py validate/status、Markdown fence 检查、submodule 状态检查
-- **powershell-verify Job** (windows-latest)：`VERIFY-DELIVERY.ps1 -Strict` 交付验证
+- **quick-gate** (ubuntu-latest, Python 3.13/3.14)：编译 `qa_runner.py`、submodule 状态检查、consistency、P00 audit、两条路由烟测、参考项目 smoke。
+- **root-acceptance** (windows-latest)：安装核心依赖后运行 `qa_runner.py validate --scope ROOT`、`qa_runner.py status`、`VERIFY-DELIVERY.ps1 -Strict`。
+- **full-acceptance** (manual workflow_dispatch)：当 `full_validate=true` 时在 Windows 跑完整 `qa_runner.py validate` 与 status。
 
 ## 9. 开发迭代记录
 
@@ -325,6 +327,7 @@ GitHub Actions 工作流位于 `.github/workflows/validate.yml`，每次 push �
 | R2 (飞轮) | 219c6d3 | P0-3 MASTER 15 模块引用、P1-4 启动序列重编号、P1-3 LEDGER 扩充 |
 | R3 (飞轮) | b60edb1 | 全量验证 + 飞轮报告 v3.0-final |
 | v3.1 (审计) | f7c250d → ef79aec | README/LICENSE 创建、文件数口径统一、飞轮报告 14 项事实核查 |
+| v3.2 (产品化) | 5839130 → 当前 | GitHub Actions 核心 CI、一键验收脚本、参考项目、评分模型、32 项验证注册表 |
 
 ## 10. 工作原则
 

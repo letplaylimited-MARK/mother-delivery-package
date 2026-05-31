@@ -1,7 +1,7 @@
 # Traceability Matrix
 
 > 用途：追踪项目级 GOAL/REQ/PRD/SPEC/TASK/TEST/AUD/MEM 的对齐关系。
-> 生成时间：2026-05-31。
+> 生成时间：2026-06-01。
 > 状态：母交付包级追踪矩阵，覆盖跨 session 核心需求。
 
 ## 1. 目标（GOAL）
@@ -9,7 +9,8 @@
 | ID | 目标 | 状态 | 验证方式 |
 |---|---|---|---|
 | G-1 | 建立 AI 协同开发的标准化交付流程 | 已完成 | 四体系 + VERIFY-DELIVERY.ps1 -Strict |
-| G-2 | 消除验证体系中的所有非预期 FAIL | 已完成 | qa_runner.py validate: 31 自动 PASS / 0 manual-current / 0 FAIL / 0 WARN / 0 SKIP |
+| G-2 | 消除验证体系中的所有非预期 FAIL | 已完成 | qa_runner.py validate: 32 自动 PASS / 0 manual-current / 0 FAIL / 0 WARN / 0 SKIP |
+| G-4 | 证明母包能启动真实最小项目实例 | 已完成 | `_reference_projects/minimal-ai-collab-taskboard` + VAL-REFERENCE-PROJECT-SMOKE |
 | G-3 | 将 QCM 公式模块从硬编码迁移为 config-driven | 已完成 | 12/14 模块迁移，测试全通过 |
 
 ## 2. 需求（REQ）
@@ -23,6 +24,7 @@
 | REQ-5 | QCM 参数可配置 | A-1 | — | — | 已完成 |
 | REQ-6 | 源提示词吸收验证 | D | — | — | 已完成 |
 | REQ-7 | 交付包四体系填充 | C | — | — | 已完成 |
+| REQ-8 | 母包产品化验收与评分门 | 用户 2026-06-01 产品化要求 | — | PROJECT-REVIEW-SCORECARD / VERIFY-MOTHER-PACK | 已完成 |
 
 ## 3. 任务（TASK）
 
@@ -37,17 +39,20 @@
 | T-7 | 源提示词吸收审查 | REQ-6 | 2026-05-28 | 26/26 验证 |
 | T-8 | 四体系内容填充 | REQ-7 | 2026-05-28 | 4 文件 |
 | T-9 | 5 个缺失文件创建 | REQ-7 | 2026-05-28 | 5 文件 |
+| T-10 | 添加参考项目、一键验收、CI 分层与评分模型 | REQ-8 | 2026-06-01 | `_reference_projects/`, `VERIFY-MOTHER-PACK.ps1`, `.github/workflows/validate.yml`, `PROJECT-REVIEW-SCORECARD.md` |
 
 ## 4. 测试（TEST）
 
 | ID | 测试 | 映射 TASK | 结果 |
 |---|---|---|---|
-| TEST-1 | qa_runner.py validate（全量） | T-1~T-5 | 31 注册项；31 自动 PASS / 0 manual-current / 0 FAIL |
+| TEST-1 | qa_runner.py validate（全量） | T-1~T-5, T-10 | 32 注册项；32 自动 PASS / 0 manual-current / 0 FAIL |
 | TEST-2 | VAL-01-SDK-TESTS（三组 Python SDK + TypeScript） | T-2 | 184 passed |
 | TEST-3 | VAL-01-GHOST-VERIFY（完整性） | T-3 | 299 files ALL CLEAN |
 | TEST-4 | VAL-04-QCM-ALL | T-5, T-6 | 25/25 PASS |
 | TEST-5 | VAL-04-QCM-PAPER | T-5, T-6 | 38/38 PASS |
 | TEST-6 | VERIFY-DELIVERY.ps1 -Strict | T-8, T-9 | 0 failures / 0 warnings |
+| TEST-7 | VAL-REFERENCE-PROJECT-SMOKE | T-10 | REFERENCE_PROJECT_SMOKE=PASS |
+| TEST-8 | VERIFY-MOTHER-PACK.ps1 | T-10 | 母包一键验收通过 |
 
 ## 5. 审计（AUD）
 

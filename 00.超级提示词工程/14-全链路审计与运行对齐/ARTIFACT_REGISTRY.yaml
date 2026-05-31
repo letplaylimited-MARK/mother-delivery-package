@@ -156,6 +156,13 @@ artifacts:
     role: "Second fresh-clone AI collaboration simulation covering control-plane readiness, transient validation handling, route permission boundaries, and real project-instance stop lines."
     read_priority: "P0 before claiming universal-AI collaborative project development readiness"
 
+  - id: "ART-00-SELF-BOOTSTRAP-SPEC-RUN"
+    type: "doc"
+    path: "00.超级提示词工程/14-全链路审计与运行对齐/SELF-BOOTSTRAP-PROJECT-SPEC-AND-RUN.md"
+    owner_project: "P00_SUPER_PROMPT"
+    role: "First real mother-package self-bootstrap project instance: inferred intent answers, self-bootstrap route gap repair, GOAL/REQ/SPEC/TASK/TEST traceability, and Phase-1 validation evidence."
+    read_priority: "P0 before continuing mother-package self-development"
+
   - id: "ART-00-FIRST-DIALOG-DECONSTRUCTION"
     type: "doc"
     path: "00.超级提示词工程/15-超级系统提示词工程/FIRST-DIALOG-COLD-START-DECONSTRUCTION.md"

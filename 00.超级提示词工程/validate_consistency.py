@@ -225,7 +225,7 @@ class ConsistencyValidator:
                       f"缺失维度: {missing}")
 
     def check_c8_intent_registry(self):
-        """C8: 意图注册表必须包含13个意图类型"""
+        """C8: 意图注册表必须包含14个意图类型"""
         content = self._read(
             "00.超级提示词工程/12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md"
         )
@@ -237,7 +237,7 @@ class ConsistencyValidator:
         intents = list(set(intent_pattern))
         # Known required intents (from the spec)
         required = [
-            "PACKAGE_UNDERSTANDING", "GUIDE_SECRETARY", "PROJECT_INITIATION",
+            "PACKAGE_UNDERSTANDING", "GUIDE_SECRETARY", "SELF_BOOTSTRAP_PROJECT", "PROJECT_INITIATION",
             "REQUIREMENT_SPEC", "IMPLEMENTATION", "REVIEW_AUDIT",
             "KNOWLEDGE_MEMORY", "ROLE_TEAM_SANDBOX", "CAPABILITY_INTEGRATION",
             "MISSION_MEMORY_AWAKENING", "MODEL_NATIVE_HANDOFF",

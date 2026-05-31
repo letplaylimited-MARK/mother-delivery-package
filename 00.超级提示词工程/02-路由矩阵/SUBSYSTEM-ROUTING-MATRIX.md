@@ -22,6 +22,7 @@
 | 技能配置、开源库选择、能力缺口、Skill/MCP/插件/LSP/脚本/工作流匹配、安装配置集成方案 | `00.超级提示词工程/10-通用AI协作生态` | `SKILL-CONFIGURATION-GATE.md`, `AI-CAPABILITY-INTEGRATION-CONTRACT.md`, `UNIVERSAL-AI-COLLABORATION-ECOSYSTEM.md` | 技能需求清单 + 候选评估矩阵 + 能力卡 + 集成测试 |
 | 使命、长期记忆、唤醒、身份逻辑、自然语言触发、元智核、认知生命体、文件夹活起来 | 根目录 + `00.超级提示词工程/12-引导秘书逻辑` + `00.超级提示词工程/13-源提示词吸收与演化` | `MISSION-MEMORY.md`, `MISSION-MEMORY-AWAKENING-PROTOCOL.md`, `META-INTELLIGENCE-CORE-SUPER-PROMPT-DECONSTRUCTION.md`, `MODEL-NATIVE-COLLABORATION-PROTOCOL.md` | awakening_check + 使命边界审查 + 记忆写入门 |
 | 交给其他通用 AI 读取、模型原生协作、不覆盖系统逻辑 | `00.超级提示词工程/11-模型原生协作协议` | `MODEL-NATIVE-COLLABORATION-PROTOCOL.md` | 指令层级审查 + Context Pack 审查 |
+| 母包自举、用母包开发母包自身、反哺仓库、第一次真实协同 AI 项目实例 | `ROOT -> 00 -> 03/04/05 -> USER_PACK` | `00.超级提示词工程/14-全链路审计与运行对齐/SELF-BOOTSTRAP-PROJECT-SPEC-AND-RUN.md` | `python qa_runner.py validate --scope ROOT`; `python qa_runner.py consistency` |
 | 用户交付包、最终交付、四体系验证、项目骨架、价值功能结构运作 | `协同通用AI大模型开发交付包` | `README.md`, `交付包组装规则.md`, `01-价值体系/README.md` | `VERIFY-DELIVERY.ps1` 模板态验证 / `VERIFY-DELIVERY.ps1 -Strict` 严格交付验收 |
 
 ## 1.1 路由反馈字段
@@ -62,6 +63,7 @@ PRD/SPEC/验收标准锻造 -> 00/06 SPECFORGE-PRD-SPEC-GATE.md
 技能/开源库/插件/MCP/LSP 选型配置 -> 00/10 SKILL-CONFIGURATION-GATE.md
 使命/唤醒/长期记忆/身份逻辑 -> MISSION-MEMORY.md + 00/12 MISSION-MEMORY-AWAKENING-PROTOCOL.md
 其他通用 AI 接手整个母包 -> 00/11 + AI_PROJECT_CONTEXT.md + 00 README
+母包自举/开发母包自身/反哺仓库 -> ROOT -> 00 -> 03/04/05 -> USER_PACK
 ```
 
 ### 2.2 文档类任务

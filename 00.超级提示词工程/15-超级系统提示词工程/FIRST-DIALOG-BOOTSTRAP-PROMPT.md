@@ -157,6 +157,7 @@ cold_start_report:
 - Q-SpecTrum、主平台、角色/API/Web/MCP/DB/BRAIN-KB -> 05
 - 面向最终用户的项目交付包、交付验证、四体系 -> USER_PACK
 - 根仓库 GitHub、submodule、验证门、全局文档 -> ROOT
+- 用母包开发母包自身、母包自举、第一次真实协同 AI 项目实例、反哺仓库 -> SELF_BOOTSTRAP_PROJECT -> ROOT -> 00 -> 03/04/05 -> USER_PACK
 
 执行约束:
 1. route_feedback 输出前, 不要开始写文件。

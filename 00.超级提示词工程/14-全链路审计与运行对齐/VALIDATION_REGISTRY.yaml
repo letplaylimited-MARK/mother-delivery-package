@@ -15,7 +15,7 @@ validations:
     command: "PowerShell Get-ChildItem recursive file count with excludes including .pytest_cache"
     expected: "Root tracked counts stable; full expanded count may move with ignored runtime DB/cache files and submodule-generated state."
     current_status: "verified_current"
-    evidence: "Current auto inventory baseline=1154 after adding the second AI collaboration cold-start simulation. qa_runner excludes directory parts .git, node_modules, build/dist/coverage, __pycache__, .pytest_cache, and excludes the generated inventory file itself."
+    evidence: "Current auto inventory baseline=1155 after adding the self-bootstrap project spec-and-run artifact. qa_runner excludes directory parts .git, node_modules, build/dist/coverage, __pycache__, .pytest_cache, and excludes the generated inventory file itself."
 
   - id: "VAL-ROOT-HARDCODE-PATH"
     scope: "ROOT"
@@ -41,9 +41,9 @@ validations:
   - id: "VAL-ROOT-ROUTE-SMOKE"
     scope: "ROOT"
     command: "python qa_runner.py route <scenario matrix>"
-    expected: "Guide Secretary route command handles Chinese Windows CLI output and returns Guide Secretary YAML with route_feedback, route_decision, platform, confidence, and validation_refs for core package, awakening, memory/MCP, Q-SpecTrum API/status, user-delivery, cross-system golden path, and review/anti-rebuild intents."
+    expected: "Guide Secretary route command handles Chinese Windows CLI output and returns Guide Secretary YAML with route_feedback, route_decision, platform, confidence, and validation_refs for core package, awakening, memory/MCP, Q-SpecTrum API/status, user-delivery, cross-system golden path, self-bootstrap project, and review/anti-rebuild intents."
     current_status: "verified_current"
-    evidence: "Current route smoke matrix passed 8/8 scenarios after B7 expansion; it now checks intent, decision, platform, minimum confidence, route_feedback, and non-empty validation_refs."
+    evidence: "Current route smoke matrix passed 9/9 scenarios after adding SELF_BOOTSTRAP_PROJECT; it checks intent, decision, platform, minimum confidence, route_feedback, and non-empty validation_refs."
 
   - id: "VAL-00-MEMORY-SOURCE-INDEX"
     scope: "P00_SUPER_PROMPT"
@@ -57,7 +57,7 @@ validations:
     command: "python qa_runner.py validate --scope P00_SUPER_PROMPT"
     expected: "Atomic inventory JSONL parses, contains required fields, has >1000 records; knowledge graph seed parses and has nodes/edges; Codex charter and scenario matrix exist."
     current_status: "verified_current"
-    evidence: "Current auto validation parses atomic inventory (1154 records), knowledge graph seed (134 nodes / 253 edges), Codex execution charter, and scenario acceptance matrix with B7 results."
+    evidence: "Current auto validation parses atomic inventory (1155 records), knowledge graph seed (135 nodes / 255 edges), Codex execution charter, scenario acceptance matrix with B7 results, and the self-bootstrap spec-and-run artifact."
 
   - id: "VAL-01-GHOST-VERIFY"
     scope: "P01_GHOST_CHANNEL"
@@ -211,7 +211,7 @@ validations:
     command: "python qa_runner.py validate  # includes VAL-END-TO-END meta gate without recursive full-validate"
     expected: "Meta gate passes audit assets, B7 scenario matrix, route smoke, consistency, and USER_PACK strict verification."
     current_status: "verified_current"
-    evidence: "Current full qa_runner validate result: 31 total, 31 PASS, 0 FAIL/WARN/SKIP, automatic 31/31. This meta gate auto-checks audit inventory/graph, GS-01..GS-08 scenario results, route smoke 8/8, consistency 10/10, and USER_PACK strict 0 failures."
+    evidence: "Current full qa_runner validate result: 31 total, 31 PASS, 0 FAIL/WARN/SKIP, automatic 31/31. This meta gate auto-checks audit inventory/graph, GS-01..GS-08 scenario results plus SELF_BOOTSTRAP_PROJECT route smoke, consistency 10/10, and USER_PACK strict 0 failures."
 
   - id: "VAL-CROSS-INTERFACE"
     scope: "ROOT"

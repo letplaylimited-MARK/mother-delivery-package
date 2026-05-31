@@ -825,6 +825,107 @@ status_objects:
   timestamps:
     created_at: '2026-05-31'
     updated_at: '2026-05-31'
+- id: GOAL-20260601-MOTHER-PACK-SELF-BOOTSTRAP
+  type: goal
+  title: 母包自举协同开发项目
+  status: verified_current
+  priority: P0
+  package_boundary: cross
+  owner_layer: P00_SUPER_PROMPT
+  source:
+    raw_user_input_ref: 用户要求不要继续问卷，而是基于全部对话、知识图谱/知识结晶/长期记忆和两次模拟，推理最佳答案，真正运行“用母包完善母包自身”的第一次协同通用AI项目开发实例。
+    source_files:
+    - path: 00.超级提示词工程/14-全链路审计与运行对齐/SELF-BOOTSTRAP-PROJECT-SPEC-AND-RUN.md
+      role: current_spec_and_run
+      locator: Phase-1 self-bootstrap project object and route repair evidence
+    - path: 00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260531-AI-COLLABORATION-COLD-START-SIMULATION.md
+      role: prior_simulation
+      locator: control-plane ready but full real project instance not yet run
+    - path: 00.超级提示词工程/14-全链路审计与运行对齐/SUBSYSTEM-CRYSTAL-B7-CROSS-SYSTEM-GOLDEN-PATHS.md
+      role: current_crystal
+      locator: next real project instance should exercise GS-07
+    source_type: user
+  routing:
+    guide_secretary_handoff_id: null
+    intent_id: SELF_BOOTSTRAP_PROJECT
+    route_decision: DIRECT
+    target_subsystems:
+    - ROOT
+    - P00_SUPER_PROMPT
+    - P03_WORKBUDDY_KB
+    - P04_QCM
+    - P05_QSPECTRUM
+    - USER_PACK
+    route_feedback:
+      selected_route: ROOT -> 00 -> 03/04/05 -> USER_PACK
+      rejected_routes:
+      - Generic IMPLEMENTATION rejected because self-bootstrap must preserve cross-system traceability and stop lines.
+      - USER_DELIVERY-only route rejected because USER_PACK strict is not the whole self-development loop.
+      confidence_after_routing: 0.86
+      feedback_to_guide: keep
+      blocked_reason: null
+  traceability:
+    goal_id: GOAL-20260601-MOTHER-PACK-SELF-BOOTSTRAP
+    parent_id: GOAL-20260526-MOTHER-PACK-COLLABORATION
+    related_ids:
+    - ART-00-SELF-BOOTSTRAP-SPEC-RUN
+    - VAL-ROOT-ROUTE-SMOKE
+    - VAL-00-AUDIT-ASSETS
+    - VAL-00-CROSS-DOC-CONSISTENCY
+    - VAL-END-TO-END
+    - VAL-CROSS-INTERFACE
+    atomic_ids:
+    - GOAL-self-bootstrap
+    - REQ-self-bootstrap-route
+    - SPEC-self-bootstrap-intent
+    - TASK-route-smoke-repair
+    - TEST-route-smoke-9
+  evidence:
+    level: VERIFIED
+    items:
+    - kind: command
+      ref: python qa_runner.py route "我要用这个母包项目完善母包自身，形成第一次真正的协同通用AI大模型项目开发实例，并把结果反哺仓库"
+      summary: SELF_BOOTSTRAP_PROJECT / DIRECT / cross_subsystem / confidence 0.86 after route repair.
+    - kind: command
+      ref: python qa_runner.py validate --scope ROOT
+      summary: ROOT 7/7 PASS; route smoke 9/9 after self-bootstrap scenario was added.
+    - kind: file
+      ref: 00.超级提示词工程/14-全链路审计与运行对齐/SELF-BOOTSTRAP-PROJECT-SPEC-AND-RUN.md
+      summary: GOAL/REQ/SPEC/TASK/TEST and stop lines for the first real self-bootstrap project instance.
+  validation:
+    validation_refs:
+    - VAL-ROOT-ROUTE-SMOKE
+    - VAL-00-AUDIT-ASSETS
+    - VAL-00-CROSS-DOC-CONSISTENCY
+    - VAL-END-TO-END
+    - VAL-CROSS-INTERFACE
+    - VAL-USER-PACK-DELIVERY-STRICT
+    required_before_close:
+    - SELF_BOOTSTRAP_PROJECT route probe returns DIRECT cross_subsystem.
+    - ROOT route smoke includes the self-bootstrap scenario.
+    - No Phase-1 edits touch 03/05 code.
+    current_status: verified_current
+  memory:
+    read_from:
+    - MISSION-MEMORY.md
+    - AI_PROJECT_CONTEXT.md
+    - 00/14 simulations, crystals, registries, and ledger
+    write_needed: true
+    write_target: 00/14 self-bootstrap spec, registries, and ledger
+    write_gate: completed_current_turn
+  risks:
+  - id: SB-RISK-001
+    summary: Future agents may treat this Phase-1 route repair as a full external business project delivery.
+    mitigation: The spec states that full business project generation remains a later phase.
+  - id: SB-RISK-002
+    summary: Future agents may over-expand prompts/roles instead of following the stop line.
+    mitigation: Phase-1 scope is limited to route repair, traceability, validation, and handoff.
+  next_action:
+  - Use this object as the entrypoint for the next restrained self-bootstrap development cycle.
+  - Only edit 03 or 05 in a future phase after explicit submodule branch eligibility is satisfied.
+  timestamps:
+    created_at: '2026-06-01'
+    updated_at: '2026-06-01'
 - id: GOAL-20260526-SUBSYSTEM-01
   type: goal
   title: 01 Ghost Channel 通讯协议成为企业级AI协同通讯标准

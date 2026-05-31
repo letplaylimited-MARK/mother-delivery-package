@@ -80,6 +80,13 @@ VALIDATION_SCOPE_MAP = {
 }
 
 INTENT_REGISTRY = {
+    "SELF_BOOTSTRAP_PROJECT": {
+        "keywords": ["自举", "母包自身", "开发自己", "反哺仓库", "自身仓库",
+                     "第一次真正", "真实项目实例", "完善母包",
+                     "self-bootstrap", "self bootstrap", "mother-delivery-package自己"],
+        "primary_route": "ROOT -> 00 -> 03/04/05 -> USER_PACK",
+        "track": "implementation",
+    },
     "PACKAGE_UNDERSTANDING": {
         "keywords": ["理解", "母包", "目录", "地图", "集成", "整体", "全貌",
                      "架构", "架构概览", "导航", "overview", "understand",
@@ -171,6 +178,10 @@ INTENT_REGISTRY = {
 
 def _route_validation_refs(intent_id: str, platform: str) -> list[str]:
     refs = ["VAL-ROOT-ROUTE-SMOKE"]
+    if intent_id == "SELF_BOOTSTRAP_PROJECT":
+        refs.extend(["VAL-00-AUDIT-ASSETS", "VAL-00-CROSS-DOC-CONSISTENCY",
+                     "VAL-END-TO-END", "VAL-CROSS-INTERFACE",
+                     "VAL-USER-PACK-DELIVERY-STRICT"])
     if intent_id == "MISSION_MEMORY_AWAKENING":
         refs.extend(["VAL-00-AUDIT-ASSETS", "VAL-00-CROSS-DOC-CONSISTENCY"])
     if platform == "P03_WORKBUDDY_KB":
@@ -190,6 +201,8 @@ def _route_validation_refs(intent_id: str, platform: str) -> list[str]:
 
 
 def _route_uso_id(intent_id: str, platform: str) -> str | None:
+    if intent_id == "SELF_BOOTSTRAP_PROJECT":
+        return "GOAL-20260601-MOTHER-PACK-SELF-BOOTSTRAP"
     if intent_id == "CROSS_SYSTEM_GOLDEN_PATH":
         return "AUD-20260531-B7-CROSS-SYSTEM-GOLDEN-PATHS"
     if intent_id == "MISSION_MEMORY_AWAKENING":
@@ -1189,7 +1202,7 @@ def _auto_file_count() -> dict:
             by_subsystem[top] = by_subsystem.get(top, 0) + 1
     # Note: submodule dirs (03, 05) may show different counts locally vs in-tree
     status = "PASS" if total >= 1050 else "WARN"
-    detail_parts = [f"total={total} (current inventory baseline=1154, submodule differences normal)"]
+    detail_parts = [f"total={total} (current inventory baseline=1155, submodule differences normal)"]
     for k in sorted(by_subsystem):
         detail_parts.append(f"{k[:20]}={by_subsystem[k]}")
     return {
@@ -1487,6 +1500,8 @@ def _auto_route_smoke() -> dict:
          "USER_DELIVERY", "DIRECT", "USER_PACK", 0.80),
         ("从想法到需求、规格、任务、测试、交付",
          "CROSS_SYSTEM_GOLDEN_PATH", "DIRECT", "cross_subsystem", 0.80),
+        ("我要用这个母包项目完善母包自身，形成第一次真正的协同通用AI大模型项目开发实例，并把结果反哺仓库",
+         "SELF_BOOTSTRAP_PROJECT", "DIRECT", "cross_subsystem", 0.80),
         ("为什么这个项目一直重构，怎么收敛？",
          "REVIEW_AUDIT", "CONFIRM", "mother_pack", 0.60),
     ]
@@ -1784,6 +1799,15 @@ def cmd_route(args):
         ("唤醒" in user_input and "激活" in user_input) or "awakening" in input_lower
     ):
         confidence = max(confidence, 0.82)
+    self_bootstrap_signal = (
+        ("母包" in user_input and ("自身" in user_input or "自己" in user_input or "反哺" in user_input))
+        or "self-bootstrap" in input_lower
+        or "self bootstrap" in input_lower
+        or "mother-delivery-package自己" in input_lower
+    )
+    if self_bootstrap_signal:
+        top_intent = "SELF_BOOTSTRAP_PROJECT"
+        confidence = max(confidence, 0.86)
 
     # Step 3: Route decision
     if confidence >= 0.80:
@@ -1816,10 +1840,10 @@ def cmd_route(args):
             break
     # Check for cross-subsystem keywords
     cross_keywords = ["跨", "全部", "整体", "所有", "cross", "all"]
-    if top_intent == "CROSS_SYSTEM_GOLDEN_PATH" or any(kw in input_lower for kw in cross_keywords):
+    if top_intent in {"CROSS_SYSTEM_GOLDEN_PATH", "SELF_BOOTSTRAP_PROJECT"} or any(kw in input_lower for kw in cross_keywords):
         platform = "cross_subsystem"
 
-    if top_intent == "CROSS_SYSTEM_GOLDEN_PATH":
+    if top_intent in {"CROSS_SYSTEM_GOLDEN_PATH", "SELF_BOOTSTRAP_PROJECT"}:
         primary_route = "ROOT -> 00 -> 03/04/05 -> USER_PACK"
     elif platform == "P05_QSPECTRUM" and top_intent == "CAPABILITY_INTEGRATION":
         primary_route = "05.Q-SpecTrum runtime/API/MCP"

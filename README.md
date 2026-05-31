@@ -16,7 +16,7 @@
 | 05 | 超极智脑 / Q-SpecTrum | 423 | 主平台：15 角色、Web UI、API、MCP、DB、知识库 — submodule | [Q-Spectrum](https://github.com/letplaylimited-MARK/Q-Spectrum) |
 | — | 协同通用 AI 大模型开发交付包 | 14 | 用户交付包骨架（价值/功能/结构/运作四体系） | 随根仓库 |
 
-> **统计口径**：以上采用 `AI_PROJECT_CONTEXT.md` 与 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 的当前审计口径；排除 `.git`、`__pycache__`、`.pytest_cache`、`node_modules`、`dist/build/coverage` 等运行缓存。当前全量展开为 1154 文件，03/05 为独立 submodule，根仓库跟踪其指针。
+> **统计口径**：以上采用 `AI_PROJECT_CONTEXT.md` 与 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 的当前审计口径；排除 `.git`、`__pycache__`、`.pytest_cache`、`node_modules`、`dist/build/coverage` 等运行缓存。当前全量展开为 1155 文件，03/05 为独立 submodule，根仓库跟踪其指针。
 
 ## 快速开始
 

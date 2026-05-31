@@ -78,6 +78,7 @@
 |---|---|---|
 | `PACKAGE_UNDERSTANDING` | 理解整个母包、目录地图、集成关系 | 根地图 + `00` + 目标子系统入口 |
 | `GUIDE_SECRETARY` | 导航秘书、入口逻辑、路由、交接包 | 本协议 + 路由矩阵 |
+| `SELF_BOOTSTRAP_PROJECT` | 用母包开发母包自身、形成第一次真实协同 AI 项目实例并反哺仓库 | `ROOT -> 00 -> 03/04/05 -> USER_PACK` + 自举项目规格 |
 | `PROJECT_INITIATION` | 新项目从想法到需求 | `06-原子化开发治理` + 用户交付包四体系 |
 | `REQUIREMENT_SPEC` | PRD/SPEC/需求变更/规格冻结 | `06` + `07` |
 | `IMPLEMENTATION` | 代码开发、集成、修复 | 目标子系统 + 对应验证 |

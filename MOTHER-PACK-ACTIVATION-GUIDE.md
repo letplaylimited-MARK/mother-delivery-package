@@ -66,6 +66,8 @@ awakening_check:
 
 注意: `awakening_check` 成功、`qa_runner.py route` 输出 `DIRECT`、或注册表显示 `verified_current`, 都不等于允许写文件。写入前必须满足 P4 execution eligibility: 当前命令证据为绿灯、任务边界清楚、验证锚点存在、目标仓库分支可编辑。`USER_PACK -Strict` 通过代表交付包结构卫生; 只有绑定真实项目实例和项目级 smoke/test 后, 才能称为最终交付完成。
 
+若用户目标是“用母包完善母包自身”或“让 mother-delivery-package 开发自己”, 应路由为 `SELF_BOOTSTRAP_PROJECT`。这不是普通 USER_PACK 交付, 而是母包自举协同开发实例: 先建立 GOAL/REQ/SPEC/TASK/TEST 和验证锚点, 再执行最小必要修复。
+
 看到这个YAML → 激活成功。现在可以正常进行项目开发协作。
 
 ### 常见问题

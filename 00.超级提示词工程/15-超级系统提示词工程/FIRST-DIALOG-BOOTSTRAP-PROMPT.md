@@ -16,6 +16,16 @@
 
 如果只支持普通聊天, 使用下面这段。
 
+## 设计依据
+
+本提示词已根据 `FIRST-DIALOG-COLD-START-DECONSTRUCTION.md` 和 `SANDBOX-RUN-20260531-FRESH-CLONE-DEVELOPER-SIMULATION.md` 调整为 6 阶段门:
+
+```text
+P0 Boundary -> P1 Integrity -> P2 Validation -> P3 Routing -> P4 Execution Eligibility -> P5 Handoff
+```
+
+新 AI 的首次输出必须证明它完成了这些阶段, 而不是只描述自己“将会理解”。
+
 ## 可复制首条消息
 
 ```text
@@ -24,6 +34,14 @@
 https://github.com/letplaylimited-MARK/mother-delivery-package
 
 请先不要重构、不要扩写愿景、不要假装已经完整读取。你的第一目标是完成“冷启动接手验证”: 下载完整仓库、初始化 submodule、读取权威入口、运行验证、输出可复盘的启动报告, 然后再根据我的具体任务路由到子系统。
+
+冷启动必须按 6 个阶段门执行:
+P0 Boundary: 确认模型原生边界、仓库根目录、母包使命文件。
+P1 Integrity: 确认 clone/submodule 完整, 并记录 03/05 分支状态。
+P2 Validation: 运行 validate/status/consistency 或明确说明无法运行的原因。
+P3 Routing: 根据用户意图输出 route_feedback 和 validation_refs。
+P4 Execution Eligibility: 判断当前只允许读取、允许根仓库编辑、允许子仓库编辑, 还是 BLOCKED。
+P5 Handoff: 输出 cold_start_report, 再继续或等待下一步。
 
 优先级与边界:
 1. 始终遵守你自身模型、平台、工具和安全规则。
@@ -68,19 +86,41 @@ python qa_runner.py validate
 python qa_runner.py status
 python qa_runner.py consistency
 
+建议同时运行至少一个路由探针:
+
+python qa_runner.py route "我想用这个母包开发一个新的AI项目，从想法到需求、规格、任务、测试、交付"
+
 首次输出必须包含以下 YAML, 字段不可省略:
 
 cold_start_report:
+  phase_gates:
+    P0_boundary: "PASS|FAIL"
+    P1_integrity: "PASS|FAIL"
+    P2_validation: "PASS|FAIL|PARTIAL|NOT_RUN"
+    P3_routing: "PASS|CONFIRM|CLARIFY|BLOCKED|NOT_RUN"
+    P4_execution_eligibility: "ALLOW_READ_ONLY|ALLOW_ROOT_EDIT|ALLOW_SUBMODULE_EDIT|BLOCKED"
+    P5_handoff: "PASS|FAIL"
   repo_root_confirmed: true|false
   clone_mode: "fresh_clone|existing_checkout|not_available"
   submodules_ready: true|false
-  submodule_branch_state: "detached_clean|on_branch|not_checked|not_available"
+  submodules:
+    "03": "detached_clean|main|dirty|missing|not_checked"
+    "05": "detached_clean|master|dirty|missing|not_checked"
   boot_files_read:
     - "<实际读取文件>"
+  command_evidence:
+    - command: "<实际运行命令>"
+      exit_code: "<0|非0|not_run>"
+      summary: "<观察到的关键结果>"
   validation:
     qa_validate: "PASS|FAIL|NOT_RUN"
     qa_status: "PASS|FAIL|NOT_RUN"
     qa_consistency: "PASS|FAIL|NOT_RUN"
+  route_probe:
+    command: "python qa_runner.py route \"<用户意图或探针>\""
+    decision: "DIRECT|CONFIRM|CLARIFY|BLOCKED|NOT_RUN"
+    validation_refs:
+      - "<验证引用>"
   inferred_user_intent: "<从我首条消息推断>"
   route_target: "<00|01|02|03|04|05|USER_PACK|ROOT|UNKNOWN>"
   confidence: 0.0-1.0
@@ -90,6 +130,11 @@ cold_start_report:
       - "<未选择原因>"
     needed_context:
       - "<下一步最小必读文件>"
+  execution_eligibility:
+    mode: "read_only|root_edit|submodule_edit|blocked"
+    reason: "<为什么允许或阻止>"
+    required_before_edit:
+      - "<例如: 03 切到 main / 05 切到 master / 运行指定验证>"
   stop_lines:
     - "<如果没有阻塞则为空列表>"
   next_action: "<下一步建议或准备执行的动作>"
@@ -112,6 +157,7 @@ cold_start_report:
 5. 只修复与当前任务、失败验证、过期权威文档或具体交付阻塞相关的问题。
 6. 不要为了“更完善”无限扩写; 以可运行、可验证、可交接为完成标准。
 7. 如果只是阅读、路由或验证, submodule detached HEAD 可接受; 如果要编辑 03/05, detached HEAD 是停止线, 必须先切换到对应分支。
+8. P4_execution_eligibility 为 BLOCKED 时, 不要写文件; 只输出阻塞原因和解除条件。
 
 现在请执行冷启动接手验证, 先输出 cold_start_report, 再等待或继续执行我给出的具体任务。
 ```

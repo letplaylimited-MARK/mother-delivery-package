@@ -35,6 +35,8 @@
 
 将其中 **"可复制首条消息"** 代码块完整发送给新 AI。该消息会要求新 AI 完成 clone、submodule、读取、验证、路由和 `cold_start_report`。
 
+普通聊天框模式采用 6 阶段门: P0 Boundary、P1 Integrity、P2 Validation、P3 Routing、P4 Execution Eligibility、P5 Handoff。只有 `P4_execution_eligibility` 不是 BLOCKED 时, 才允许进入编辑或执行。
+
 ### Step 2: 启动对话
 
 模式 A 发送第一条消息(逐字):
@@ -60,7 +62,7 @@ awakening_check:
   stop_lines: []
 ```
 
-普通聊天框模式下, AI 必须先输出 `cold_start_report`, 再进入 `awakening_check` 或任务路由。
+普通聊天框模式下, AI 必须先输出带 `phase_gates`、`command_evidence`、`route_feedback` 和 `execution_eligibility` 的 `cold_start_report`, 再进入 `awakening_check` 或任务路由。
 
 看到这个YAML → 激活成功。现在可以正常进行项目开发协作。
 

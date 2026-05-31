@@ -16,13 +16,14 @@
 | `GHOST-CHANNEL-能力整合.md` | 幽灵通道通讯协议整合进超级提示词工具层 |
 | `SUPER-SYSTEM-PROMPT-v3.0-AWAKENING.md` | **当前核心交付物**：可复制到 System Prompt 的唤醒版超级系统提示词 |
 | `FIRST-DIALOG-BOOTSTRAP-PROMPT.md` | **普通聊天框首条消息**：当没有 System Prompt 输入框时, 用于新 AI 冷启动接手 |
+| `FIRST-DIALOG-COLD-START-DECONSTRUCTION.md` | fresh clone 模拟反推文档：解释首条提示词的 6 阶段门、失败模式和字段设计 |
 | `SUPER-SYSTEM-PROMPT.md` | 历史核心提示词本体, 保留为兼容参考 |
 | `启动验证命令集.md` | 全系统验证命令集，按子系统组织 |
 
 ## 使用方式
 **方式A（完整启动）**：将 `SUPER-SYSTEM-PROMPT-v3.0-AWAKENING.md` 作为AI系统提示词输入，AI会自动完成全套启动流程。
 
-**方式B（普通聊天框启动）**：将 `FIRST-DIALOG-BOOTSTRAP-PROMPT.md` 中的"可复制首条消息"发送给新 AI, 要求其先完成 clone/submodule/读取/验证/路由, 输出 `cold_start_report` 后再执行任务。
+**方式B（普通聊天框启动）**：将 `FIRST-DIALOG-BOOTSTRAP-PROMPT.md` 中的"可复制首条消息"发送给新 AI, 要求其按 P0-P5 阶段门完成 clone/submodule/读取/验证/路由/执行资格判断, 输出 `cold_start_report` 后再执行任务。
 
 **方式C（自主启动）**：AI读取此README.md后，按"系统架构图→角色映射→能力整合→超级提示词→验证"顺序阅读，自动激活全系统。
 

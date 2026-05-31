@@ -149,6 +149,13 @@ artifacts:
     role: "Fresh GitHub clone simulation report proving developer/AI cold-start, validation, routing, and submodule branch guardrails."
     read_priority: "P0 before claiming new developer handoff readiness"
 
+  - id: "ART-00-FIRST-DIALOG-DECONSTRUCTION"
+    type: "doc"
+    path: "00.超级提示词工程/15-超级系统提示词工程/FIRST-DIALOG-COLD-START-DECONSTRUCTION.md"
+    owner_project: "P00_SUPER_PROMPT"
+    role: "Deep deconstruction of the fresh-clone simulation into first-dialog phase gates, failure modes, and cold_start_report field design."
+    read_priority: "P0 before changing first-dialog bootstrap prompt"
+
   - id: "ART-01-SUBSYSTEM-CRYSTAL"
     type: "doc"
     path: "00.超级提示词工程/14-全链路审计与运行对齐/SUBSYSTEM-CRYSTAL-P01-GHOST-CHANNEL.md"

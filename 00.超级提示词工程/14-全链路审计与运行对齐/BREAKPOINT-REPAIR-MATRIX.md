@@ -9,7 +9,7 @@
 
 - 6 个显式断裂点：用户或文档可以直接看见的链路缺口。
 - 4 个隐蔽断裂点：单独看文件似乎合理，但跨系统运行时会卡死或漂移。
-- 5 个追加修复项：不是原始断裂点，但会导致后续 AI 接手时重复误判。
+- 6 个追加修复项：不是原始断裂点，但会导致后续 AI 接手时重复误判。
 
 优先级判断：
 
@@ -28,7 +28,7 @@ P2：会降低后续自动化、可读性或审计效率。
 | EXP-003 | Context Pack/交接包缺少 USO 追踪 | 跨文件夹任务只有自然语言和文件清单，没有 `uso_id`、`ledger_ref`、`validation_refs`，无法进入统一状态账本 | 增加 `traceability` 字段，绑定 `UNIFIED-STATUS-OBJECT-SPEC.md` 与 `UNIFIED-STATUS-LEDGER.yaml` |
 | EXP-004 | 原子治理缺少暂停/阻塞状态 | 原状态机从 `IN_PROGRESS` 直接到 `VERIFIED`，没有表达“主动暂停”“被依赖阻塞”“被新需求替代” | 状态机增加 `PAUSED`、`BLOCKED`、`SUPERSEDED`，并补充进入条件和恢复规则 |
 | EXP-005 | 验证语义被折叠 | Manifest 完整性、SDK 测试、模板 smoke、健康检查、严格交付门被混写为“验证”，容易把 smoke 当成 release gate | `VALIDATION_REGISTRY.yaml` 继续分开 integrity、test、template、health、delivery；工作流文档改成显式语义 |
-| EXP-006 | 用户交付包模板态与最终态混淆 | 普通验证通过不代表最终项目交付可用；Strict 失败是模板态正常结果，但容易被误报为缺陷或完成 | 继续把 `VERIFY-DELIVERY.ps1` 与 `-Strict` 区分为 base/template gate 与 final delivery gate |
+| EXP-006 | 用户交付包模板态与最终态混淆 | 普通验证通过不代表最终项目交付可用；即使 Strict 当前通过，后续内容回退到模板占位仍会重新构成风险 | 继续把 `VERIFY-DELIVERY.ps1` 与 `-Strict` 区分为 base/template gate 与 final delivery gate，并以 Strict 0 failures 作为最终交付门 |
 
 ## 3. 4 个隐蔽断裂点
 
@@ -46,8 +46,9 @@ P2：会降低后续自动化、可读性或审计效率。
 | ADD-001 | 注册表字段需要 `semantics`、`side_effects`、`source_status` | 否则 AI 只能知道“有命令/有文件”，不知道命令含义和副作用 | 本轮先在新记忆源索引落地，后续扩展到验证/能力注册表 |
 | ADD-002 | `03` 搜索 DB 优先级需与记忆优先级一致 | 先前 artifact registry 把 search DB 标为 P2，但记忆优先级文档已把 03 搜索/记忆列入 P1 | 本轮把 `ART-03-SEARCH-DB` 修为 P1 |
 | ADD-003 | 路由后必须回写 Context Pack | 没有回写，下一位 AI 看不到为何走这条路径 | 本轮增加 `route_feedback` 与 `traceability` 字段 |
-| ADD-004 | 深度审计不等于已读 100% | 目前是重点文件和验证链路深读，不应声称 1118 文件全部语义审计完成 | 保留 Coverage Registry 的 `PARTIAL-DEEP` 口径 |
-| ADD-005 | 需要后续自动校验脚本 | 当前矩阵与索引仍依赖人工维护 | 标记为下一轮 P1 自动化任务 |
+| ADD-004 | 深度审计不等于已读 100% | 目前是重点文件和验证链路深读，不应声称当前 1150 文件全部语义审计完成 | 保留 Coverage Registry 的 `PARTIAL-DEEP` 口径 |
+| ADD-005 | 自动校验仍需字段级补强 | B7 已把 ROOT route smoke 与端到端/跨接口摘要升级为自动元验证；但部分注册表字段仍依赖人工维护 | 后续只在真实失败或新增核心字段时补自动校验 |
+| ADD-006 | `03` 测试曾污染真实搜索索引 | `test_vector_search.py` 删除/写入真实 `search_index.db` 会让派生缓存被误当证据 | 已隔离到 pytest 临时 WORKSPACE/DB/FAISS 路径 |
 
 ## 5. 修复后的标准齿轮链
 

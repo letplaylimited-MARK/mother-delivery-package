@@ -1,6 +1,6 @@
 import asyncio
 
-from ghost_channel import GhostChannelSDK
+from ghost_channel_sdk import GhostChannelSDK
 
 
 async def main() -> None:

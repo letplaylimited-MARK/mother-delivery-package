@@ -1,7 +1,7 @@
 # 结构体系
 
 > 用途：说明项目由哪些文件、模块、数据、接口、依赖组成，方便用户、开发者和 AI 快速理解。
-> 生成时间：2026-05-28，基于母交付包实际目录结构和 Git 仓库。
+> 生成时间：2026-05-31，基于母交付包实际目录结构、审计清单与运行验证。
 
 ## 1. 目录地图
 
@@ -11,11 +11,11 @@ project-root/
 ├── AI_PROJECT_CONTEXT.md                      # 全局目录地图、子系统定位
 ├── MOTHER-PACK-ACTIVATION-GUIDE.md            # 唯一权威 AI 启动协议
 ├── 开发者母交付包使用说明.md                    # 开发者入门指南
-├── qa_runner.py                               # 18 条验证命令统一入口
+├── qa_runner.py                               # 31 项注册验证统一入口
 ├── qcm-universal-ai-system-v3.0.skill          # QCM 技能文件（ZIP，45 角色/9 阶段）
 ├── .gitignore                                 # Git 排除规则
 │
-├── 00.超级提示词工程/                           # 跨项目 AI 协同的提示词操作系统（45 md + 5 yaml）
+├── 00.超级提示词工程/                           # 跨项目 AI 协同的提示词操作系统与审计控制平面
 │   ├── 01-总控提示词/                           # AI 进入后的启动逻辑
 │   ├── 02-路由矩阵/                             # 子系统路由判断
 │   ├── 03-上下文包模板/                         # 任务上下文装配
@@ -32,7 +32,7 @@ project-root/
 │   ├── 14-全链路审计与运行对齐/                 # 注册表/审计/断裂点/状态账本
 │   └── 15-超级系统提示词工程/                   # SSP v1/v2/v3 + 沙盘报告
 │
-├── 01.通讯协议_幽灵通道/                        # Ghost Channel v1.0 协议+SDK（299 文件）
+├── 01.通讯协议_幽灵通道/                        # Ghost Channel v1.0 协议+SDK（299 manifest checked）
 │   ├── 00_总览/                                # 项目总览和交接
 │   ├── 01_核心协议/                             # Delta/VectorClock/Merkle/AES/HMAC
 │   ├── 02_开源社区包/                           # ghost_channel 开源 SDK（18 tests）
@@ -41,28 +41,28 @@ project-root/
 │   ├── VERIFY.ps1                              # 完整性验证脚本
 │   └── MANIFEST.yaml                           # 299 文件 SHA256 完整性清单
 │
-├── 02.通用知识库框架_Universal-KB/              # V1 知识库模板（21 文件）
+├── 02.通用知识库框架_Universal-KB/              # Universal-KB 模板规范（当前审计 22 文件）
 │   └── 01-raw -> 02-processed -> 03-wiki -> 04-memory -> 05-agents -> 06-output
 │
-├── 03.数据库管理_文件夹整理AI应用/               # V2 知识库应用（172 文件，submodule）
+├── 03.数据库管理_文件夹整理AI应用/               # V2 知识库应用（当前审计 153 文件，子工作区）
 │   ├── app.py                                  # Flask Web/REST/CLI（端口 5000）
 │   ├── mcp_server.py                           # MCP Server（20 个工具）
-│   ├── tests/                                  # 103 tests
-│   └── verify_install.py                       # 安装验证（22 通过）
+│   ├── tests/                                  # 当前审计 107 tests
+│   └── verify_install.py                       # 安装验证（23 通过 / 0 失败）
 │
-├── 04.QCM-MVP-Emergence/                       # QCM 共鸣/涌现 MVP（146 文件）
+├── 04.QCM-MVP-Emergence/                       # QCM 共鸣/涌现 MVP（当前审计 148 文件）
 │   ├── 02-代码编写/                             # 22 公式实现 + 测试
 │   ├── qcm/                                    # 命名空间包（config/core/roles/collaboration）
 │   └── test_qcm_all.py                         # 25/25 tests 通过
 │
-├── 05.超极智脑_Q-SpecTrum/                      # 主平台（431 文件，submodule）
+├── 05.超极智脑_Q-SpecTrum/                      # 主平台（当前审计 423 文件，子工作区）
 │   ├── qspectrum_engine.py                     # 主引擎（Secretary->KnowledgeResonance->LLM）
 │   ├── api_server.py                           # REST API + Web UI（端口 8765）
 │   ├── run.py                                  # CLI/Web/status 统一入口
 │   ├── brain_core/                             # 可复用脑模块（config/graph/MCP/capabilities）
 │   ├── BRAIN-KB/                               # P0-P1 长期知识
-│   ├── verify-integration.py                   # 31/31 集成验证通过
-│   └── platform.db                             # 40 表/85 行/15 角色
+│   ├── verify-integration.py                   # 结构集成验证
+│   └── AI项目管理/Platform/db/platform.db       # 平台数据库权威位置（15 角色）
 │
 └── 协同通用AI大模型开发交付包/                    # 用户交付包（本目录）
     ├── README.md                               # 交付包说明
@@ -112,7 +112,7 @@ project-root/
 
 | 接口 | 类型 | 调用方 | 返回/效果 |
 |---|---|---|---|
-| `qa_runner.py validate` | CLI | 开发者/AI | 18 条验证结果（PASS/FAIL/WARN/MANUAL） |
+| `qa_runner.py validate` | CLI | 开发者/AI | 31 项注册验证结果（PASS/FAIL/WARN/SKIP） |
 | `03/mcp_server.py` | MCP stdio | AI 模型 | 20 个工具（搜索/向量/记忆/文件处理/工作流） |
 | `05/api_server.py` | REST API | Web 前端/脚本 | `/api/chat`、roles、knowledge、memory 等端点 |
 | `05/run.py` | CLI | 开发者 | `--web`(Web UI)、`--status`(健康检查)、`--query`(查询) |
@@ -125,8 +125,8 @@ project-root/
 
 | 类型 | 内容 | 说明 |
 |---|---|---|
-| 运行时 | Python 3.13+ | 推荐 venv 隔离，路径：`~/.workbuddy/binaries/python/` |
-| Python 包 | cryptography 48.0.0, Flask 3.1.3, numpy 2.4.6, chromadb 1.5.9, pytest 9.0.3, pytest-asyncio 1.4.0 | 安装于 venv |
+| 运行时 | Python 3.10+ | 推荐 venv 隔离；当前验证环境为 Python 3.14.4，ChromaDB 有外部弃用警告但测试通过 |
+| Python 包 | cryptography, Flask, numpy, chromadb, pytest, pytest-asyncio 等 | 以各子系统 `requirements.txt` / `pyproject.toml` 为准 |
 | 数据库 | SQLite（platform.db、search_index.db） | 05 和 03 的运行时数据库 |
 | 向量检索 | ChromaDB | 03 知识库和 05 Q-SpecTrum 的向量搜索 |
 | 版本控制 | Git（Monorepo + 2 Submodule） | 03→knowledge-base-manager(main), 05→Q-Spectrum(master) |
@@ -138,6 +138,6 @@ project-root/
 |---|---|---|
 | `qcm-universal-ai-system-v3.0.skill` | 打包生成（ZIP 357KB） | QCM 技能定义，45 角色/9 阶段/24 维/5 子代理 |
 | `01/MANIFEST.yaml` | Python 脚本自动生成 | 299 文件 SHA256 完整性清单 |
-| 验证报告 | `qa_runner.py validate` | 18 条验证结果，JSON 结构化输出 |
+| 验证报告 | `qa_runner.py validate` | 31 项注册验证结果，JSON 结构化输出 |
 | 交付包验证结果 | `VERIFY-DELIVERY.ps1 [-Strict]` | 交付就绪度检查 |
 | Git 仓库 | `git push origin main` | GitHub: letplaylimited-MARK/mother-delivery-package |

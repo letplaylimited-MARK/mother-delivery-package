@@ -95,7 +95,7 @@
 多智能体记忆同步示例
 """
 import asyncio
-from ghost_channel import GhostChannelSDK, GhostChannelConfig
+from ghost_channel_sdk import GhostChannelSDK, GhostChannelConfig
 
 async def memory_sync_scenario():
     sdk = GhostChannelSDK(GhostChannelConfig(
@@ -160,7 +160,7 @@ asyncio.run(memory_sync_scenario())</code></pre>
 CI/CD 工作流同步示例
 """
 import asyncio
-from ghost_channel import GhostChannelSDK, GhostChannelConfig
+from ghost_channel_sdk import GhostChannelSDK, GhostChannelConfig
 
 async def cicd_workflow():
     sdk = GhostChannelSDK(GhostChannelConfig())
@@ -225,7 +225,7 @@ print(f"恢复到: {recovered}")</code></pre>
 IoT 设备状态同步
 """
 import asyncio
-from ghost_channel import GhostChannelSDK, GhostChannelConfig
+from ghost_channel_sdk import GhostChannelSDK, GhostChannelConfig
 
 async def iot_sync():
     sdk = GhostChannelSDK(GhostChannelConfig(completion_mode="verify"))
@@ -272,7 +272,7 @@ asyncio.run(iot_sync())</code></pre>
 电商订单处理工作流
 """
 import asyncio
-from ghost_channel import GhostChannelSDK
+from ghost_channel_sdk import GhostChannelSDK
 
 async def order_workflow():
     sdk = GhostChannelSDK()

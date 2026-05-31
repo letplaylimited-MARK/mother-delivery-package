@@ -44,12 +44,12 @@ export REDIS_HOST="redis"
 export REDIS_PORT="6379"
 ```
 
-### 3. Scale Workers
+### 3. Capacity Planning
 
-```bash
-# Scale to 4 workers
-docker-compose up -d --scale ghost-hub-sdk-worker=4
-```
+The current compose file starts one `ghost-hub-sdk` API container and does not define a
+separate worker service. Add a dedicated worker service before using worker scaling
+commands, or remove fixed `container_name` values before horizontally scaling API
+replicas.
 
 ### 4. Enable TLS
 

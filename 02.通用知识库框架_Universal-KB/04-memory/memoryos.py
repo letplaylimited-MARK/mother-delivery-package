@@ -10,6 +10,7 @@ Universal-KB MemoryOS 风格记忆系统
 
 import json
 import os
+import tempfile
 from datetime import datetime
 from typing import List, Dict, Optional, Tuple
 from dataclasses import dataclass, field
@@ -213,7 +214,8 @@ class MemoryOS:
 
 
 if __name__ == '__main__':
-    memory = MemoryOS('./test_memory')
-    print("=== Universal-KB MemoryOS Test ===")
-    memory.add_memory("测试知识: 三层架构 = raw + wiki + memory", memory_type='semantic')
-    print(json.dumps(memory.get_summary(), indent=2, ensure_ascii=False))
+    with tempfile.TemporaryDirectory(prefix='universal_kb_memoryos_') as tmpdir:
+        memory = MemoryOS(tmpdir)
+        print("=== Universal-KB MemoryOS Test ===")
+        memory.add_memory("测试知识: 三层架构 = raw + wiki + memory", memory_type='semantic')
+        print(json.dumps(memory.get_summary(), indent=2, ensure_ascii=False))

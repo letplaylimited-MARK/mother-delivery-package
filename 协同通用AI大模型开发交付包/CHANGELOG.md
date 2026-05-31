@@ -51,7 +51,7 @@
 ### Added
 - 项目全量扫描和基线建立
 - 七子系统文件统计和 Git 状态确认
-- qa_runner.py 首次运行和 18 条验证基线记录
+- qa_runner.py 首次运行和早期验证基线记录
 - 00/validate_consistency.py 10 维一致性检查首次运行
 
 ### Discovered

@@ -1,7 +1,7 @@
 # Traceability Matrix
 
 > 用途：追踪项目级 GOAL/REQ/PRD/SPEC/TASK/TEST/AUD/MEM 的对齐关系。
-> 生成时间：2026-05-28。
+> 生成时间：2026-05-31。
 > 状态：母交付包级追踪矩阵，覆盖跨 session 核心需求。
 
 ## 1. 目标（GOAL）
@@ -9,7 +9,7 @@
 | ID | 目标 | 状态 | 验证方式 |
 |---|---|---|---|
 | G-1 | 建立 AI 协同开发的标准化交付流程 | 已完成 | 四体系 + VERIFY-DELIVERY.ps1 -Strict |
-| G-2 | 消除验证体系中的所有非预期 FAIL | 已完成 | qa_runner.py validate: 0 非预期 FAIL |
+| G-2 | 消除验证体系中的所有非预期 FAIL | 已完成 | qa_runner.py validate: 31 自动 PASS / 0 manual-current / 0 FAIL / 0 WARN / 0 SKIP |
 | G-3 | 将 QCM 公式模块从硬编码迁移为 config-driven | 已完成 | 12/14 模块迁移，测试全通过 |
 
 ## 2. 需求（REQ）
@@ -42,20 +42,20 @@
 
 | ID | 测试 | 映射 TASK | 结果 |
 |---|---|---|---|
-| TEST-1 | qa_runner.py validate（全量） | T-1~T-5 | 12 PASS / 0 FAIL |
-| TEST-2 | VAL-01-SDK-TESTS（开源 SDK） | T-2 | 18 passed |
+| TEST-1 | qa_runner.py validate（全量） | T-1~T-5 | 31 注册项；31 自动 PASS / 0 manual-current / 0 FAIL |
+| TEST-2 | VAL-01-SDK-TESTS（三组 Python SDK + TypeScript） | T-2 | 184 passed |
 | TEST-3 | VAL-01-GHOST-VERIFY（完整性） | T-3 | 299 files ALL CLEAN |
 | TEST-4 | VAL-04-QCM-ALL | T-5, T-6 | 25/25 PASS |
 | TEST-5 | VAL-04-QCM-PAPER | T-5, T-6 | 38/38 PASS |
-| TEST-6 | VERIFY-DELIVERY.ps1 -Strict | T-8, T-9 | 待确认 |
+| TEST-6 | VERIFY-DELIVERY.ps1 -Strict | T-8, T-9 | 0 failures / 0 warnings |
 
 ## 5. 审计（AUD）
 
 | ID | 审计 | 范围 | 结果 |
 |---|---|---|---|
 | AUD-1 | 源提示词吸收合规性 | 00/13 全目录 | 26/26 机制验证通过，11/11 reject 零泄漏 |
-| AUD-2 | 跨文档一致性 | 00 validate_consistency.py | 9/10 PASS / 1 WARN（C5 路由覆盖度） |
-| AUD-3 | Markdown fence 平衡 | 全量 511 md 文件 | 0 unbalanced |
+| AUD-2 | 跨文档一致性 | 00 validate_consistency.py | 10/10 PASS / 0 WARN |
+| AUD-3 | Markdown fence 平衡 | 全量 523 md 文件 | 0 unbalanced |
 
 ## 6. 记忆（MEM）
 
@@ -93,7 +93,7 @@
 
 | ID | 目标/需求 | 任务 | 测试 | 审计 |
 |---|---|---|---|---|
-| G-03-1 | 103 项测试全 PASS，0 跳过 | T-03-1 实现 `tests/` 目录 12 个测试模块 | TEST-03-1 VAL-03-TESTS: 103/103 passed | AUD-03-1 H4 修复：23 个 except Exception 全部补 `logger.exception()` |
+| G-03-1 | 知识库测试全 PASS，0 跳过 | T-03-1 实现并维护 `tests/` 目录测试模块 | TEST-03-1 VAL-03-TESTS: 107 passed | AUD-03-1 H4 修复：23 个 except Exception 全部补 `logger.exception()` |
 | REQ-03-1 | requirements.txt 无未使用包 | T-03-2 清理 5 个未使用依赖，保留 ruff | TEST-03-2 `pip check` 零冲突 + ruff check 无 F401 | AUD-03-2 M1 修复：15 处 sys.path hacks 整合为 `path_setup.py` |
 | REQ-03-2 | install.ps1 一键安装验证通过 | T-03-3 创建 `install.ps1` + `validate_install.py` | TEST-03-3 VAL-03-INSTALL: install + validate 双 PASS | AUD-03-3 PowerShell `-ExecutionPolicy Bypass` 兼容性确认 |
 
@@ -103,15 +103,15 @@
 |---|---|---|---|---|
 | G-04-1 | QCM 公式模块从硬编码迁移为 config-driven | T-04-1 扩展 `qcm/config.py` paper_params 段（14 模块，60 常量） | TEST-04-1 VAL-04-QCM-ALL: 25 PASS + VAL-04-QCM-PAPER: 38 PASS + VAL-04-HEALTH: 6/6 = 69/69 ALL PASS | AUD-04-1 calculator.py/detector.py 因循环依赖保留硬编码，标注来源 |
 | REQ-04-1 | 涌现公式 R > 0.85 可复现（seed=42） | T-04-2 实现 `detector.py` 核心公式 + `test_emergence.py`（38 tests） | TEST-04-2 VAL-04-QCM-PAPER: 38/38 PASS, R=0.8664 | AUD-04-2 公式版本 v6.3，E 惩罚项已移除，R 上限 0.85+ |
-| REQ-04-2 | qa_runner.py 在 sandbox 环境可运行 | T-04-3 修复 `run_cmd()` 添加 `env=os.environ.copy()` | TEST-04-3 `python qa_runner.py validate` 12 PASS / 0 FAIL | AUD-04-3 Markdown fence 检测改用 `re.MULTILINE` 防止 false negative |
+| REQ-04-2 | qa_runner.py 在 sandbox 环境可运行 | T-04-3 修复 `run_cmd()` 添加 `env=os.environ.copy()` | TEST-04-3 `python qa_runner.py validate --scope P04_QCM` 5/5 PASS | AUD-04-3 Markdown fence 检测改用 `re.MULTILINE` 防止 false negative |
 
 ### 7.5 05 超极智脑_Q-Spectrum
 
 | ID | 目标/需求 | 任务 | 测试 | 审计 |
 |---|---|---|---|---|
-| G-05-1 | 端到端集成测试覆盖核心工作流 | T-05-1 创建 `test_integration.py`（12 场景） | TEST-05-1 VAL-05-INTEGRATION: 12/12 PASS | AUD-05-1 BRAIN-KB/.chroma_db/ 持久化验证 |
-| REQ-05-1 | 状态对齐：MISSION-MEMORY + CAPABILITY-REGISTRY 一致 | T-05-2 运行 `qa_runner.py status` 生成状态快照 | TEST-05-2 VAL-05-STATUS: capability_count 与 registry 一致 | AUD-05-2 ROLE-REGISTRY.yaml 与 AGENTS.md 角色列表对齐 |
-| REQ-05-2 | CI/CD 自动化（GitHub Actions） | T-05-3 创建 `.github/workflows/ci.yml`（Python 3.12/3.13/3.14 矩阵） | TEST-05-3 GitHub Actions green on push to master | AUD-05-3 `ci.yml` 参考 03 的 `test.yml` 但修复 `runs-on: ubuntu-latest` 拼写 |
+| G-05-1 | 端到端集成测试覆盖核心工作流 | T-05-1 维护 `tests/`、`run.py --e2e`、API/MCP smoke | TEST-05-1 VAL-05-PYTEST 158 passed；VAL-05-E2E 13/13；API/MCP smoke PASS | AUD-05-1 BRAIN-KB/.chroma_db/ 与 platform.db 权威路径验证 |
+| REQ-05-1 | 状态对齐：MISSION-MEMORY + CAPABILITY-REGISTRY 一致 | T-05-2 运行 `python run.py --status` 与 `qa_runner.py validate --scope P05_QSPECTRUM` | TEST-05-2 VAL-05-STATUS: System ALL GREEN | AUD-05-2 ROLE-REGISTRY.yaml 与 AGENTS.md 角色列表对齐 |
+| REQ-05-2 | CI/CD 自动化（GitHub Actions） | T-05-3 交付前以当前仓库 workflows 与 GitHub Actions 状态确认 | TEST-05-3 当前本地验证作为主要证据；远端 CI 需独立确认 | AUD-05-3 不用本地成功替代远端 CI 绿色状态 |
 
 ### 7.6 协同通用AI大模型开发交付包
 
@@ -120,6 +120,7 @@
 | G-C-1 | 四体系（价值/功能/结构/运作）从模板态升级为可交付内容 | T-C-1 填充 `01-价值体系/README.md` ~ `04-运作体系/README.md` | TEST-C-1 VERIFY-DELIVERY.ps1 -Strict: 0 failures, 0 warnings | AUD-C-1 四体系内容基于真实开发过程，非模板填充 |
 | REQ-C-1 | 5 个交付门禁文件必须存在且内容非空 | T-C-2 创建 AI_PROJECT_CONTEXT / HANDOFF / CHANGELOG / TRACEABILITY-MATRIX / VALIDATION_REPORT | TEST-C-2 `scripts/verify.ps1` 调用 VERIFY-DELIVERY.ps1 -Strict 全 PASS | AUD-C-2 HANDOFF.md 包含 AKU 规范待建等已知缺口 |
 | REQ-C-2 | 占位符 `<...>` 在严格模式下零容忍 | T-C-3 全局替换 `<母交付包根目录>` → `project-root`，`<package>` → `{package}` | TEST-C-3 Grep `<[A-Za-z]` 零匹配 | AUD-C-3 白名单机制因编码问题未生效，直接替换更可靠 |
+| REQ-C-3 | 交付包事实不能停留在历史快照 | T-C-4 2026-05-31 刷新验证总数、测试数、P05/P03 当前入口 | TEST-C-4 VAL-USER-PACK-DELIVERY + VAL-USER-PACK-DELIVERY-STRICT 0 failures / 0 warnings | AUD-C-4 B6 文档审计确认不再把 2026-05-28 的旧验证快照当作当前事实 |
 
 ---
 
@@ -179,4 +180,3 @@ AUD: AUD-C-1（内容非模板，有真实数据）
   ↓
 MEM: MEM-5（循环依赖方案写入 HANDOFF.md §4）
 ```
-

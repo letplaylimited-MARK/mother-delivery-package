@@ -325,7 +325,7 @@ Version strings **MUST** follow `MAJOR.MINOR.PATCH` syntax.
 ### 13.1 Python SDK
 
 ```python
-from ghost_channel import GhostChannelSDK, GhostChannelConfig
+from ghost_channel_sdk import GhostChannelSDK, GhostChannelConfig
 
 sdk = GhostChannelSDK(GhostChannelConfig(
     compression_level=9,

@@ -21,9 +21,15 @@ import argparse
 import json
 import os
 import re
+import shutil
+import socket
 import subprocess
 import sys
+import tempfile
 import time
+import urllib.parse
+import urllib.request
+import zipfile
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -33,6 +39,13 @@ try:
 except ImportError:
     # Fallback: minimal YAML loader for simple cases
     yaml = None
+
+for stream in (sys.stdout, sys.stderr):
+    if hasattr(stream, "reconfigure"):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -47,8 +60,13 @@ ARTIFACT_REGISTRY_PATH = REGISTRY_DIR / "ARTIFACT_REGISTRY.yaml"
 LEDGER_PATH = REGISTRY_DIR / "UNIFIED-STATUS-LEDGER.yaml"
 CONSISTENCY_SCRIPT = MOTHER_ROOT / "00.超级提示词工程" / "validate_consistency.py"
 
-# Venv Python — used by run_cmd for all validate commands
-VENV_PYTHON = Path(r"C:\Users\wanwa\.workbuddy\binaries\python\envs\default\Scripts\python.exe")
+# Python used by run_cmd for validation commands.
+# Override with MOTHER_PACK_PYTHON when a dedicated validation interpreter is needed.
+VENV_PYTHON = Path(os.environ.get("MOTHER_PACK_PYTHON", sys.executable))
+PYTEST_COMMAND = os.environ.get("MOTHER_PACK_PYTEST")
+if not PYTEST_COMMAND:
+    pytest_path = shutil.which("pytest")
+    PYTEST_COMMAND = f'"{pytest_path}"' if pytest_path else f'"{VENV_PYTHON}" -m pytest'
 
 VALIDATION_SCOPE_MAP = {
     "ROOT": ".",
@@ -95,8 +113,9 @@ INTENT_REGISTRY = {
     },
     "REVIEW_AUDIT": {
         "keywords": ["审查", "审计", "评审", "review", "audit", "检查",
-                     "验证", "quality"],
-        "primary_route": "目标子系统 + 00/07 + 测试/证据",
+                     "验证", "quality", "重构", "收敛", "停止", "断裂",
+                     "问题日志", "风险"],
+        "primary_route": "目标子系统 + 00/14 + 00/07 + 测试/证据",
         "track": "review",
     },
     "KNOWLEDGE_MEMORY": {
@@ -136,12 +155,56 @@ INTENT_REGISTRY = {
         "primary_route": "协同通用AI大模型开发交付包",
         "track": "delivery",
     },
+    "CROSS_SYSTEM_GOLDEN_PATH": {
+        "keywords": ["想法", "需求", "规格", "任务", "测试", "交付",
+                     "闭环", "跨系统", "golden path", "end-to-end"],
+        "primary_route": "ROOT -> 00 -> 03/04/05 -> USER_PACK",
+        "track": "delivery",
+    },
     "AMBIGUOUS": {
         "keywords": [],
         "primary_route": "追问，不执行",
         "track": "understanding",
     },
 }
+
+
+def _route_validation_refs(intent_id: str, platform: str) -> list[str]:
+    refs = ["VAL-ROOT-ROUTE-SMOKE"]
+    if intent_id == "MISSION_MEMORY_AWAKENING":
+        refs.extend(["VAL-00-AUDIT-ASSETS", "VAL-00-CROSS-DOC-CONSISTENCY"])
+    if platform == "P03_WORKBUDDY_KB":
+        refs.extend(["VAL-03-INSTALL", "VAL-03-TESTS", "VAL-03-HTTP-SMOKE"])
+    if platform == "P04_QCM":
+        refs.extend(["VAL-04-QCM-RUNTIME-SMOKE", "VAL-QCM-SKILL-VALIDATE"])
+    if platform == "P05_QSPECTRUM":
+        refs.extend(["VAL-05-STATUS", "VAL-05-API-SMOKE", "VAL-05-MCP-SMOKE"])
+    if platform == "USER_PACK" or intent_id == "USER_DELIVERY":
+        refs.extend(["VAL-USER-PACK-DELIVERY", "VAL-USER-PACK-DELIVERY-STRICT"])
+    if platform == "cross_subsystem" or intent_id == "CROSS_SYSTEM_GOLDEN_PATH":
+        refs.extend(["VAL-END-TO-END", "VAL-CROSS-INTERFACE",
+                     "VAL-USER-PACK-DELIVERY-STRICT"])
+    if intent_id == "REVIEW_AUDIT":
+        refs.extend(["VAL-END-TO-END", "VAL-CROSS-INTERFACE"])
+    return list(dict.fromkeys(refs))
+
+
+def _route_uso_id(intent_id: str, platform: str) -> str | None:
+    if intent_id == "CROSS_SYSTEM_GOLDEN_PATH":
+        return "AUD-20260531-B7-CROSS-SYSTEM-GOLDEN-PATHS"
+    if intent_id == "MISSION_MEMORY_AWAKENING":
+        return "GOAL-20260526-MOTHER-PACK-COLLABORATION"
+    if platform == "P03_WORKBUDDY_KB":
+        return "GOAL-20260526-SUBSYSTEM-03"
+    if platform == "P04_QCM":
+        return "AUD-20260531-P04-QCM-SKILL"
+    if platform == "P05_QSPECTRUM":
+        return "AUD-20260531-P05-QSPECTRUM-RUNTIME"
+    if platform == "USER_PACK":
+        return "GOAL-20260526-USER-PACK"
+    if intent_id == "REVIEW_AUDIT":
+        return "AUD-20260531-B7-CROSS-SYSTEM-GOLDEN-PATHS"
+    return None
 
 # ---------------------------------------------------------------------------
 # Utilities
@@ -251,6 +314,243 @@ def print_subheader(title: str, width: int = 70):
     print(f"\n{'─' * width}")
     print(f"  {title}")
     print(f"{'─' * width}")
+
+
+def _free_local_port() -> int:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.bind(("127.0.0.1", 0))
+        return sock.getsockname()[1]
+
+
+def _auto_qcm_runtime_smoke(cwd: Path | None) -> dict:
+    """Run the three qcm.main modes: research, production output, and HTTP smoke."""
+    qcm_root = cwd or (MOTHER_ROOT / "04.QCM-MVP-Emergence")
+    details = []
+    failures = []
+
+    research_cmd = "python -m qcm.main --mode research --seed 42 --max-rounds 22 --log-level WARNING"
+    research = run_cmd(research_cmd, cwd=qcm_root, timeout=180)
+    research_text = f"{research['stdout']}\n{research['stderr']}"
+    if research["exit_code"] == 0 and "EMERGENCE: YES" in research_text and "Rounds: 22" in research_text:
+        details.append("research R22 emergence PASS")
+    else:
+        failures.append(f"research failed: {research_text[-300:].strip()}")
+
+    with tempfile.TemporaryDirectory(prefix="qcm_prod_smoke_") as out_dir:
+        prod_cmd = f'python -m qcm.main --mode production --seed 42 --max-rounds 3 --output "{out_dir}" --log-level WARNING'
+        production = run_cmd(prod_cmd, cwd=qcm_root, timeout=180)
+        files = list(Path(out_dir).glob("qcm_result_*.json"))
+        if production["exit_code"] == 0 and files:
+            try:
+                payload = json.loads(files[0].read_text(encoding="utf-8"))
+                if payload.get("total_rounds") == 3 and "max_R" in payload:
+                    details.append("production JSON output PASS")
+                else:
+                    failures.append(f"production JSON unexpected: {payload}")
+            except Exception as exc:
+                failures.append(f"production JSON unreadable: {exc}")
+        else:
+            text = f"{production['stdout']}\n{production['stderr']}"
+            failures.append(f"production failed: {text[-300:].strip()}")
+
+    port = _free_local_port()
+    python_exe = str(VENV_PYTHON) if VENV_PYTHON.exists() else sys.executable
+    env = os.environ.copy()
+    env.setdefault("PYTHONUTF8", "1")
+    env.setdefault("PYTHONIOENCODING", "utf-8")
+    proc = subprocess.Popen(
+        [python_exe, "-m", "qcm.main", "--mode", "service", "--port", str(port), "--log-level", "WARNING"],
+        cwd=qcm_root,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        env=env,
+    )
+    try:
+        base = f"http://127.0.0.1:{port}"
+        last_error = None
+        health = None
+        for _ in range(40):
+            try:
+                with urllib.request.urlopen(base + "/health", timeout=1) as resp:
+                    health = json.loads(resp.read().decode("utf-8"))
+                break
+            except Exception as exc:
+                last_error = exc
+                time.sleep(0.25)
+        if health is None:
+            failures.append(f"service did not start: {last_error}")
+        else:
+            with urllib.request.urlopen(base + "/status", timeout=2) as resp:
+                status_payload = json.loads(resp.read().decode("utf-8"))
+            body = json.dumps({"rounds": 3, "seed": 42, "roles": ["Secretary", "Researcher"]}).encode("utf-8")
+            req = urllib.request.Request(
+                base + "/simulate",
+                data=body,
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                simulate = json.loads(resp.read().decode("utf-8"))
+            if (
+                health.get("status") == "healthy"
+                and status_payload.get("status") == "running"
+                and simulate.get("total_rounds") == 3
+            ):
+                details.append("service /health /status /simulate PASS")
+            else:
+                failures.append(f"service unexpected: {health} {status_payload} {simulate}")
+    except Exception as exc:
+        failures.append(f"service smoke failed: {exc}")
+    finally:
+        proc.terminate()
+        try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            proc.wait(timeout=5)
+
+    return {
+        "id": "VAL-04-QCM-RUNTIME-SMOKE",
+        "scope": "",
+        "status": "FAIL" if failures else "PASS",
+        "detail": "; ".join(failures or details),
+        "command": "qcm.main research/production/service smoke",
+        "auto": True,
+    }
+
+
+def _auto_qcm_skill(validate_only: bool) -> dict:
+    """Validate the qcm-v3.0 .skill archive in an isolated temp directory."""
+    archive = MOTHER_ROOT / "qcm-universal-ai-system-v3.0.skill"
+    vid = "VAL-QCM-SKILL-VALIDATE" if validate_only else "VAL-QCM-SKILL-TESTS"
+    if not archive.exists():
+        return {
+            "id": vid, "scope": "", "status": "FAIL",
+            "detail": f"archive missing: {archive}",
+            "command": str(archive), "auto": True,
+        }
+
+    with tempfile.TemporaryDirectory(prefix="qcm_skill_") as tmp_dir:
+        with zipfile.ZipFile(archive) as zf:
+            zf.extractall(tmp_dir)
+        skill_root = Path(tmp_dir) / "qcm-v3.0"
+        if validate_only:
+            cmd = "python scripts/validate_qcm.py"
+            expected = "FINAL RESULT: PASS"
+        else:
+            cmd = "pytest tests -q"
+            expected = "passed"
+        r = run_cmd(cmd, cwd=skill_root, timeout=240)
+        combined = f"{r['stdout']}\n{r['stderr']}"
+        status = "PASS" if r["exit_code"] == 0 and expected in combined else "FAIL"
+        return {
+            "id": vid, "scope": "", "status": status,
+            "detail": combined[-500:].strip(),
+            "command": cmd, "auto": True,
+        }
+
+
+def _aggregate_auto_results(vid: str, checks: list[tuple[str, dict]]) -> dict:
+    failures = []
+    details = []
+    for name, result in checks:
+        status = result.get("status", "UNKNOWN")
+        details.append(f"{name}={status}")
+        if status != "PASS":
+            failures.append(f"{name}: {result.get('detail', '')[:160]}")
+    return {
+        "id": vid,
+        "scope": "ROOT",
+        "status": "PASS" if not failures else "FAIL",
+        "detail": "; ".join(failures or details),
+        "command": "meta validation gate",
+        "auto": True,
+    }
+
+
+def _auto_scenario_matrix_gate() -> dict:
+    matrix = REGISTRY_DIR / "SCENARIO-ACCEPTANCE-MATRIX.md"
+    if not matrix.exists():
+        return {
+            "id": "VAL-SCENARIO-MATRIX", "scope": "ROOT",
+            "status": "FAIL", "detail": f"Missing {matrix}",
+            "auto": True,
+        }
+    text = matrix.read_text(encoding="utf-8", errors="replace")
+    missing = []
+    for sid in [f"GS-{i:02d}" for i in range(1, 9)]:
+        if f"| {sid} | VERIFIED" not in text:
+            missing.append(sid)
+    required_phrases = [
+        "VAL-03-HTTP-SMOKE",
+        "AUD-20260531-B7-CROSS-SYSTEM-GOLDEN-PATHS",
+        "停止结构扩写",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            missing.append(phrase)
+    return {
+        "id": "VAL-SCENARIO-MATRIX",
+        "scope": "ROOT",
+        "status": "PASS" if not missing else "FAIL",
+        "detail": "GS-01..GS-08 VERIFIED with B7 stop line" if not missing else f"Missing: {missing}",
+        "auto": True,
+    }
+
+
+def _auto_user_pack_strict() -> dict:
+    user_pack = MOTHER_ROOT / "协同通用AI大模型开发交付包"
+    r = run_cmd('powershell -ExecutionPolicy Bypass -File .\\VERIFY-DELIVERY.ps1 -Strict',
+                cwd=user_pack, timeout=120)
+    return {
+        "id": "VAL-USER-PACK-STRICT-META",
+        "scope": "USER_PACK",
+        "status": "PASS" if r["exit_code"] == 0 else "FAIL",
+        "detail": r["stdout"][-300:] or r["stderr"][-200:],
+        "command": "VERIFY-DELIVERY.ps1 -Strict",
+        "auto": True,
+    }
+
+
+def _auto_qcm_config_sync_meta() -> dict:
+    qcm_root = MOTHER_ROOT / "04.QCM-MVP-Emergence"
+    qcm_py = str(qcm_root).replace("\\", "/")
+    r = run_cmd(f'set PYTHONPATH={qcm_py}&& python "02-代码编写/test_config_sync.py"',
+                cwd=qcm_root, timeout=180)
+    return {
+        "id": "VAL-QCM-CONFIG-SYNC-META",
+        "scope": "P04_QCM",
+        "status": "PASS" if r["exit_code"] == 0 else "FAIL",
+        "detail": r["stdout"][-300:] or r["stderr"][-200:],
+        "command": "test_config_sync.py",
+        "auto": True,
+    }
+
+
+def _auto_end_to_end_meta() -> dict:
+    checks = [
+        ("audit_assets", _auto_audit_assets()),
+        ("scenario_matrix", _auto_scenario_matrix_gate()),
+        ("route_smoke", _auto_route_smoke()),
+        ("consistency", _auto_consistency_check()),
+        ("user_pack_strict", _auto_user_pack_strict()),
+    ]
+    return _aggregate_auto_results("VAL-END-TO-END", checks)
+
+
+def _auto_cross_interface_meta() -> dict:
+    checks = [
+        ("route_smoke", _auto_route_smoke()),
+        ("p03_http", _auto_p03_http_smoke(MOTHER_ROOT / "03.数据库管理_文件夹整理AI应用")),
+        ("qcm_config_sync", _auto_qcm_config_sync_meta()),
+        ("p05_api", _auto_p05_api_smoke(MOTHER_ROOT / "05.超极智脑_Q-SpecTrum")),
+        ("p05_mcp", _auto_p05_mcp_smoke(MOTHER_ROOT / "05.超极智脑_Q-SpecTrum")),
+        ("user_pack_strict", _auto_user_pack_strict()),
+    ]
+    return _aggregate_auto_results("VAL-CROSS-INTERFACE", checks)
 
 
 # ---------------------------------------------------------------------------
@@ -369,18 +669,60 @@ def _try_auto_execute(vid: str, cmd_str: str, cwd: Path | None) -> dict | None:
         result = _auto_consistency_check()
     elif vid == "VAL-00-MEMORY-SOURCE-INDEX":
         result = _auto_memory_source_index()
+    elif vid == "VAL-00-AUDIT-ASSETS":
+        result = _auto_audit_assets()
     elif vid == "VAL-ROOT-HARDCODE-PATH":
         result = _auto_hardcode_path_check()
+    elif vid == "VAL-ROOT-ROUTE-SMOKE":
+        result = _auto_route_smoke()
+    elif vid == "VAL-END-TO-END":
+        result = _auto_end_to_end_meta()
+    elif vid == "VAL-CROSS-INTERFACE":
+        result = _auto_cross_interface_meta()
+    elif vid == "VAL-03-HTTP-SMOKE":
+        result = _auto_p03_http_smoke(cwd)
     elif vid == "VAL-05-STATUS":
         # Python status check with UTF-8 (Windows-compatible)
         cmd = 'python run.py --status'
         r = run_cmd(cmd, cwd=cwd)
-        status = "PASS" if r["exit_code"] == 0 else "FAIL"
+        combined = f"{r['stdout']}\n{r['stderr']}"
+        status = "PASS" if (
+            r["exit_code"] == 0
+            and "System: ALL GREEN" in combined
+            and "ISSUES FOUND" not in combined
+        ) else "FAIL"
         result = {
             "id": vid, "scope": "", "status": status,
-            "detail": r["stdout"][:200] or r["stderr"][:200],
+            "detail": combined[-300:].strip(),
             "command": cmd_str, "auto": True,
         }
+    elif vid == "VAL-05-PYTEST":
+        cmd = 'pytest tests -q'
+        r = run_cmd(cmd, cwd=cwd, timeout=360)
+        status = "PASS" if r["exit_code"] == 0 and "158 passed" in r["stdout"] else "FAIL"
+        result = {
+            "id": vid, "scope": "", "status": status,
+            "detail": r["stdout"][-300:] or r["stderr"][-300:],
+            "command": cmd_str, "auto": True,
+        }
+    elif vid == "VAL-05-E2E":
+        cmd = 'python run.py --e2e'
+        r = run_cmd(cmd, cwd=cwd, timeout=240)
+        combined = f"{r['stdout']}\n{r['stderr']}"
+        status = "PASS" if (
+            r["exit_code"] == 0
+            and "E2E Results: 13 passed, 0 failed" in combined
+            and "VERDICT: Brand new AI models can understand" in combined
+        ) else "FAIL"
+        result = {
+            "id": vid, "scope": "", "status": status,
+            "detail": combined[-400:].strip(),
+            "command": cmd_str, "auto": True,
+        }
+    elif vid == "VAL-05-API-SMOKE":
+        result = _auto_p05_api_smoke(cwd)
+    elif vid == "VAL-05-MCP-SMOKE":
+        result = _auto_p05_mcp_smoke(cwd)
     elif vid == "VAL-03-TESTS":
         # pytest with UTF-8 (Windows-compatible)
         env_cmd = 'pytest tests/ -q'
@@ -391,17 +733,19 @@ def _try_auto_execute(vid: str, cmd_str: str, cwd: Path | None) -> dict | None:
             "detail": r["stdout"][-300:] or r["stderr"][-300:],
             "command": cmd_str, "auto": True,
         }
-    elif vid in ("VAL-04-QCM-ALL", "VAL-04-QCM-PAPER"):
+    elif vid in ("VAL-04-QCM-ALL", "VAL-04-QCM-PAPER", "VAL-QCM-CONFIG-SYNC"):
         # QCM tests (need PYTHONPATH=cwd for qcm namespace package)
         qcm_py = str(cwd).replace("\\", "/") if cwd else "."
         if vid == "VAL-04-QCM-ALL":
             test_cmd = f'set PYTHONPATH={qcm_py}&& python "02-代码编写/test_qcm_all.py"'
-        else:
+        elif vid == "VAL-04-QCM-PAPER":
             test_cmd = (f'set PYTHONPATH={qcm_py}&& pytest "02-代码编写/test_roles.py" '
                         f'"02-代码编写/test_collaboration.py" '
                         f'"02-代码编写/test_sandbox.py" '
                         f'"02-代码编写/test_flywheel.py" '
                         f'"02-代码编写/test_summoning.py" -q')
+        else:
+            test_cmd = f'set PYTHONPATH={qcm_py}&& python "02-代码编写/test_config_sync.py"'
         r = run_cmd(test_cmd, cwd=cwd, timeout=180)
         status = "PASS" if r["exit_code"] == 0 else "FAIL"
         result = {
@@ -409,41 +753,50 @@ def _try_auto_execute(vid: str, cmd_str: str, cwd: Path | None) -> dict | None:
             "detail": r["stdout"][-300:] or r["stderr"][-300:],
             "command": cmd_str, "auto": True,
         }
+    elif vid == "VAL-04-QCM-RUNTIME-SMOKE":
+        result = _auto_qcm_runtime_smoke(cwd)
+    elif vid == "VAL-QCM-SKILL-VALIDATE":
+        result = _auto_qcm_skill(validate_only=True)
+    elif vid == "VAL-QCM-SKILL-TESTS":
+        result = _auto_qcm_skill(validate_only=False)
     elif vid in ("VAL-01-SDK-TESTS",):
-        # SDK tests (3 actual suites under 01 subsystem)
+        # SDK tests under 01 subsystem: three Python suites plus TypeScript.
         # Each suite has its own PYTHONPATH requirement
         sdk_base = MOTHER_ROOT / "01.通讯协议_幽灵通道" / "03_SDK与集成"
         suites = [
             ("开源社区SDK", "02_开源社区包/ghost_channel开源库",
-             "tests/unit", "src"),  # src-layout: PYTHONPATH=src
+             "tests/unit", ["src", "."]),
             ("GhostHub企业SDK", "03_企业SDK包/GhostHub_SDK",
-             "tests", ""),  # flat layout: PYTHONPATH=parent
+             "tests", ["."]),
             ("轻量SDK工程包", "04_SDK工程包/ghost-channel-sdk/python",
-             "tests", ""),  # tests under python/
+             "tests", [".", "../../../02_开源社区包/ghost_channel开源库/src"]),
         ]
         total_pass = 0
         total_fail = 0
         total_error = 0
         details = []
-        for name, pkg_dir, test_rel, extra_path in suites:
+        for name, pkg_dir, test_rel, python_paths in suites:
             pkg_path = sdk_base / pkg_dir
             test_path = pkg_path / test_rel
             if not test_path.exists():
                 details.append(f"{name}: NOT FOUND")
+                total_error += 1
                 continue
             # Build PYTHONPATH: append extra_path (e.g. src/) if specified
             cmd_env = os.environ.copy()
             cmd_env.setdefault("PYTHONUTF8", "1")
             cmd_env.setdefault("PYTHONIOENCODING", "utf-8")
-            pythonpath_parts = [str(pkg_path)]
-            if extra_path:
-                pythonpath_parts.insert(0, str(pkg_path / extra_path))
+            pythonpath_parts = []
+            for rel in python_paths:
+                path = (pkg_path / rel).resolve()
+                if path.exists():
+                    pythonpath_parts.append(str(path))
             cmd_env["PYTHONPATH"] = ";".join(pythonpath_parts)
-            py = str(VENV_PYTHON) if VENV_PYTHON.exists() else "python"
-            r = run_cmd_raw(f'{py} -m pytest "{test_rel}" -q',
+            r = run_cmd_raw(f'{PYTEST_COMMAND} "{test_rel}" -q',
                            cwd=pkg_path, timeout=180, env=cmd_env)
             # Parse pass/fail from output
-            for line in r["stdout"].split("\n"):
+            combined_output = f"{r['stdout']}\n{r['stderr']}"
+            for line in combined_output.split("\n"):
                 m = re.search(r"(\d+) passed", line)
                 if m:
                     total_pass += int(m.group(1))
@@ -453,11 +806,41 @@ def _try_auto_execute(vid: str, cmd_str: str, cwd: Path | None) -> dict | None:
                 m = re.search(r"(\d+) error", line)
                 if m:
                     total_error += int(m.group(1))
-            if r["exit_code"] != 0 and not r["stdout"]:
+            if r["exit_code"] != 0:
                 total_error += 1
-            detail_msg = r["stdout"][-80:].strip()
+            detail_msg = combined_output[-120:].strip()
             details.append(f"{name}: exit={r['exit_code']} {detail_msg}")
-        if total_fail > 0 or (total_pass == 0 and total_error > 0):
+
+        ts_path = sdk_base / "04_SDK工程包" / "ghost-channel-sdk" / "typescript"
+        npm_path = shutil.which("npm.cmd") or shutil.which("npm")
+        if not ts_path.exists():
+            details.append("TypeScript SDK: NOT FOUND")
+            total_error += 1
+        elif not npm_path:
+            details.append("TypeScript SDK: npm NOT FOUND")
+            total_error += 1
+        else:
+            cmd_env = os.environ.copy()
+            npm_cmd = f'"{npm_path}" test'
+            r = run_cmd_raw(npm_cmd, cwd=ts_path, timeout=120, env=cmd_env)
+            combined_output = f"{r['stdout']}\n{r['stderr']}"
+            pass_seen = False
+            for line in combined_output.split("\n"):
+                m = re.search(r"# pass (\d+)", line)
+                if m:
+                    total_pass += int(m.group(1))
+                    pass_seen = True
+                m = re.search(r"# fail (\d+)", line)
+                if m:
+                    total_fail += int(m.group(1))
+            if r["exit_code"] != 0:
+                total_error += 1
+            elif not pass_seen:
+                total_error += 1
+            detail_msg = combined_output[-120:].strip()
+            details.append(f"TypeScript SDK: exit={r['exit_code']} {detail_msg}")
+
+        if total_fail > 0 or total_error > 0:
             status = "FAIL"
         elif total_pass > 0:
             status = "PASS"
@@ -465,7 +848,7 @@ def _try_auto_execute(vid: str, cmd_str: str, cwd: Path | None) -> dict | None:
             status = "FAIL"
         result = {
             "id": vid, "scope": "", "status": status,
-            "detail": f"SDK: {total_pass} passed, {total_fail} failed, {total_error} errors; " + "; ".join(details[:3]),
+            "detail": f"SDK: {total_pass} passed, {total_fail} failed, {total_error} errors; " + "; ".join(details[:4]),
             "command": cmd_str, "auto": True,
         }
 
@@ -474,6 +857,264 @@ def _try_auto_execute(vid: str, cmd_str: str, cwd: Path | None) -> dict | None:
         result.setdefault("scope", "")
         result.setdefault("auto", True)
     return result
+
+
+def _auto_p05_api_smoke(cwd: Path | None) -> dict:
+    """Start Q-SpecTrum API on a free port and verify real HTTP routes."""
+    p05_root = cwd or (MOTHER_ROOT / "05.超极智脑_Q-SpecTrum")
+    if not p05_root.exists():
+        return {
+            "id": "VAL-05-API-SMOKE", "scope": "P05_QSPECTRUM",
+            "status": "SKIP", "detail": f"Missing P05 root: {p05_root}",
+            "auto": True,
+        }
+
+    port = _free_local_port()
+    base = f"http://127.0.0.1:{port}"
+    python_exe = str(VENV_PYTHON) if VENV_PYTHON.exists() else sys.executable
+    env = os.environ.copy()
+    env["QSPECTRUM_LLM"] = "mock"
+    env.setdefault("PYTHONUTF8", "1")
+    env.setdefault("PYTHONIOENCODING", "utf-8")
+    proc = subprocess.Popen(
+        [python_exe, "run.py", "--web", "--port", str(port), "--provider", "mock"],
+        cwd=p05_root,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.STDOUT,
+        env=env,
+    )
+
+    def request(method: str, path: str, body: dict | None = None, timeout: int = 20):
+        data = json.dumps(body, ensure_ascii=False).encode("utf-8") if body is not None else None
+        req = urllib.request.Request(
+            base + path,
+            data=data,
+            headers={"Content-Type": "application/json"} if data else {},
+            method=method,
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return resp.status, json.loads(resp.read().decode("utf-8"))
+
+    try:
+        ready = False
+        last_error = None
+        for _ in range(30):
+            try:
+                code, status_payload = request("GET", "/api/status", timeout=2)
+                if code == 200 and status_payload.get("roles_loaded") == 15:
+                    ready = True
+                    break
+            except Exception as exc:
+                last_error = exc
+                time.sleep(1)
+        if not ready:
+            return {
+                "id": "VAL-05-API-SMOKE", "scope": "P05_QSPECTRUM",
+                "status": "FAIL", "detail": f"API did not become ready: {last_error}",
+                "auto": True,
+            }
+
+        code, roles = request("GET", "/api/roles")
+        checks = [code == 200 and roles.get("total") == 15]
+        routes = []
+        for query, expected in [
+            ("Research our competitors", "ROLE-Q02"),
+            ("Audit this code for security bugs", "ROLE-Q06"),
+            ("Help me grow as an engineer", "ROLE-Q08"),
+        ]:
+            code, body = request(
+                "POST", "/api/chat",
+                {"message": query, "session_id": "qa-runner-api-smoke"},
+            )
+            role = body.get("routing", {}).get("role_code")
+            routes.append(f"{query[:8]}->{role}")
+            checks.append(code == 200 and body.get("success") is True and role == expected)
+
+        status = "PASS" if all(checks) else "FAIL"
+        return {
+            "id": "VAL-05-API-SMOKE", "scope": "P05_QSPECTRUM",
+            "status": status,
+            "detail": f"status roles=15; roles total={roles.get('total')}; routes={', '.join(routes)}",
+            "auto": True,
+        }
+    except Exception as exc:
+        return {
+            "id": "VAL-05-API-SMOKE", "scope": "P05_QSPECTRUM",
+            "status": "FAIL", "detail": f"API smoke failed: {exc}",
+            "auto": True,
+        }
+    finally:
+        proc.terminate()
+        try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            proc.wait(timeout=5)
+
+
+def _auto_p05_mcp_smoke(cwd: Path | None) -> dict:
+    """Verify Q-SpecTrum MCP stdio emits clean JSON-RPC responses."""
+    p05_root = cwd or (MOTHER_ROOT / "05.超极智脑_Q-SpecTrum")
+    if not p05_root.exists():
+        return {
+            "id": "VAL-05-MCP-SMOKE", "scope": "P05_QSPECTRUM",
+            "status": "SKIP", "detail": f"Missing P05 root: {p05_root}",
+            "auto": True,
+        }
+
+    python_exe = str(VENV_PYTHON) if VENV_PYTHON.exists() else sys.executable
+    env = os.environ.copy()
+    env["PYTHONUTF8"] = "1"
+    env["PYTHONIOENCODING"] = "utf-8"
+    messages = [
+        {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}},
+        {"jsonrpc": "2.0", "method": "notifications/initialized", "params": {}},
+        {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}},
+        {"jsonrpc": "2.0", "id": 3, "method": "resources/read",
+         "params": {"uri": "qspectrum://status"}},
+        {"jsonrpc": "2.0", "id": 4, "method": "tools/call",
+         "params": {"name": "execute_chat",
+                    "arguments": {"message": "Research our competitors"}}},
+        {"jsonrpc": "2.0", "id": 5, "method": "tools/call",
+         "params": {"name": "query_database",
+                    "arguments": {"sql": "SELECT COUNT(*) AS n FROM ai_roles"}}},
+    ]
+    stdin = "".join(json.dumps(m, ensure_ascii=False) + "\n" for m in messages)
+    try:
+        result = subprocess.run(
+            [python_exe, "qspectrum_mcp_server.py", "--provider", "mock"],
+            input=stdin,
+            cwd=p05_root,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=90,
+            env=env,
+        )
+    except Exception as exc:
+        return {
+            "id": "VAL-05-MCP-SMOKE", "scope": "P05_QSPECTRUM",
+            "status": "FAIL", "detail": f"MCP smoke failed: {exc}",
+            "auto": True,
+        }
+
+    parsed = []
+    non_json = []
+    for line in result.stdout.splitlines():
+        if not line.strip():
+            continue
+        try:
+            parsed.append(json.loads(line))
+        except Exception:
+            non_json.append(line[:80])
+
+    by_id = {msg.get("id"): msg for msg in parsed if msg.get("id") is not None}
+    checks = [
+        result.returncode == 0,
+        not non_json,
+        len(by_id.get(2, {}).get("result", {}).get("tools", [])) >= 10,
+        len(by_id.get(3, {}).get("result", {}).get("contents", [])) == 1,
+    ]
+    try:
+        chat_text = by_id[4]["result"]["content"][0]["text"]
+        chat_payload = json.loads(chat_text)
+        checks.append("Researcher" in chat_payload.get("response", ""))
+        sql_text = by_id[5]["result"]["content"][0]["text"]
+        sql_payload = json.loads(sql_text)
+        checks.append(sql_payload.get("results", [{}])[0].get("n") == 15)
+    except Exception:
+        checks.append(False)
+
+    status = "PASS" if all(checks) else "FAIL"
+    stderr_lines = len([l for l in result.stderr.splitlines() if l.strip()])
+    return {
+        "id": "VAL-05-MCP-SMOKE", "scope": "P05_QSPECTRUM",
+        "status": status,
+        "detail": (
+            f"json_messages={len(parsed)}, non_json={len(non_json)}, "
+            f"tools={len(by_id.get(2, {}).get('result', {}).get('tools', []))}, "
+            f"stderr_lines={stderr_lines}"
+        ),
+        "auto": True,
+    }
+
+
+def _auto_p03_http_smoke(cwd: Path | None) -> dict:
+    """Start WorkBuddy KB Flask app and verify /memory plus /api/search."""
+    p03_root = cwd or (MOTHER_ROOT / "03.数据库管理_文件夹整理AI应用")
+    if not p03_root.exists():
+        return {
+            "id": "VAL-03-HTTP-SMOKE", "scope": "P03_WORKBUDDY_KB",
+            "status": "SKIP", "detail": f"Missing P03 root: {p03_root}",
+            "auto": True,
+        }
+
+    port = _free_local_port()
+    base = f"http://127.0.0.1:{port}"
+    python_exe = str(VENV_PYTHON) if VENV_PYTHON.exists() else sys.executable
+    env = os.environ.copy()
+    env.setdefault("PYTHONUTF8", "1")
+    env.setdefault("PYTHONIOENCODING", "utf-8")
+    proc = subprocess.Popen(
+        [python_exe, "app.py", "--port", str(port), "--no-bootstrap", "--daemon"],
+        cwd=p03_root,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.STDOUT,
+        env=env,
+    )
+
+    try:
+        ready = False
+        last_error = None
+        for _ in range(30):
+            try:
+                with urllib.request.urlopen(base + "/memory", timeout=2) as resp:
+                    memory_payload = json.loads(resp.read().decode("utf-8"))
+                if resp.status == 200:
+                    ready = True
+                    break
+            except Exception as exc:
+                last_error = exc
+                time.sleep(0.25)
+
+        if not ready:
+            return {
+                "id": "VAL-03-HTTP-SMOKE", "scope": "P03_WORKBUDDY_KB",
+                "status": "FAIL", "detail": f"HTTP app did not become ready: {last_error}",
+                "auto": True,
+            }
+
+        query = urllib.parse.quote("知识库")
+        with urllib.request.urlopen(f"{base}/api/search?q={query}", timeout=30) as resp:
+            search_payload = json.loads(resp.read().decode("utf-8"))
+        results = search_payload.get("results", [])
+        required_memory_keys = {"config", "short_term_count", "mid_term_count", "long_term_knowledge"}
+        status = "PASS" if required_memory_keys.issubset(memory_payload) and len(results) > 0 else "FAIL"
+        first_path = results[0].get("path", "") if results else ""
+        return {
+            "id": "VAL-03-HTTP-SMOKE",
+            "scope": "P03_WORKBUDDY_KB",
+            "status": status,
+            "detail": (
+                f"port={port}; memory_keys={','.join(sorted(memory_payload.keys()))}; "
+                f"search_results={len(results)}; first_path={first_path}"
+            ),
+            "auto": True,
+        }
+    except Exception as exc:
+        return {
+            "id": "VAL-03-HTTP-SMOKE", "scope": "P03_WORKBUDDY_KB",
+            "status": "FAIL", "detail": f"HTTP smoke failed: {exc}",
+            "auto": True,
+        }
+    finally:
+        proc.terminate()
+        try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            proc.wait(timeout=5)
 
 
 def _auto_yaml_parse() -> dict:
@@ -528,15 +1169,17 @@ def _auto_markdown_fences() -> dict:
 
 def _auto_file_count() -> dict:
     """Auto-check: File count verification."""
-    excludes = [".git", "node_modules", "dist", "build", "coverage",
-                "__pycache__", ".pytest_cache"]
+    excludes = {".git", "node_modules", "dist", "build", "coverage",
+                "__pycache__", ".pytest_cache"}
     total = 0
     by_subsystem = {}
     for p in MOTHER_ROOT.rglob("*"):
         if not p.is_file():
             continue
         rel = str(p.relative_to(MOTHER_ROOT)).replace("\\", "/")
-        if any(ex in rel for ex in excludes):
+        if rel.endswith("00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY.jsonl"):
+            continue
+        if any(part in excludes for part in rel.split("/")):
             continue
         total += 1
         # Classify by subsystem
@@ -546,7 +1189,7 @@ def _auto_file_count() -> dict:
             by_subsystem[top] = by_subsystem.get(top, 0) + 1
     # Note: submodule dirs (03, 05) may show different counts locally vs in-tree
     status = "PASS" if total >= 1050 else "WARN"
-    detail_parts = [f"total={total} (baseline=1118, submodule差异正常)"]
+    detail_parts = [f"total={total} (current inventory baseline=1150, submodule differences normal)"]
     for k in sorted(by_subsystem):
         detail_parts.append(f"{k[:20]}={by_subsystem[k]}")
     return {
@@ -653,7 +1296,7 @@ def _auto_consistency_check() -> dict:
             "status": "SKIP", "detail": f"validate_consistency.py not found: {script}",
             "command": "python validate_consistency.py", "auto": True,
         }
-    r = run_cmd(f'python "{script}"', cwd=MOTHER_ROOT, timeout=120)
+    r = run_cmd(f'python "{script}" "{MOTHER_ROOT}"', cwd=MOTHER_ROOT, timeout=120)
     stdout = r["stdout"]
     # Parse PASS/FAIL/WARN counts from output
     pass_m = re.search(r"PASS:\s*(\d+)", stdout)
@@ -662,7 +1305,9 @@ def _auto_consistency_check() -> dict:
     pass_count = int(pass_m.group(1)) if pass_m else 0
     fail_count = int(fail_m.group(1)) if fail_m else 0
     warn_count = int(warn_m.group(1)) if warn_m else 0
-    if fail_count > 0:
+    if r["exit_code"] != 0:
+        status = "FAIL"
+    elif fail_count > 0:
         status = "FAIL"
     elif warn_count > 0:
         status = "WARN"
@@ -709,6 +1354,61 @@ def _auto_memory_source_index() -> dict:
         "id": "VAL-00-MEMORY-SOURCE-INDEX", "scope": "P00_SUPER_PROMPT",
         "status": status, "detail": detail,
         "command": "Parse MEMORY-SOURCE-INDEX.yaml and inspect required fields", "auto": True,
+    }
+
+
+def _auto_audit_assets() -> dict:
+    """Auto-check: atomic inventory, graph seed, and deep-audit control docs."""
+    inv_path = REGISTRY_DIR / "ATOMIC-FILE-INVENTORY.jsonl"
+    graph_path = REGISTRY_DIR / "KNOWLEDGE-GRAPH-SEED.yaml"
+    required_docs = [
+        REGISTRY_DIR / "CODEX-DEEP-AUDIT-EXECUTION-CHARTER.md",
+        REGISTRY_DIR / "SCENARIO-ACCEPTANCE-MATRIX.md",
+        REGISTRY_DIR / "DEEP-UNDERSTANDING-KNOWLEDGE-CRYSTALLIZATION-BLUEPRINT.md",
+    ]
+    failures = []
+    inventory_count = 0
+    required_fields = {
+        "path", "subsystem", "kind", "size_bytes", "sha256",
+        "priority", "audit_state", "evidence_level",
+    }
+    if not inv_path.exists():
+        failures.append("ATOMIC-FILE-INVENTORY.jsonl missing")
+    else:
+        try:
+            with inv_path.open("r", encoding="utf-8") as f:
+                for line_no, line in enumerate(f, start=1):
+                    if not line.strip():
+                        continue
+                    record = json.loads(line)
+                    missing = required_fields - set(record)
+                    if missing:
+                        failures.append(f"inventory line {line_no} missing {sorted(missing)}")
+                        break
+                    inventory_count += 1
+            if inventory_count < 1000:
+                failures.append(f"inventory too small: {inventory_count}")
+        except Exception as exc:
+            failures.append(f"inventory parse error: {exc}")
+
+    graph = load_yaml(graph_path)
+    nodes = graph.get("nodes", []) if isinstance(graph, dict) else []
+    edges = graph.get("edges", []) if isinstance(graph, dict) else []
+    if not nodes or not edges:
+        failures.append("KNOWLEDGE-GRAPH-SEED.yaml missing nodes or edges")
+
+    for doc in required_docs:
+        if not doc.exists():
+            failures.append(f"missing {doc.name}")
+
+    status = "PASS" if not failures else "FAIL"
+    detail = f"inventory={inventory_count}, graph_nodes={len(nodes)}, graph_edges={len(edges)}"
+    if failures:
+        detail += "; " + "; ".join(failures[:3])
+    return {
+        "id": "VAL-00-AUDIT-ASSETS", "scope": "P00_SUPER_PROMPT",
+        "status": status, "detail": detail,
+        "command": "Parse audit inventory/graph/control docs", "auto": True,
     }
 
 
@@ -768,6 +1468,74 @@ def _auto_hardcode_path_check() -> dict:
         "status": status, "detail": detail,
         "command": "rg scan for local absolute paths", "auto": True,
     }
+
+
+def _auto_route_smoke() -> dict:
+    """Auto-check: Guide Secretary route command handles core Chinese scenarios."""
+    scenarios = [
+        ("帮我完整理解整个母包并给出下一步审计路径",
+         "PACKAGE_UNDERSTANDING", "CONFIRM", "mother_pack", 0.60),
+        ("请读取母包并完成唤醒激活",
+         "MISSION_MEMORY_AWAKENING", "DIRECT", "mother_pack", 0.80),
+        ("我要运行03知识库搜索和MCP工具",
+         "KNOWLEDGE_MEMORY", "DIRECT", "P03_WORKBUDDY_KB", 0.80),
+        ("帮我测试05 Q-SpecTrum API和角色路由",
+         "CAPABILITY_INTEGRATION", "DIRECT", "P05_QSPECTRUM", 0.80),
+        ("请给出05 Q-SpecTrum当前系统状态摘要",
+         "CAPABILITY_INTEGRATION", "DIRECT", "P05_QSPECTRUM", 0.80),
+        ("准备最终用户交付包并严格验证",
+         "USER_DELIVERY", "DIRECT", "USER_PACK", 0.80),
+        ("从想法到需求、规格、任务、测试、交付",
+         "CROSS_SYSTEM_GOLDEN_PATH", "DIRECT", "cross_subsystem", 0.80),
+        ("为什么这个项目一直重构，怎么收敛？",
+         "REVIEW_AUDIT", "CONFIRM", "mother_pack", 0.60),
+    ]
+    env = os.environ.copy()
+    env.setdefault("PYTHONUTF8", "1")
+    env.setdefault("PYTHONIOENCODING", "utf-8")
+    failures = []
+    passed = 0
+    runner = MOTHER_ROOT / "qa_runner.py"
+    for text, expected_intent, expected_decision, expected_platform, min_confidence in scenarios:
+        try:
+            r = subprocess.run(
+                [sys.executable, str(runner), "route", text],
+                cwd=MOTHER_ROOT, capture_output=True, text=True,
+                timeout=60, encoding="utf-8", errors="replace", env=env,
+            )
+        except Exception as exc:
+            failures.append(f"{expected_intent}: {exc}")
+            continue
+        combined = f"{r.stdout}\n{r.stderr}"
+        conf_match = re.search(r"confidence_after_routing:\s*([0-9.]+)", combined)
+        confidence = float(conf_match.group(1)) if conf_match else 0.0
+        ok = (
+            r.returncode == 0
+            and f'  intent_id: "{expected_intent}"' in combined
+            and f'  route_decision: "{expected_decision}"' in combined
+            and f'    platform: "{expected_platform}"' in combined
+            and confidence >= min_confidence
+            and "guide_secretary:" in combined
+            and "route_feedback:" in combined
+            and "validation_refs: []" not in combined
+        )
+        if ok:
+            passed += 1
+        else:
+            failures.append(
+                f"{expected_intent}/{expected_decision}/{expected_platform}: "
+                f"exit={r.returncode} conf={confidence} {combined[-120:].strip()}"
+            )
+    status = "PASS" if not failures else "FAIL"
+    detail = f"{passed}/{len(scenarios)} route smoke scenarios passed"
+    if failures:
+        detail += "; " + "; ".join(failures[:2])
+    return {
+        "id": "VAL-ROOT-ROUTE-SMOKE", "scope": "ROOT",
+        "status": status, "detail": detail,
+        "command": "python qa_runner.py route <scenario matrix>", "auto": True,
+    }
+
 
 def cmd_status(_args):
     """Read all registries and output system overview."""
@@ -995,6 +1763,28 @@ def cmd_route(args):
         base_confidence = keyword_score + uniqueness_score + clarity_score
         confidence = round(max(min(base_confidence + 0.15, 0.98), 0.35), 2)
 
+    explicit_subsystem_signal = any(
+        token in input_lower
+        for token in [
+            "01", "02", "03", "04", "05",
+            "p01", "p02", "p03", "p04", "p05",
+            "q-spectrum", "qspectrum", "q-spectrum",
+            "ghost channel", "幽灵通道", "知识库", "qcm",
+            "用户交付包",
+        ]
+    )
+    action_signal = any(
+        token in input_lower
+        for token in ["测试", "验证", "运行", "启动", "状态", "摘要", "健康",
+                      "api", "mcp", "status", "query", "search", "health", "搜索"]
+    )
+    if top_intent != "AMBIGUOUS" and explicit_subsystem_signal and action_signal:
+        confidence = max(confidence, 0.82)
+    if top_intent == "MISSION_MEMORY_AWAKENING" and (
+        ("唤醒" in user_input and "激活" in user_input) or "awakening" in input_lower
+    ):
+        confidence = max(confidence, 0.82)
+
     # Step 3: Route decision
     if confidence >= 0.80:
         route_decision = "DIRECT"
@@ -1011,20 +1801,32 @@ def cmd_route(args):
     # Platform detection from keywords
     platform = "mother_pack"
     platform_map = {
-        "03": "P03_WORKBUDDY_KB",
-        "04": "P04_QCM",
-        "05": "P05_QSPECTRUM",
-        "01": "P01_GHOST_CHANNEL",
-        "02": "P02_UNIVERSAL_KB",
+        "P03_WORKBUDDY_KB": ["03", "p03", "workbuddy", "知识库", "mcp"],
+        "P04_QCM": ["04", "p04", "qcm", "沙盘", "涌现"],
+        "P05_QSPECTRUM": ["05", "p05", "q-spectrum", "qspectrum",
+                          "q-spectrum", "超极智脑", "智脑"],
+        "P01_GHOST_CHANNEL": ["01", "p01", "ghost channel", "幽灵通道"],
+        "P02_UNIVERSAL_KB": ["02", "p02", "universal-kb"],
+        "USER_PACK": ["用户交付包", "最终用户交付包", "协同通用ai", "user_pack",
+                      "delivery package"],
     }
-    for code, name in platform_map.items():
-        if code in user_input or name.lower().split("_")[0] in input_lower:
+    for name, aliases in platform_map.items():
+        if any(alias in input_lower for alias in aliases):
             platform = name
             break
     # Check for cross-subsystem keywords
     cross_keywords = ["跨", "全部", "整体", "所有", "cross", "all"]
-    if any(kw in input_lower for kw in cross_keywords):
+    if top_intent == "CROSS_SYSTEM_GOLDEN_PATH" or any(kw in input_lower for kw in cross_keywords):
         platform = "cross_subsystem"
+
+    if top_intent == "CROSS_SYSTEM_GOLDEN_PATH":
+        primary_route = "ROOT -> 00 -> 03/04/05 -> USER_PACK"
+    elif platform == "P05_QSPECTRUM" and top_intent == "CAPABILITY_INTEGRATION":
+        primary_route = "05.Q-SpecTrum runtime/API/MCP"
+    elif platform == "P03_WORKBUDDY_KB" and top_intent == "KNOWLEDGE_MEMORY":
+        primary_route = "03 WorkBuddy KB search/MCP"
+    elif platform == "USER_PACK" and top_intent == "USER_DELIVERY":
+        primary_route = "协同通用AI大模型开发交付包"
 
     # People detection
     people = ["developer"]
@@ -1050,7 +1852,8 @@ def cmd_route(args):
     if scores:
         print_subheader("意图匹配分数")
         for iid, score in sorted(scores.items(), key=lambda x: x[1], reverse=True)[:5]:
-            bar = "█" * int(score * 20) + "░" * (20 - int(score * 20))
+            filled = int(score * 20)
+            bar = "#" * filled + "-" * (20 - filled)
             print(f"  {iid:30s} {bar} {score:.2f}")
 
     print_subheader("五维雷达")
@@ -1074,6 +1877,8 @@ def cmd_route(args):
     rejected = [iid for iid, sc in scores.items() if iid != top_intent and sc > 0.2]
     if rejected:
         print(f"  排除路由: {', '.join(rejected[:5])}")
+    validation_refs = _route_validation_refs(top_intent, platform)
+    uso_id = _route_uso_id(top_intent, platform)
 
     # Generate YAML output
     print_subheader("Guide Secretary YAML")
@@ -1098,9 +1903,9 @@ guide_secretary:
     role_team: {json.dumps(people)}
     tools_or_commands: []
   traceability:
-    uso_id: null
+    uso_id: {json.dumps(uso_id)}
     ledger_ref: "00.超级提示词工程/14-全链路审计与运行对齐/UNIFIED-STATUS-LEDGER.yaml"
-    validation_refs: []
+    validation_refs: {json.dumps(validation_refs)}
   route_feedback:
     routing_matrix_version: "{ts[:10]}"
     selected_route: "{primary_route}"
@@ -1119,6 +1924,23 @@ guide_secretary:
 generated_at: "{ts}"
 """
     print(yaml_out)
+    if top_intent == "MISSION_MEMORY_AWAKENING":
+        awakening_check = {
+            "status": "ready_for_handoff",
+            "model_native_boundary": "通用AI保留原生推理、工具执行和代码审计能力，母包不取代模型。",
+            "mother_pack_boundary": "母包提供使命、路由、记忆源、验证门和交付治理控制平面。",
+            "user_pack_boundary": "用户交付包是最终项目交接模板，Strict 门是结构/交接门，不等于业务运行测试。",
+            "required_first_reads": [
+                "MISSION-MEMORY.md",
+                "MOTHER-PACK-ACTIVATION-GUIDE.md",
+                "AI_PROJECT_CONTEXT.md",
+                "00.超级提示词工程/14-全链路审计与运行对齐/SCENARIO-ACCEPTANCE-MATRIX.md",
+            ],
+            "next_gate": "Run qa_runner.py validate --scope ROOT before execution claims.",
+        }
+        print("awakening_check:")
+        for key, value in awakening_check.items():
+            print(f"  {key}: {json.dumps(value, ensure_ascii=False)}")
 
     return 0
 

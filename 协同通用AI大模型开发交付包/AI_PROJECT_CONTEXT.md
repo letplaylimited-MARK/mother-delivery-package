@@ -1,7 +1,7 @@
 # AI Project Context
 
 > 用途：交付给最终用户的项目上下文文档（母交付包 AI_PROJECT_CONTEXT.md 的精简版）。
-> 生成时间：2026-05-28。
+> 生成时间：2026-05-31。
 
 ## 项目概述
 
@@ -11,20 +11,20 @@
 
 | 项 | 数值 |
 |---|---|
-| 子系统 | 7 个（00-05 + 协同交付包） |
-| 文件总数 | ~1118 个（排除 cache） |
-| 验证命令 | 18 条（qa_runner.py validate） |
-| 测试用例 | 274+（103 + 25 + 38 + 18 + 31 + 其他） |
-| Git 仓库 | GitHub: letplaylimited-MARK/mother-delivery-package（14 commits） |
-| Python 包依赖 | 6 个核心（cryptography, Flask, numpy, chromadb, pytest, pytest-asyncio） |
+| 子系统 | 7 个目录子系统（00-05 + 协同交付包）+ 1 个 QCM `.skill` 能力包 |
+| 文件总数 | 当前审计快照 1150；权威值以 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 为准 |
+| 验证注册 | 31 项（31 项自动验证；0 项 manual/current） |
+| 测试证据 | 01 SDK 184、03 知识库 107、04 QCM 25+38+6、QCM Skill 173、05 Q-SpecTrum 158 pytest + 13 E2E |
+| Git 仓库 | GitHub: letplaylimited-MARK/mother-delivery-package；当前工作树状态以 `git status` 为准 |
+| Python 包依赖 | 各子系统使用自己的 `requirements.txt` / `pyproject.toml`；当前最低交接口径为 Python 3.10+ |
 
-## 核心验证结果（2026-05-28）
+## 核心验证结果（2026-05-31）
 
 ```
-PASS:  12  (含 299 文件完整性、25 QCM tests、38 paper tests、18 SDK tests、31 集成验证)
-FAIL:   0  (之前唯一的 FAIL 已通过)
-WARN:   1  (VAL-02-TEMPLATE-REVIEW: README 夸大)
-MANUAL: 4  (需人工确认的项目级检查)
+AUTO PASS: 31/31
+MANUAL/CURRENT: 0
+FAIL/WARN/SKIP: 0
+Consistency: 10/10 PASS
 ```
 
 ## 子系统快速索引
@@ -34,6 +34,6 @@ MANUAL: 4  (需人工确认的项目级检查)
 | 00 超级提示词工程 | 控制平面：启动/路由/阶段门/审计 | 00/README.md |
 | 01 幽灵通道 | 通信协议 + SDK | VERIFY.ps1 |
 | 02 通用知识库 | 知识管理模板 | 04-memory/memoryos.py |
-| 03 数据库管理 | 知识库应用（Flask+MCP） | verify_install.py |
+| 03 数据库管理 | 知识库应用（Flask+MCP） | verify_install.py + pytest tests -q |
 | 04 QCM-MVP | 共鸣公式 + 涌现检测 | test_qcm_all.py |
-| 05 Q-SpecTrum | 主平台（15 角色 + Web + API） | verify-integration.py |
+| 05 Q-SpecTrum | 主平台（15 角色 + Web + API + MCP） | verify-integration.py + run.py --e2e |

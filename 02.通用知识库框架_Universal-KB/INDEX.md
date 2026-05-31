@@ -2,12 +2,12 @@
 
 > 定位: 通用知识库**模板规范** | 版本: V2.1 | 2026-05-29
 > 关系: 本目录 = 模板 / 03 目录 = 可运行实现 (Flask + FAISS + MCP)
+> 说明: 本目录内不包含单独的 `V1_TO_V2_MIGRATION.md`；迁移路径见 README 的方案 A/B 与母包根目录同名迁移文档。
 
 ## 文件结构
 ```
 02.通用知识库框架_Universal-KB/
 ├── README.md
-├── V1_TO_V2_MIGRATION.md              迁移指引 (-> 03 实现版)
 ├── 01-raw/                            原始资料 (只读, ingest 入口)
 ├── 02-processed/                      处理后数据
 ├── 03-wiki/                           知识图谱
@@ -37,7 +37,7 @@
 | 04-memory/memoryos.py | MemoryOS 概念引擎 (编译运行验证) | 中 |
 | 04-memory/config.yaml | 记忆配置 (FIFO 7 / 热度 1000 / 持久 100) | 中 |
 | 05-agents/AGENTS.md | Ingest / Query / Lint 工作流定义 | 中 |
-| V1_TO_V2_MIGRATION.md | 本模板到 03 实现版的迁移指引 | 低 |
+| 母包根目录 `V1_TO_V2_MIGRATION.md` | 本模板到 03 实现版的迁移指引 | 低 |
 
 ## 快速开始
 
@@ -45,7 +45,7 @@
 ```
 cd "03.数据库管理_文件夹整理AI应用"
 pip install -r requirements.txt
-pytest tests/ -v        # 103/103 pass
+pytest tests/ -q        # 当前审计 107 passed
 python app.py           # 启动 Flask 知识库服务
 ```
 
@@ -54,6 +54,15 @@ python app.py           # 启动 Flask 知识库服务
 cp -r "02.通用知识库框架_Universal-KB" your-project-kb/
 mkdir -p 01-raw 02-processed 03-wiki/{concepts,entities,sources,comparisons} \
          04-memory/{short_term,mid_term,long_term} 05-agents 06-output docs
+```
+
+Windows PowerShell:
+```powershell
+Copy-Item -Recurse -Force "02.通用知识库框架_Universal-KB" "your-project-kb"
+cd your-project-kb
+New-Item -ItemType Directory -Force -Path `
+  01-raw,02-processed,03-wiki\concepts,03-wiki\entities,03-wiki\sources,03-wiki\comparisons,`
+  04-memory\short_term,04-memory\mid_term,04-memory\long_term,05-agents,06-output,docs
 ```
 
 验证: `python -m py_compile 04-memory/memoryos.py` -- 无语法错误即通过

@@ -6,7 +6,7 @@ Ghost Channel 是 Q-SpecTrum 智脑的标准通讯协议，提供安全、去中
 
 ## Key Facts
 - **3 SDKs**: ghost_channel (protocol) → ghost_channel_sdk (lightweight) → ghost_hub_sdk (enterprise)
-- **162/162 tests passing** | **299 files** SHA256 verified | MIT License v1.0.0
+- **184/184 SDK tests passing** (Python 162 + TypeScript 22) | **299 files** SHA256 verified | MIT License v1.0.0
 - See `00_总览/PROJECT_HANDOFF.md` for full handoff documentation
 
 ## What's Included

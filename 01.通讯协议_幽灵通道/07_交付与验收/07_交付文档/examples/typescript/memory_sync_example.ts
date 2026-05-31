@@ -1,4 +1,4 @@
-import { GhostChannelClient } from '../../../04-SDK工程包/ghost-channel-sdk/typescript/src/index.js'
+import { GhostChannelClient } from '../../../../03_SDK与集成/04_SDK工程包/ghost-channel-sdk/typescript/src/index.ts'
 
 const client = new GhostChannelClient({
   compressionLevel: 9,

@@ -214,7 +214,7 @@ unified_status_object:
     items:
       - kind: "command"
         ref: "PowerShell file baseline"
-        summary: "1118 stable files, excluding runtime caches"
+        summary: "Current stable file baseline is recorded in ATOMIC-FILE-INVENTORY-SUMMARY.md, excluding runtime caches"
   validation:
     validation_refs: ["VAL-ROOT-FILE-COUNT", "VAL-ROOT-HARDCODE-PATH"]
     required_before_close:

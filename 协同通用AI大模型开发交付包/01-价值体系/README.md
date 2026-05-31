@@ -1,7 +1,7 @@
 # 价值体系
 
 > 用途：说明这个项目为什么值得交付、为谁创造价值、用什么结果验收。
-> 生成时间：2026-05-28，基于母交付包全量推演结果。
+> 生成时间：2026-05-31，基于母交付包全量审计与运行验证结果。
 
 ## 1. 用户与场景
 
@@ -35,12 +35,12 @@
 
 - 任何新 AI 模型进入母包后，能在 8 步标准唤醒流程后正确输出 `awakening_check` YAML 并进入任务路由。
 - 需求从自然语言到 PRD/SPEC 经过 SpecForge Gate 1-4 全流程，无未解释的默认技术栈或模糊验收标准。
-- 子系统验证命令（18 条）全部通过，`qa_runner.py validate` 结果 ≤ 1 个 FAIL（预期为协同交付包模板）。
+- 注册验证项当前达到 31 项自动 PASS、0 项 manual-current、0 FAIL、0 WARN、0 SKIP；后续交付以 `python qa_runner.py validate` 和 `python qa_runner.py consistency` 为准。
 - 用户交付包 `VERIFY-DELIVERY.ps1 -Strict` 通过，零 FAIL。
-- Git 仓库所有 submodule 指针与远程一致，`git status` clean。
+- 交付前 `git status` 可解释：本轮审计修复应被提交或明确列为未提交变更，不能声称 clean 但无证据。
 
 ## 5. 边界与不承诺
 
 - 本项目不承诺：替代通用 AI 大模型的核心能力；提供永久人格或假长期记忆；自动生成可部署的生产系统（需要开发者确认和补充）。
-- 本项目依赖：Python 3.13+ 运行环境、Git（submodule 管理）、通用 AI 大模型服务（用户自备）、文件系统（知识库和记忆存储）。
-- 需要后续阶段处理：AKU 知识原子规范文档（AKU-KNOWLEDGE-ATOM-SPEC.md）；项目级 TRACEABILITY-MATRIX 实例填充；02 通用知识库框架从模板态升级为可运行应用。
+- 本项目依赖：Python 3.10+ 运行环境、Git、通用 AI 大模型服务（用户自备）、文件系统（知识库和记忆存储）。
+- 需要后续阶段处理：把 AKU 知识原子规范转化为可执行 ingest/lint 流程；持续填充项目级 TRACEABILITY-MATRIX；02 通用知识库框架如需独立运行，应另立为应用工程，当前可运行实现以 03 为准。

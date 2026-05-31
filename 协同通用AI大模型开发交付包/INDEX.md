@@ -9,6 +9,11 @@
 ├── README.md                    本包总说明
 ├── 交付包组装规则.md            组装流程与质量门
 ├── VERIFY-DELIVERY.ps1          交付验证脚本
+├── AI_PROJECT_CONTEXT.md         AI 项目上下文地图
+├── HANDOFF.md                    当前交接状态与风险
+├── VALIDATION_REPORT.md          当前验证证据
+├── TRACEABILITY-MATRIX.md        目标/需求/任务/测试追踪
+├── CHANGELOG.md                  变更历史
 ├── 01-价值体系/                 项目为什么有价值
 ├── 02-功能体系/                 项目能做什么
 ├── 03-结构体系/                 模块/文件/接口/依赖组成
@@ -27,6 +32,10 @@
 | 文件 | 用途 | 优先级 |
 |------|------|--------|
 | README.md | 项目用途、适用对象、交付边界 | 高 |
+| AI_PROJECT_CONTEXT.md | 项目上下文地图，供其他 AI 快速接手 | 高 |
+| HANDOFF.md | 当前状态、风险、后续事项 | 高 |
+| VALIDATION_REPORT.md | 当前验证结果与证据 | 高 |
+| TRACEABILITY-MATRIX.md | 目标/需求/任务/测试/审计映射 | 高 |
 | 04-运作体系/README.md | 安装/启动/验证/排错命令 | 高 |
 | VERIFY-DELIVERY.ps1 | 自动化交付验证 (普通模式 / -Strict 模式) | 高 |
 | 交付包组装规则.md | 组装流程与质量门 | 中 |
@@ -48,11 +57,15 @@ powershell -ExecutionPolicy Bypass -File .\VERIFY-DELIVERY.ps1 -Strict
 
 其他 AI 进入时的读取顺序:
 1. README.md
-2. 01-价值体系/README.md
-3. 02-功能体系/README.md
-4. 03-结构体系/README.md
-5. 04-运作体系/README.md
-6. AI_PROJECT_CONTEXT.md (若存在)
+2. AI_PROJECT_CONTEXT.md
+3. HANDOFF.md
+4. VALIDATION_REPORT.md
+5. TRACEABILITY-MATRIX.md
+6. CHANGELOG.md
+7. 01-价值体系/README.md
+8. 02-功能体系/README.md
+9. 03-结构体系/README.md
+10. 04-运作体系/README.md
 
 最终用户第一步: README.md -> 04-运作体系/README.md -> 项目验证入口
 

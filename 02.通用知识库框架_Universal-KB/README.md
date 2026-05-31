@@ -2,7 +2,7 @@
 
 > **版本**: V2.1 | **更新**: 2026-05-29
 > **定位**: 通用知识库**模板规范**。`03.数据库管理_文件夹整理AI应用/` 是本模板的完整可运行实现（Flask + FAISS + MCP）。
-> **关系**: 本目录 = 模板 / `03` = 实现。迁移指引见根目录 `V1_TO_V2_MIGRATION.md`
+> **关系**: 本目录 = 模板 / `03` = 实现。迁移路径由本 README 的方案 A/B 和根目录 `V1_TO_V2_MIGRATION.md` 共同说明；本模板目录内不另带迁移文件。
 
 ---
 
@@ -11,7 +11,7 @@
 | 项目 | 类型 | 技术栈 | 状态 |
 |------|------|----------|------|
 | **02 Universal-KB**（本目录） | 模板规范 | Markdown + Python 脚本 | 模板态 |
-| **03 knowledge-base-manager** | 可运行实现 | Flask + FAISS + MCP + ChromaDB | ✅ 生产级（103/103 tests） |
+| **03 knowledge-base-manager** | 可运行实现 | Flask + FAISS + MCP + ChromaDB | ✅ 生产级（当前审计 107/107 tests） |
 
 **使用选择**：
 - 需要**快速开始 / 轻量部署** → 直接使用 `03/` 的 V2.0 实现
@@ -43,7 +43,7 @@ Universal-KB/
 ├── 06-output/          # Layer 6: 输出成果（交付物）
 ├── docs/               # 补充文档
 ├── README.md           # 本文件
-└── V1_TO_V2_MIGRATION.md  # 迁移指引（→ 03/ 实现）
+└── docs/               # 模板文档；迁移说明见本 README 方案 A/B 与根目录 V1_TO_V2_MIGRATION.md
 ```
 
 ---
@@ -109,8 +109,8 @@ python -m venv .venv
 # 安装依赖
 pip install -r requirements.txt
 
-# 运行测试（103/103 预期）
-pytest tests/ -v
+# 运行测试（当前审计：107 passed）
+pytest tests/ -q
 
 # 启动 Flask 知识库服务
 python app.py
@@ -119,16 +119,27 @@ python app.py
 ### 方案 B：基于本模板自建
 
 ```bash
-# 复制本目录为项目起点
+# Linux/macOS/Git Bash：复制本目录为项目起点
 cp -r "02.通用知识库框架_Universal-KB" your-project-kb/
 
-# 初始化目录结构
+# 初始化目录结构（Linux/macOS/Git Bash）
 cd your-project-kb/
 mkdir -p 01-raw 02-processed 03-wiki/{concepts,entities,sources,comparisons} \
          04-memory/{short_term,mid_term,long_term} 05-agents 06-output docs
 
 # 将 MemoryOS 引擎放入 04-memory/
 # （从 03/ 实现版复制 memoryos.py 和 config.yaml）
+```
+
+```powershell
+# Windows PowerShell：复制本目录为项目起点
+Copy-Item -Recurse -Force "02.通用知识库框架_Universal-KB" "your-project-kb"
+
+# Windows PowerShell 初始化目录结构
+cd your-project-kb
+New-Item -ItemType Directory -Force -Path `
+  01-raw,02-processed,03-wiki\concepts,03-wiki\entities,03-wiki\sources,03-wiki\comparisons,`
+  04-memory\short_term,04-memory\mid_term,04-memory\long_term,05-agents,06-output,docs
 ```
 
 ---
@@ -161,7 +172,7 @@ mkdir -p 01-raw 02-processed 03-wiki/{concepts,entities,sources,comparisons} \
 |------|------|------|
 | V2.1 | 2026-05-29 | 升级 README：明确与 03 实现版的关系，补充 AKU 对接规范，移除占位符 |
 | V1.0 | 2026-04-21 | 初始模板版本（6 层架构定义） |
-| V2.0 | 2026-05-23 | 03/ 实现版完成（Flask + FAISS + MCP，103 tests） |
+| V2.0 | 2026-05-23 | 03/ 实现版完成（Flask + FAISS + MCP；当前审计已扩展到 107 tests） |
 
 ---
 

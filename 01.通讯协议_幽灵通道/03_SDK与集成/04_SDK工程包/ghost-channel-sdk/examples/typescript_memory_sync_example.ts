@@ -1,4 +1,4 @@
-import { GhostChannelClient } from '../typescript/src/index.js'
+import { GhostChannelClient } from '../typescript/src/index.ts'
 
 const client = new GhostChannelClient({
   compressionLevel: 9,

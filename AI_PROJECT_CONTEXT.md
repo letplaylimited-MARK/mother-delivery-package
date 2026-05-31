@@ -1,7 +1,7 @@
 # AI Project Context Map
 
 > 用途：给未来的通用 AI 大模型、开发者、审查者快速理解本文件夹。  
-> 当前盘点时间：2026-05-29。  
+> 当前盘点时间：2026-05-31。  
 > 路径约定：本文不绑定具体电脑路径；统一使用 `<母交付包根目录>` 表示本文件所在目录。
 
 ## 0. 总体判断
@@ -46,15 +46,15 @@ Q-SpecTrum 智脑平台
 
 | 目录 | 当前状态 | 定位 | 关键入口 |
 |---|---:|---|---|
-| `00.超级提示词工程` | 52 文件 | 跨项目 AI 协同的提示词操作系统：总控启动、引导秘书、使命记忆唤醒、SpecForge PRD/SPEC Gate、Skill Configuration Gate、源提示词吸收、元智核解构、超级提示词原子化复核、全链路审计与运行对齐、机器可读注册表、统一状态对象、审计问题日志、断裂点修复矩阵、记忆源索引、路由、上下文包、原子治理、反漂移、角色沙盘、母包集成蓝图、通用 AI 协作生态接入契约、模型原生协作协议 | `README.md`, `01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md`, `06-原子化开发治理/SPECFORGE-PRD-SPEC-GATE.md`, `10-通用AI协作生态/SKILL-CONFIGURATION-GATE.md`, `12-引导秘书逻辑/MISSION-MEMORY-AWAKENING-PROTOCOL.md`, `12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md`, `13-源提示词吸收与演化/META-INTELLIGENCE-CORE-SUPER-PROMPT-DECONSTRUCTION.md`, `13-源提示词吸收与演化/SOURCE-PROMPT-INGESTION-PROTOCOL.md`, `13-源提示词吸收与演化/SUPER-PROMPT-ATOMIC-RESEARCH-REVIEW.md`, `14-全链路审计与运行对齐/FULL-STACK-WORKFLOW-AUDIT-PROTOCOL.md`, `14-全链路审计与运行对齐/MOTHER-CHILD-WORKFLOW-MAP.md`, `14-全链路审计与运行对齐/AUDIT-COVERAGE-REGISTRY.md`, `14-全链路审计与运行对齐/WORKFLOW-AUDIT-ISSUE-LOG.md`, `14-全链路审计与运行对齐/BREAKPOINT-REPAIR-MATRIX.md`, `14-全链路审计与运行对齐/UNIFIED-STATUS-OBJECT-SPEC.md`, `14-全链路审计与运行对齐/UNIFIED-STATUS-LEDGER.yaml`, `14-全链路审计与运行对齐/PROJECT_REGISTRY.yaml`, `14-全链路审计与运行对齐/CAPABILITY_REGISTRY.yaml`, `14-全链路审计与运行对齐/ARTIFACT_REGISTRY.yaml`, `14-全链路审计与运行对齐/VALIDATION_REGISTRY.yaml`, `14-全链路审计与运行对齐/MEMORY-SOURCE-PRIORITY.md`, `14-全链路审计与运行对齐/MEMORY-SOURCE-INDEX.yaml`, `09-母包集成蓝图/MOTHER-PACK-AI-COLLABORATION-BLUEPRINT.md`, `11-模型原生协作协议/MODEL-NATIVE-COLLABORATION-PROTOCOL.md` |
-| `01.通讯协议_幽灵通道` | 295 文件 | Ghost Channel v1.0 协议、SDK、部署与商业交付包 | `README.md`, `INDEX.md`, `00_总览/PROJECT_HANDOFF.md` |
-| `02.通用知识库框架_Universal-KB` | 21 文件 | V1 通用知识库框架模板 | `README.md`, `05-agents/AGENTS.md` |
-| `03.数据库管理_文件夹整理AI应用` | 172+ 文件 | V2 知识库应用：Flask + MCP + 文件整理 + 向量检索（独立 submodule） | `README.md`, `AGENTS.md`, `app.py`, `mcp_server.py` |
-| `04.QCM-MVP-Emergence` | 146 文件 | QCM 共鸣/涌现 MVP，22 公式实现和测试 | `README.md`, `PROJECT_HANDOFF-QCM.md`, `qcm/main.py` |
-| `05.超极智脑_Q-SpecTrum` | 431+ 文件 | 主平台：15 角色、Web UI、API、DB、知识库、验证门（独立 submodule） | `README.md`, `INDEX.md`, `AGENTS.md`, `智腦協議-BRAIN-PROTOCOL.md`, `run.py` |
-| `协同通用AI大模型开发交付包` | 13 文件 | 开发者完成具体项目后交给最终用户的交付包骨架，承载价值/功能/结构/运作四体系，并提供模板/严格两种交付验证模式 | `README.md`, `交付包组装规则.md`, `VERIFY-DELIVERY.ps1`, `01-价值体系/README.md` |
+| `00.超级提示词工程` | 74 文件 | 跨项目 AI 协同的提示词操作系统与审计控制平面：总控启动、引导秘书、使命记忆唤醒、SpecForge、Skill Gate、源提示词吸收、全链路审计、机器可读注册表、统一状态对象、知识结晶、沙盘记录 | `README.md`, `01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md`, `12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md`, `14-全链路审计与运行对齐/VALIDATION_REGISTRY.yaml`, `14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md`, `14-全链路审计与运行对齐/DEEP-AUDIT-BATCH-EXECUTION-PLAN.yaml` |
+| `01.通讯协议_幽灵通道` | 296 文件 | Ghost Channel v1.0 协议、SDK、部署与商业交付包 | `README.md`, `INDEX.md`, `00_总览/PROJECT_HANDOFF.md`, `VERIFY.ps1` |
+| `02.通用知识库框架_Universal-KB` | 28 文件 | Universal-KB 通用知识库模板；完整可运行知识库应用以 03 为准 | `README.md`, `INDEX.md`, `04-memory/memoryos.py`, `05-agents/AGENTS.md` |
+| `03.数据库管理_文件夹整理AI应用` | 153 文件 | V2 知识库应用：Flask + MCP + 文件整理 + 向量检索（子工作区） | `README.md`, `AGENTS.md`, `app.py`, `mcp_server.py`, `verify_install.py` |
+| `04.QCM-MVP-Emergence` | 148 文件 | QCM 共鸣/涌现 MVP，22 公式实现、角色/沙盘/飞轮与运行入口 | `README.md`, `PROJECT_HANDOFF-QCM.md`, `qcm/main.py`, `health_check.py` |
+| `05.超极智脑_Q-SpecTrum` | 423 文件 | 主平台：15 角色、Web UI、API、MCP、DB、知识库、验证门（子工作区） | `README.md`, `INDEX.md`, `AGENTS.md`, `智腦協議-BRAIN-PROTOCOL.md`, `run.py`, `api_server.py`, `qspectrum_mcp_server.py` |
+| `协同通用AI大模型开发交付包` | 14 文件 | 开发者完成具体项目后交给最终用户的交付包骨架，承载价值/功能/结构/运作四体系，并提供普通/Strict 两种交付验证模式 | `README.md`, `AI_PROJECT_CONTEXT.md`, `HANDOFF.md`, `VALIDATION_REPORT.md`, `TRACEABILITY-MATRIX.md`, `VERIFY-DELIVERY.ps1` |
 
-统计口径：00/01/02/04/协同的文件数为 `git ls-files` 跟踪数；03/05 为独立 submodule，数字标注 `+` 表示含 submodule 内部展开，根仓库仅跟踪指针文件。根仓库总跟踪 542 文件（含 submodule 指针），全量展开约 1082 文件。Markdown、Python、JSON/YAML、HTML/PDF、SQLite DB 是主体。`.pytest_cache` 会因验证命令临时生成，不计入稳定交付基线。
+统计口径：以上采用 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 当前审计口径，排除 `.git`、`__pycache__`、`.pytest_cache`、`node_modules`、`dist/build/coverage` 等运行缓存；当前全量展开为 1150 文件。
 
 ## 2. 子系统理解
 
@@ -78,15 +78,14 @@ ghost_channel              # 开源协议核心，src layout
 
 验证注意：
 
-- 文档宣称 162/162 SDK 测试通过。
-- 当前已复跑三组 SDK 测试：开源核心 18 passed、轻量 SDK 68 passed、企业 SDK 76 passed。
+- 当前已复跑 SDK 测试：开源核心 18 passed、轻量 SDK 68 passed、企业 SDK 76 passed、TypeScript SDK 22 passed，合计 184 passed。
 - 当前 `GhostHub_SDK/pyproject.toml` 已修复早期报告提到的根包缺失问题，包含 `ghost_hub_sdk` 根包和 FastAPI/Pydantic/Uvicorn/MQTT/WebSocket 依赖。
 - `VERIFY.ps1` 已修复自校验跳过正则，兼容 `MANIFEST.yaml :` 这种冒号前带空格的 manifest 行。
-- `ghost-channel-sdk/README.md` 仍有旧 import 示例 `from ghost_channel import ...`，实际轻量 SDK 包名应以 `ghost_channel_sdk` 为准。
+- 轻量 SDK 公开包名以 `ghost_channel_sdk` 为准；历史旧 import 示例已在 B2 收敛。
 
 ### 2.2 `02.通用知识库框架_Universal-KB`
 
-定位：V1 通用知识管理模板。
+定位：通用知识管理模板，不是完整运行应用。
 
 核心链路：
 
@@ -99,7 +98,7 @@ ghost_channel              # 开源协议核心，src layout
 - `03-wiki/index.md`：知识图谱索引。
 - `04-memory/memoryos.py`：三层记忆引擎。
 - `05-agents/AGENTS.md`：Ingest / Query / Lint 行为配置。
-- 当前 `04-memory/memoryos.py` 可编译并可运行 smoke test；但本目录仍应按“轻量模板”使用，不应等同于 `03` 的完整可运行应用。
+- 当前 `04-memory/memoryos.py` 可编译并可运行 smoke test；smoke 使用临时目录，不再在母包根目录生成 `test_memory`。本目录仍应按“轻量模板”使用，不应等同于 `03` 的完整可运行应用。
 
 ### 2.3 `03.数据库管理_文件夹整理AI应用`
 
@@ -111,14 +110,14 @@ ghost_channel              # 开源协议核心，src layout
 python verify_install.py
 python app.py --port 5000
 python mcp_server.py
-pytest tests/ -v
+pytest tests -q
 ```
 
 当前验证：
 
-- `python verify_install.py`：22 通过、0 失败、1 警告。
+- `python verify_install.py`：23 通过、0 失败、1 警告。
 - 警告仅为未配置 `.env`，影响 API key/高级 AI 调用，不影响基础运行。
-- 测试套件可收集 103 tests。
+- `pytest tests -q` 当前 107 passed。
 
 核心模块：
 
@@ -149,7 +148,7 @@ R(e_i, e_j) = 0.35*K_sim + 0.40*C_comp + 0.25*I_freq
 
 - `python "02-代码编写/test_qcm_all.py"`：25 PASS / 0 FAIL。
 - `pytest test_roles/test_collaboration/test_sandbox/test_flywheel/test_summoning -q`：38 passed。
-- `python health_check.py`：4/6 checks passed，状态 `NEEDS ATTENTION`。这与 README 的交付测试不同，像是健康检查脚本的语义阈值/期望与当前模型参数存在漂移，需要单独看待。
+- `python health_check.py`：6/6 checks passed，状态 `READY`。
 
 ### 2.5 `05.超极智脑_Q-SpecTrum`
 
@@ -179,9 +178,13 @@ python scripts/security-check.py
 
 当前验证：
 
-- `python verify-integration.py`：31/31 OK。
-- `python run.py --status` 在默认 GBK PowerShell 会因 ✅/❌ Unicode 输出报 `UnicodeEncodeError`；加 `$env:PYTHONUTF8='1'` 后正常显示 `System: ALL GREEN ✅`。
-- `platform.db`：40 tables、85 rows、15 roles、10 protocols、4 workflows、7 agents。
+- `python verify-integration.py`：PASS；`_HANDOFF/` 是 runtime handoff 提示，不是硬失败。
+- `python run.py --status`：当前已做 UTF-8 输出硬化，显示 `System: ALL GREEN`。
+- `pytest tests -q`：158 passed。
+- `python run.py --e2e`：13 passed / 0 failed。
+- API smoke：`/api/status`、`/api/roles`、`/api/chat` 路由 Q02/Q06/Q08 通过。
+- MCP stdio smoke：18 tools，status resource、execute_chat、SELECT-only DB 查询通过，stdout 无非 JSON 污染。
+- 平台数据库权威路径：`AI项目管理/Platform/db/platform.db`，当前 15 角色。
 
 核心模块：
 
@@ -190,11 +193,11 @@ python scripts/security-check.py
 - `run.py`：CLI/Web/status/e2e/guide 统一入口。
 - `brain_core/`：已抽出的可复用脑模块，包括 config、graph、MCP bridge、capabilities、brain、hybrid router、knowledge orchestrator、skill orchestrator 等。
 - `BRAIN-KB/`：P0-P1 长期知识，包含 decisions、knowledge、limitations、patterns。
-- `AI项目管理/Platform/db/platform.db` 与根目录 `platform.db` 均为 40 表平台 DB。
+- `AI项目管理/Platform/db/platform.db` 是当前代码权威平台 DB；根目录 `platform.db` 不应作为主路径假设。
 
 文档漂移：
 
-- `requirements.txt` 写“标准库无第三方依赖”，但 `pyproject.toml` 声明 `chromadb>=1.5.0`、`networkx>=3.0`。实际当前环境能运行，后续打包时要统一说法。
+- `requirements.txt` 与 `pyproject.toml` 当前均声明 `chromadb>=1.5.0`、`networkx>=3.0`；README / QUICK-START / INSTALL-GUIDE 已对齐为 Python 3.10+ 与 `pip install -r requirements.txt`。
 
 ## 3. 跨系统集成关系
 
@@ -264,11 +267,11 @@ Q-SpecTrum
 | `01` 验证语义混淆 | `VERIFY.ps1` 是 manifest 完整性校验；SDK 测试需要另跑三组 pytest | 在验证登记表中分开 integrity 与 SDK tests |
 | `01` 多份审计报告时间线不一致 | 早期报告说企业 SDK 待修，当前 pyproject 已修 | 后续以 `PROJECT_HANDOFF.md` 和实际 pyproject 为准 |
 | `01/ghost-channel-sdk` 文档 import 示例漂移 | 使用者可能导入错包 | 统一为 `ghost_channel_sdk` |
-| `02` 模板定位可能被过度承诺 | README 容易让人以为是完整可运行应用 | 保持 template 定位，后续补 PowerShell 友好验证脚本 |
-| `04` 旧 CLI 文档 | 部分文档使用 `--rounds`，当前入口是 `--max-rounds` | 统一 QCM 文档入口 |
-| `04/health_check.py` 与测试结果不一致 | 健康检查显示 needs attention，README 测试通过 | 复核 health_check 的 6 项条件是否过期 |
-| `05/run.py --status` GBK 输出失败 | Windows 默认终端无法打印 emoji | 设置 `$env:PYTHONUTF8='1'` 或移除状态输出 emoji |
-| `05` 依赖说明冲突 | requirements 与 pyproject 对依赖描述不一致 | 统一安装说明 |
+| `02` 模板定位可能被过度承诺 | B6 已明确 template 定位、补 `.gitkeep`、PowerShell 命令和 tempdir smoke | 后续运行诉求默认路由到 03，除非明确要把 02 独立产品化 |
+| `04` 旧 CLI 文档 | B4 已统一当前入口并保留旧参数排错提示 | 后续只在真实失败场景下复核 |
+| `04/health_check.py` 历史结论已漂移 | 旧审计曾记录 4/6 NEEDS ATTENTION，当前实测 6/6 READY | 以后以当前命令输出和 `VALIDATION_REGISTRY.yaml` 为准 |
+| `05/run.py --status` Windows 输出 | 旧版在 GBK 终端会被 emoji 打断 | 当前已做 UTF-8 输出硬化；仍建议保留状态命令在验证环中 |
+| `05` 依赖说明冲突 | requirements、pyproject、README、QUICK-START、INSTALL-GUIDE 已对齐 | 后续若新增依赖，同步更新这些入口 |
 | 根目录 Git Monorepo | 03/05为submodule，修改后需分别在子模块内commit，再更新根目录引用 | 修改前先 `git status` 确认所在层级 |
 
 ## 7. 最短启动命令清单

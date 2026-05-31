@@ -14,13 +14,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libffi-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY pyproject.toml README.md LICENSE ./
+COPY 03_SDK与集成/03_企业SDK包/GhostHub_SDK/ ./
 
-RUN pip install --no-cache-dir ghost-hub-sdk==${GHOST_HUB_VERSION}
-
-RUN pip install --no-cache-dir -e ".[all]" || true
-
-COPY . .
+RUN pip install --no-cache-dir -e ".[all]" || pip install --no-cache-dir -e .
 
 ENV PYTHONPATH=/app
 
@@ -29,4 +25,4 @@ EXPOSE 8080 8883 5672
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import ghost_hub_sdk; print('ok')" || exit 1
 
-CMD ["python", "-c", "from ghost_hub_sdk.api.main import app; app.run(host='0.0.0.0', port=8080)"]
+CMD ["uvicorn", "ghost_hub_sdk.api.main:app", "--host", "0.0.0.0", "--port", "8080"]

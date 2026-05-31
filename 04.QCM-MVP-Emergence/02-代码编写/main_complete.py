@@ -26,7 +26,10 @@ if sys.platform == "win32":
     sys.stderr.reconfigure(encoding="utf-8")
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
+qcm_root = os.path.dirname(script_dir)
 sys.path.insert(0, script_dir)
+if qcm_root not in sys.path:
+    sys.path.insert(0, qcm_root)
 
 # L1: Core modules (always on)
 from simple_role import SimpleRole, create_demo_roles, ROLE_CONFIG

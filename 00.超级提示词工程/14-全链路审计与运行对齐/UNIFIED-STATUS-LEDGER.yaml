@@ -417,6 +417,414 @@ status_objects:
     timestamps:
       created_at: '2026-05-29'
       updated_at: '2026-05-29'
+- id: AUD-20260531-P04-QCM-SKILL
+  type: audit
+  title: P04 QCM 与 qcm-v3.0 skill 运行审计和知识结晶
+  status: verified_current
+  priority: P0
+  package_boundary: cross
+  owner_layer: P04_QCM
+  source:
+    raw_user_input_ref: 用户要求对 P04/QCM 和 qcm-universal-ai-system-v3.0 做颗粒级理解、沙盘推演、真实运行验证与可交付收敛。
+    source_files:
+    - path: 04.QCM-MVP-Emergence/README.md
+      role: authority
+      locator: QCM subsystem entrypoint
+    - path: qcm-universal-ai-system-v3.0.skill
+      role: authority
+      locator: qcm-v3.0 skill archive
+    - path: 00.超级提示词工程/14-全链路审计与运行对齐/SUBSYSTEM-CRYSTAL-P04-QCM-AND-QCM-SKILL.md
+      role: current_crystal
+      locator: verified P04/QCM skill understanding
+    source_type: user
+  routing:
+    guide_secretary_handoff_id: null
+    intent_id: DEEP_AUDIT_P04_QCM
+    route_decision: DIRECT
+    target_subsystems:
+    - P04_QCM
+    - QCM_SKILL
+    - P00_SUPER_PROMPT
+    route_feedback:
+      selected_route: B4_P04_QCM_AND_QCM_SKILL
+      rejected_routes: []
+      confidence_after_routing: 0.96
+      feedback_to_guide: keep
+      blocked_reason: null
+  traceability:
+    goal_id: GOAL-20260526-MOTHER-PACK-COLLABORATION
+    parent_id: GOAL-20260526-MOTHER-PACK-COLLABORATION
+    related_ids:
+    - VAL-04-QCM-ALL
+    - VAL-04-QCM-PAPER
+    - VAL-04-HEALTH
+    - VAL-04-QCM-RUNTIME-SMOKE
+    - VAL-QCM-CONFIG-SYNC
+    - VAL-QCM-SKILL-VALIDATE
+    - VAL-QCM-SKILL-TESTS
+    atomic_ids:
+    - AUD-p04-qcm-runtime
+    - AUD-qcm-skill-v3
+  evidence:
+    level: VERIFIED
+    items:
+    - kind: file
+      ref: 00.超级提示词工程/14-全链路审计与运行对齐/SUBSYSTEM-CRYSTAL-P04-QCM-AND-QCM-SKILL.md
+      summary: P04 and qcm skill crystal created.
+    - kind: file
+      ref: 00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260531-P04-QCM-AND-QCM-SKILL.md
+      summary: Six-round sandbox/flywheel audit record created.
+    - kind: command
+      ref: python qa_runner.py validate --scope P04_QCM
+      summary: 5/5 PASS.
+    - kind: command
+      ref: python qa_runner.py validate --scope QCM_SKILL
+      summary: 2/2 PASS.
+  validation:
+    validation_refs:
+    - VAL-04-QCM-ALL
+    - VAL-04-QCM-PAPER
+    - VAL-04-HEALTH
+    - VAL-04-QCM-RUNTIME-SMOKE
+    - VAL-QCM-CONFIG-SYNC
+    - VAL-QCM-SKILL-VALIDATE
+    - VAL-QCM-SKILL-TESTS
+    required_before_close:
+    - P04_QCM validation 5/5 PASS
+    - QCM_SKILL validation 2/2 PASS
+    current_status: verified_current
+  memory:
+    read_from:
+    - 04.QCM-MVP-Emergence/README.md
+    - 04.QCM-MVP-Emergence/qcm/main.py
+    - 04.QCM-MVP-Emergence/qcm/pipeline.py
+    - qcm-universal-ai-system-v3.0.skill
+    write_needed: true
+    write_target: 00/14 crystallization docs
+    write_gate: completed_current_turn
+  risks:
+  - id: P04-GAP-001
+    summary: Service mode depends on optional FastAPI/Pydantic/Uvicorn install.
+    mitigation: INSTALL.md documents optional install; current local smoke passed after installing FastAPI.
+  - id: P04-GAP-002
+    summary: .skill archive edits are less transparent than normal text files.
+    mitigation: qa_runner now extracts and validates/tests the archive.
+  next_action:
+  - B7_CROSS_SYSTEM_GOLDEN_PATHS completed; next action is a real project instance only if the user supplies or selects one, not further structural expansion.
+  timestamps:
+    created_at: '2026-05-31'
+    updated_at: '2026-05-31'
+- id: AUD-20260531-P05-QSPECTRUM-RUNTIME
+  type: audit
+  title: P05 Q-SpecTrum 运行时、API、MCP 与记忆边界审计
+  status: verified_current
+  priority: P0
+  package_boundary: '05'
+  owner_layer: P05_QSPECTRUM
+  source:
+    raw_user_input_ref: 用户要求对 05 Q-SpecTrum 做颗粒级理解、真实运行验证、API/MCP/DB/记忆边界确认与可交付收敛。
+    source_files:
+    - path: 05.超极智脑_Q-SpecTrum/INDEX.md
+      role: authority
+      locator: P05 subsystem map
+    - path: 05.超极智脑_Q-SpecTrum/智腦協議-BRAIN-PROTOCOL.md
+      role: authority
+      locator: Brain runtime protocol
+    - path: 05.超极智脑_Q-SpecTrum/run.py
+      role: runtime_entry
+      locator: CLI/Web/E2E entrypoint
+    - path: 00.超级提示词工程/14-全链路审计与运行对齐/SUBSYSTEM-CRYSTAL-P05-QSPECTRUM-RUNTIME.md
+      role: current_crystal
+      locator: verified P05 runtime understanding
+    source_type: user
+  routing:
+    guide_secretary_handoff_id: null
+    intent_id: DEEP_AUDIT_P05_QSPECTRUM
+    route_decision: DIRECT
+    target_subsystems:
+    - P05_QSPECTRUM
+    - P00_SUPER_PROMPT
+    route_feedback:
+      selected_route: B5_P05_QSPECTRUM_RUNTIME
+      rejected_routes: []
+      confidence_after_routing: 0.97
+      feedback_to_guide: keep
+      blocked_reason: null
+  traceability:
+    goal_id: GOAL-20260526-MOTHER-PACK-COLLABORATION
+    parent_id: GOAL-20260526-MOTHER-PACK-COLLABORATION
+    related_ids:
+    - VAL-05-INTEGRATION
+    - VAL-05-STATUS
+    - VAL-05-PYTEST
+    - VAL-05-E2E
+    - VAL-05-API-SMOKE
+    - VAL-05-MCP-SMOKE
+    atomic_ids:
+    - AUD-p05-qspectrum-runtime
+    - AUD-p05-api-mcp-smoke
+  evidence:
+    level: VERIFIED
+    items:
+    - kind: file
+      ref: 00.超级提示词工程/14-全链路审计与运行对齐/SUBSYSTEM-CRYSTAL-P05-QSPECTRUM-RUNTIME.md
+      summary: P05 runtime/API/MCP crystal created.
+    - kind: file
+      ref: 00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260531-P05-QSPECTRUM-RUNTIME.md
+      summary: Six-round sandbox/flywheel audit record created.
+    - kind: command
+      ref: python qa_runner.py validate --scope P05_QSPECTRUM
+      summary: 6/6 PASS.
+    - kind: command
+      ref: python qa_runner.py validate
+      summary: Full validation 31/31 PASS, automatic 31/31, 0 FAIL/WARN/SKIP.
+    - kind: command
+      ref: pytest tests -q
+      summary: 158 passed.
+    - kind: command
+      ref: python run.py --e2e
+      summary: 13 passed, 0 failed.
+  validation:
+    validation_refs:
+    - VAL-05-INTEGRATION
+    - VAL-05-STATUS
+    - VAL-05-PYTEST
+    - VAL-05-E2E
+    - VAL-05-API-SMOKE
+    - VAL-05-MCP-SMOKE
+    required_before_close:
+    - P05_QSPECTRUM validation 6/6 PASS
+    - pytest 158 passed
+    - API smoke PASS
+    - MCP smoke PASS
+    current_status: verified_current
+  memory:
+    read_from:
+    - 05.超极智脑_Q-SpecTrum/INDEX.md
+    - 05.超极智脑_Q-SpecTrum/AGENTS.md
+    - 05.超极智脑_Q-SpecTrum/智腦協議-BRAIN-PROTOCOL.md
+    - 05.超极智脑_Q-SpecTrum/run.py
+    - 05.超极智脑_Q-SpecTrum/api_server.py
+    - 05.超极智脑_Q-SpecTrum/qspectrum_engine.py
+    - 05.超极智脑_Q-SpecTrum/qspectrum_mcp_server.py
+    write_needed: true
+    write_target: 00/14 crystallization docs
+    write_gate: completed_current_turn
+  risks:
+  - id: P05-GAP-001
+    summary: DeerFlow directory is not present locally; core runtime remains green.
+    mitigation: Keep DeerFlow as optional integration until installed and separately validated.
+  - id: P05-GAP-002
+    summary: ChromaDB emits a Python 3.14 deprecation warning during E2E.
+    mitigation: Track as external dependency-side warning; P05 tests and runtime pass.
+  next_action:
+  - B7_CROSS_SYSTEM_GOLDEN_PATHS completed; next action is a real project instance only if the user supplies or selects one, not further structural expansion.
+  timestamps:
+    created_at: '2026-05-31'
+    updated_at: '2026-05-31'
+- id: AUD-20260531-B6-P02-USER-PACK
+  type: audit
+  title: B6 P02 Universal-KB 模板与用户交付包边界审计
+  status: verified_current
+  priority: P0
+  package_boundary: cross
+  owner_layer: P02_UNIVERSAL_KB
+  source:
+    raw_user_input_ref: 用户要求真正颗粒级理解每个文件夹子系统，并确认模板、可运行实现和最终交付包边界，避免 AI 误判与无限重构。
+    source_files:
+    - path: 02.通用知识库框架_Universal-KB/README.md
+      role: authority
+      locator: Universal-KB template entrypoint
+    - path: 协同通用AI大模型开发交付包/README.md
+      role: authority
+      locator: user delivery package entrypoint
+    - path: 00.超级提示词工程/14-全链路审计与运行对齐/SUBSYSTEM-CRYSTAL-P02-TEMPLATE-AND-USER-PACK.md
+      role: current_crystal
+      locator: verified B6 template/delivery boundary
+    source_type: user
+  routing:
+    guide_secretary_handoff_id: null
+    intent_id: DEEP_AUDIT_B6_P02_USER_PACK
+    route_decision: DIRECT
+    target_subsystems:
+    - P02_UNIVERSAL_KB
+    - USER_PACK
+    - P00_SUPER_PROMPT
+    route_feedback:
+      selected_route: B6_P02_TEMPLATE_AND_USER_PACK
+      rejected_routes: []
+      confidence_after_routing: 0.97
+      feedback_to_guide: keep
+      blocked_reason: null
+  traceability:
+    goal_id: GOAL-20260526-MOTHER-PACK-COLLABORATION
+    parent_id: GOAL-20260526-MOTHER-PACK-COLLABORATION
+    related_ids:
+    - VAL-02-TEMPLATE-REVIEW
+    - VAL-USER-PACK-DELIVERY
+    - VAL-USER-PACK-DELIVERY-STRICT
+    - WAI-007
+    - WAI-008
+    - WAI-020
+    - WAI-021
+    atomic_ids:
+    - AUD-b6-p02-template
+    - AUD-b6-user-pack-delivery
+  evidence:
+    level: VERIFIED
+    items:
+    - kind: file
+      ref: 00.超级提示词工程/14-全链路审计与运行对齐/SUBSYSTEM-CRYSTAL-P02-TEMPLATE-AND-USER-PACK.md
+      summary: B6 template/delivery crystal created.
+    - kind: file
+      ref: 00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260531-P02-TEMPLATE-AND-USER-PACK.md
+      summary: Six-round sandbox/flywheel audit record created.
+    - kind: command
+      ref: python qa_runner.py validate --scope P02_UNIVERSAL_KB
+      summary: 1/1 PASS.
+    - kind: command
+      ref: python qa_runner.py validate --scope USER_PACK
+      summary: 2/2 PASS.
+  validation:
+    validation_refs:
+    - VAL-02-TEMPLATE-REVIEW
+    - VAL-USER-PACK-DELIVERY
+    - VAL-USER-PACK-DELIVERY-STRICT
+    required_before_close:
+    - P02_UNIVERSAL_KB validation 1/1 PASS
+    - USER_PACK validation 2/2 PASS
+    current_status: verified_current
+  memory:
+    read_from:
+    - 02.通用知识库框架_Universal-KB/README.md
+    - 02.通用知识库框架_Universal-KB/INDEX.md
+    - 02.通用知识库框架_Universal-KB/05-agents/AGENTS.md
+    - 协同通用AI大模型开发交付包/README.md
+    - 协同通用AI大模型开发交付包/交付包组装规则.md
+    - 协同通用AI大模型开发交付包/VERIFY-DELIVERY.ps1
+    write_needed: true
+    write_target: 00/14 crystallization docs
+    write_gate: completed_current_turn
+  risks:
+  - id: B6-RISK-001
+    summary: P02 Strict/template success could be confused with full app runtime.
+    mitigation: Route full KB runtime work to P03 unless 02 productization is explicitly requested.
+  - id: B6-RISK-002
+    summary: USER_PACK Strict verifies handoff hygiene, not future business runtime.
+    mitigation: Concrete projects must extend scripts/verify.ps1 with real smoke/tests.
+  next_action:
+  - B7_CROSS_SYSTEM_GOLDEN_PATHS completed; use the next real user project as the full S4 project-instance sample.
+  timestamps:
+    created_at: '2026-05-31'
+    updated_at: '2026-05-31'
+- id: AUD-20260531-B7-CROSS-SYSTEM-GOLDEN-PATHS
+  type: audit
+  title: B7 跨系统黄金路径验收与停止重构裁决
+  status: verified_current
+  priority: P0
+  package_boundary: cross
+  owner_layer: P00_SUPER_PROMPT
+  source:
+    raw_user_input_ref: 用户要求真正跑通母包与通用AI协同开发，不再陷入无限重构，必须用黄金路径和真实验证确认可交付价值。
+    source_files:
+    - path: 00.超级提示词工程/14-全链路审计与运行对齐/SCENARIO-ACCEPTANCE-MATRIX.md
+      role: authority
+      locator: B7 scenario acceptance results section 6
+    - path: 00.超级提示词工程/14-全链路审计与运行对齐/SUBSYSTEM-CRYSTAL-B7-CROSS-SYSTEM-GOLDEN-PATHS.md
+      role: current_crystal
+      locator: verified cross-system golden-path understanding
+    - path: 00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260531-B7-CROSS-SYSTEM-GOLDEN-PATHS.md
+      role: sandbox_record
+      locator: six-round B7 scenario run
+    source_type: user
+  routing:
+    guide_secretary_handoff_id: null
+    intent_id: CROSS_SYSTEM_GOLDEN_PATH
+    route_decision: DIRECT
+    target_subsystems:
+    - ROOT
+    - P00_SUPER_PROMPT
+    - P03_WORKBUDDY_KB
+    - P04_QCM
+    - P05_QSPECTRUM
+    - USER_PACK
+    route_feedback:
+      selected_route: ROOT -> 00 -> 03/04/05 -> USER_PACK
+      rejected_routes:
+      - Single subsystem route rejected because B7 acceptance requires cross-system handoff and stop-line evidence.
+      confidence_after_routing: 0.81
+      feedback_to_guide: keep
+      blocked_reason: null
+  traceability:
+    goal_id: GOAL-20260526-MOTHER-PACK-COLLABORATION
+    parent_id: GOAL-20260526-MOTHER-PACK-COLLABORATION
+    related_ids:
+    - VAL-ROOT-ROUTE-SMOKE
+    - VAL-03-HTTP-SMOKE
+    - VAL-04-QCM-RUNTIME-SMOKE
+    - VAL-05-API-SMOKE
+    - VAL-USER-PACK-DELIVERY-STRICT
+    - WAI-022
+    - WAI-023
+    atomic_ids:
+    - AUD-b7-cross-system-golden-paths
+    - TASK-route-golden-path
+    - TASK-p03-http-smoke
+    - TASK-stop-rebuild-decision
+  evidence:
+    level: VERIFIED
+    items:
+    - kind: file
+      ref: 00.超级提示词工程/14-全链路审计与运行对齐/SUBSYSTEM-CRYSTAL-B7-CROSS-SYSTEM-GOLDEN-PATHS.md
+      summary: B7 cross-system crystal created.
+    - kind: file
+      ref: 00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260531-B7-CROSS-SYSTEM-GOLDEN-PATHS.md
+      summary: Six-round B7 scenario sandbox record created.
+    - kind: command
+      ref: python qa_runner.py validate --scope ROOT
+      summary: ALL CLEAR; ROOT 7/7 PASS and automatic 7/7, including route smoke, end-to-end meta gate, and cross-interface meta gate.
+    - kind: command
+      ref: python qa_runner.py validate --scope P03_WORKBUDDY_KB
+      summary: 3/3 PASS, including HTTP /memory and /api/search smoke.
+    - kind: command
+      ref: python qa_runner.py validate --scope P05_QSPECTRUM
+      summary: 6/6 PASS.
+  validation:
+    validation_refs:
+    - VAL-ROOT-ROUTE-SMOKE
+    - VAL-03-HTTP-SMOKE
+    - VAL-04-QCM-RUNTIME-SMOKE
+    - VAL-QCM-SKILL-VALIDATE
+    - VAL-05-STATUS
+    - VAL-05-API-SMOKE
+    - VAL-05-MCP-SMOKE
+    - VAL-USER-PACK-DELIVERY-STRICT
+    required_before_close:
+    - ROOT route smoke 8/8 PASS
+    - ROOT end-to-end and cross-interface meta gates PASS
+    - P03 HTTP smoke PASS
+    - P04/P05/USER_PACK scoped validations PASS
+    - Scenario matrix section 6 records all GS outcomes
+    current_status: verified_current
+  memory:
+    read_from:
+    - MISSION-MEMORY.md
+    - AI_PROJECT_CONTEXT.md
+    - 00/14 scenario matrix and registries
+    - P03/P04/P05/USER_PACK validation outputs
+    write_needed: true
+    write_target: 00/14 crystallization docs and ledger
+    write_gate: completed_current_turn
+  risks:
+  - id: B7-GAP-001
+    summary: GS-07 real new business project instance was not generated in this pass.
+    mitigation: Use the next real user project as the full S4 instance instead of fabricating a sample.
+  next_action:
+  - Stop structural expansion for this pass.
+  - Only repair new failing validations, stale authority docs, or concrete handoff blockers.
+  timestamps:
+    created_at: '2026-05-31'
+    updated_at: '2026-05-31'
 - id: GOAL-20260526-SUBSYSTEM-01
   type: goal
   title: 01 Ghost Channel 通讯协议成为企业级AI协同通讯标准
@@ -573,13 +981,13 @@ status_objects:
       items:
       - kind: test
         ref: 03.数据库管理_文件夹整理AI应用/tests/
-        summary: 103/103 tests passed
+        summary: 107/107 tests passed
     validation:
       validation_refs:
       - VAL-03-INSTALL
       - VAL-03-TESTS
       required_before_close:
-      - 103/103 tests PASS
+      - 107/107 tests PASS
       - install check PASS
       current_status: verified_current
     memory:
@@ -590,7 +998,7 @@ status_objects:
       write_gate: none
     risks: []
     next_action:
-    - Tag v2.0.0 with 103/103 tests
+    - Tag v2.0.0 with 107/107 tests
     timestamps:
       created_at: '2026-05-29'
       updated_at: '2026-05-29'
@@ -787,7 +1195,7 @@ status_objects:
       locator: 交付包四体系填充
     - path: 协同通用AI大模型开发交付包/AI_PROJECT_CONTEXT.md
       role: authority
-      locator: 项目上下文14 commits
+      locator: 当前交付包 AI 上下文地图
     source_type: user
   routing:
     guide_secretary_handoff_id: null

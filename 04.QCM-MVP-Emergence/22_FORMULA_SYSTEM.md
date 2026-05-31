@@ -1,6 +1,6 @@
 # QCM 22公式系统架构
 
-> **v6.3 更新**: 以下所有 22 条公式均已实现并通过 63/63 测试。
+> **v6.3 更新**: 以下所有 22 条公式均已实现并通过 63/63 核心测试；2026-05-31 已补跑 config-sync 4 项、health 6 项与 qcm.main 场景 smoke。
 > 参见 `PROJECT_HANDOFF-QCM.md` 和 `README.md` 获取最新状态。
 > 原始计划（Phase 1-4）已全部完成。
 
@@ -152,6 +152,8 @@ Layer 5 (决策):
 | test_flywheel.py | 11/11 ✅ |
 | test_summoning.py | 6/6 ✅ |
 | **合计** | **63/63 ALL PASS** ✅ |
+| test_config_sync.py | 4/4 ✅ |
+| health_check.py | 6/6 READY ✅ |
 
 ---
 

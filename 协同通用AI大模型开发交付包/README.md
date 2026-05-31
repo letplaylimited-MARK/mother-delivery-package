@@ -80,12 +80,13 @@ AI_PROJECT_CONTEXT.md    # 面向其他 AI 的项目上下文地图
 其他通用 AI 大模型拿到用户交付包后，建议按顺序读取：
 
 1. `<用户交付包根目录>/README.md`
-2. `<用户交付包根目录>/01-价值体系/README.md`
-3. `<用户交付包根目录>/02-功能体系/README.md`
-4. `<用户交付包根目录>/03-结构体系/README.md`
-5. `<用户交付包根目录>/04-运作体系/README.md`
-6. 若存在 `<用户交付包根目录>/AI_PROJECT_CONTEXT.md`，再读取该项目上下文地图。
-7. 按具体任务进入源码、应用、数据、文档或验证脚本。
+2. 若存在 `<用户交付包根目录>/AI_PROJECT_CONTEXT.md`，读取项目上下文地图。
+3. 若存在 `<用户交付包根目录>/HANDOFF.md`，读取当前交接状态和风险。
+4. 若存在 `<用户交付包根目录>/VALIDATION_REPORT.md`，读取最近验证结果。
+5. 若存在 `<用户交付包根目录>/TRACEABILITY-MATRIX.md`，读取目标/需求/任务/测试追踪。
+6. 若存在 `<用户交付包根目录>/CHANGELOG.md`，读取变更历史。
+7. 读取 `<用户交付包根目录>/01-价值体系/README.md` 到 `04-运作体系/README.md`。
+8. 按具体任务进入源码、应用、数据、文档或验证脚本。
 
 ## 6. 最终用户第一步
 
@@ -115,4 +116,4 @@ powershell -ExecutionPolicy Bypass -File .\VERIFY-DELIVERY.ps1
 powershell -ExecutionPolicy Bypass -File .\VERIFY-DELIVERY.ps1 -Strict
 ```
 
-普通模式用于确认骨架结构、路径泄漏、密钥泄漏和 Markdown 基础质量；`-Strict` 模式用于最终项目交付，要求补齐项目上下文、交接、变更记录、追踪矩阵、验证报告和项目自己的验证入口。
+普通模式用于确认骨架结构、路径泄漏、密钥泄漏和 Markdown 基础质量；`-Strict` 模式用于最终项目交付，要求补齐项目上下文、交接、变更记录、追踪矩阵、验证报告和项目自己的验证入口。当前骨架的 `scripts/verify.ps1` 是严格结构验证包装器；正式项目交付时必须扩展或替换为真实业务 smoke/test 入口。

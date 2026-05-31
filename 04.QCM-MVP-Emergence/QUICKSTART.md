@@ -5,6 +5,15 @@
 > ⚠️ **本文檔為 v1.0 原始版，已由 `README.md` v6.3 和 `PROJECT_HANDOFF-QCM.md` 取代。**
 > 以下為保留的歷史內容，新用戶請直接閱讀 `README.md`。
 
+> 2026-05-31 審計補充：當前可執行入口請以 `README.md` / `PROJECT_HANDOFF-QCM.md` / `SUBSYSTEM-CRYSTAL-P04-QCM-AND-QCM-SKILL.md` 為準。CLI 輪次參數為 `--max-rounds`，不是舊版 `--rounds`。
+
+```bash
+python "02-代码编写/main.py"
+python "02-代码编写/main_complete.py"
+python -m qcm.main --mode research --seed 42 --max-rounds 22
+python qa_runner.py validate --scope P04_QCM
+```
+
 ---
 
 ## 一句话说明

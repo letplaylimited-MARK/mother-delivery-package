@@ -56,6 +56,7 @@
 - [x] 知識增長 4.94x (目標 4.22x, 17% 偏差在容許範圍)
 - [x] **Paper 模組測試 (38 項)**: test_roles(6/6) + test_collaboration(7/7) + test_sandbox(8/8) + test_flywheel(11/11) + test_summoning(6/6)
 - [x] **總計: 63/63 ALL PASS**
+- [x] **2026-05-31 審計補充**: `test_config_sync.py` 4/4 PASS；`health_check.py` 6/6 READY；`qcm.main` research/production/service smoke 已補跑
 
 ## 5. 清理狀態
 
@@ -95,6 +96,7 @@
 - [x] FastAPI 服務強化: /health /step /reset /history /capabilities 端點
 - [x] Cap-D CryptoEngine 整合: 每輪 delta 加密驗證，config 控制 (capabilities.crypto)
 - [x] Cap-G SelfHealer 整合: 每 10 輪快照，config 控制 (capabilities.healer)
+- [x] Cap-D/G 默認關閉，通過 `--cap-crypto` / `--cap-healer` 或 config flag 顯式啟用；審計已補跑 12 輪 production flag 場景
 
 ## 9. Phase 6 — 論文模組 (5 模組, 20 新檔案, 38 新測試)
 

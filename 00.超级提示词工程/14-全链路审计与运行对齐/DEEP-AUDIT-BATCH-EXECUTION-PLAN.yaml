@@ -1,0 +1,194 @@
+schema_version: "0.1"
+generated_at: "2026-05-31"
+purpose: "Executable batch plan for atomic deep reading, knowledge graph linking, crystallization, and validation."
+status_legend:
+  planned: "Batch is defined but not started."
+  in_progress: "Batch has current evidence gathering."
+  crystallized: "Batch produced knowledge crystals."
+  verified: "Batch artifacts and validation commands passed."
+  blocked: "Batch has a blocker requiring user or external state."
+
+global_rules:
+  - "Do not claim full semantic understanding from inventory alone."
+  - "Every batch must promote files from inventoried to read/understood/linked/validated only with evidence."
+  - "Every conclusion must use FACT, VERIFIED, INFERENCE, GAP, or RISK."
+  - "Every runnable subsystem must have at least one current command or service/API smoke."
+  - "Stop expanding when current goal is validated and remaining items are tracked as GAP/RISK."
+
+batches:
+  - id: "B0_ROOT_BOUNDARY"
+    status: "crystallized"
+    scope: ["ROOT"]
+    inventory_bucket: "INV:ROOT"
+    file_count_current: 13
+    required_reads:
+      - "MISSION-MEMORY.md"
+      - "MOTHER-PACK-ACTIVATION-GUIDE.md"
+      - "AI_PROJECT_CONTEXT.md"
+      - "README.md"
+      - "qcm-universal-ai-system-v3.0.skill (archive listing first; deep extract only when needed)"
+    validation_refs:
+      - "VAL-ROOT-ROUTE-SMOKE"
+      - "VAL-ROOT-HARDCODE-PATH"
+      - "VAL-ROOT-MARKDOWN-FENCES"
+      - "VAL-ROOT-YAML-PARSE"
+    expected_outputs:
+      - "awakening boundary crystals"
+      - "mother/user pack boundary"
+      - "Codex role positioning"
+
+  - id: "B1_P00_CONTROL_PLANE"
+    status: "verified"
+    scope: ["P00_SUPER_PROMPT"]
+    inventory_bucket: "INV:P00_SUPER_PROMPT"
+    file_count_current: 74
+    required_reads:
+      - "00.超级提示词工程/README.md"
+      - "00.超级提示词工程/01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md"
+      - "00.超级提示词工程/02-路由矩阵/SUBSYSTEM-ROUTING-MATRIX.md"
+      - "00.超级提示词工程/06-原子化开发治理/ATOMIC-AI-DEVELOPMENT-OPERATING-SYSTEM.md"
+      - "00.超级提示词工程/11-模型原生协作协议/MODEL-NATIVE-COLLABORATION-PROTOCOL.md"
+      - "00.超级提示词工程/12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md"
+      - "00.超级提示词工程/14-全链路审计与运行对齐/*.yaml"
+    validation_refs:
+      - "VAL-00-MEMORY-SOURCE-INDEX"
+      - "VAL-00-AUDIT-ASSETS"
+      - "VAL-00-CROSS-DOC-CONSISTENCY"
+    expected_outputs:
+      - "atomic inventory"
+      - "knowledge graph seed"
+      - "scenario acceptance matrix"
+      - "control-plane knowledge crystals"
+
+  - id: "B2_P01_GHOST_CHANNEL"
+    status: "verified"
+    scope: ["P01_GHOST_CHANNEL"]
+    inventory_bucket: "INV:P01_GHOST_CHANNEL"
+    file_count_current: 296
+    required_reads:
+      - "01.通讯协议_幽灵通道/README.md"
+      - "01.通讯协议_幽灵通道/INDEX.md"
+      - "01.通讯协议_幽灵通道/00_总览/PROJECT_HANDOFF.md"
+      - "01.通讯协议_幽灵通道/VERIFY.ps1"
+      - "01.通讯协议_幽灵通道/03_SDK与集成/**/README.md"
+      - "01.通讯协议_幽灵通道/03_SDK与集成/**/tests"
+    validation_refs:
+      - "VAL-01-GHOST-VERIFY"
+      - "VAL-01-SDK-TESTS"
+    expected_outputs:
+      - "protocol/sdk/deployment crystal: SUBSYSTEM-CRYSTAL-P01-GHOST-CHANNEL.md"
+      - "six-round sandbox record: SANDBOX-RUN-20260531-P01-GHOST-CHANNEL.md"
+      - "authority boundary between core SDK, lightweight SDK, enterprise SDK, TypeScript SDK, and deployment assets"
+
+  - id: "B3_P03_WORKBUDDY_KB"
+    status: "verified"
+    scope: ["P03_WORKBUDDY_KB"]
+    inventory_bucket: "INV:P03_WORKBUDDY_KB"
+    file_count_current: 153
+    required_reads:
+      - "03.数据库管理_文件夹整理AI应用/README.md"
+      - "03.数据库管理_文件夹整理AI应用/AGENTS.md"
+      - "03.数据库管理_文件夹整理AI应用/app.py"
+      - "03.数据库管理_文件夹整理AI应用/mcp_server.py"
+      - "03.数据库管理_文件夹整理AI应用/.workbuddy/scripts"
+    validation_refs:
+      - "VAL-03-INSTALL"
+      - "VAL-03-TESTS"
+    expected_outputs:
+      - "knowledge/search/MCP runtime crystal: SUBSYSTEM-CRYSTAL-P03-WORKBUDDY-KB.md"
+      - "six-round sandbox record: SANDBOX-RUN-20260531-P03-WORKBUDDY-KB.md"
+      - "MemoryOS and search index authority boundary"
+
+  - id: "B4_P04_QCM_AND_QCM_SKILL"
+    status: "verified"
+    scope: ["P04_QCM", "QCM_SKILL"]
+    inventory_bucket: ["INV:P04_QCM", "QCM_SKILL_ARCHIVE"]
+    file_count_current: 148
+    qcm_skill_internal_file_count: 43
+    required_reads:
+      - "04.QCM-MVP-Emergence/README.md"
+      - "04.QCM-MVP-Emergence/PROJECT_HANDOFF-QCM.md"
+      - "04.QCM-MVP-Emergence/22_FORMULA_SYSTEM.md"
+      - "04.QCM-MVP-Emergence/qcm/main.py"
+      - "04.QCM-MVP-Emergence/qcm/pipeline.py"
+      - "qcm-universal-ai-system-v3.0.skill::qcm-v3.0/SKILL.md"
+      - "qcm-universal-ai-system-v3.0.skill::qcm-v3.0/config.yaml"
+    validation_refs:
+      - "VAL-04-QCM-ALL"
+      - "VAL-04-QCM-PAPER"
+      - "VAL-04-HEALTH"
+      - "VAL-04-QCM-RUNTIME-SMOKE"
+      - "VAL-QCM-CONFIG-SYNC"
+      - "VAL-QCM-SKILL-VALIDATE"
+      - "VAL-QCM-SKILL-TESTS"
+    expected_outputs:
+      - "QCM formula/sandbox/role-team crystal: SUBSYSTEM-CRYSTAL-P04-QCM-AND-QCM-SKILL.md"
+      - "6-round flywheel execution mapping: SANDBOX-RUN-20260531-P04-QCM-AND-QCM-SKILL.md"
+
+  - id: "B5_P05_QSPECTRUM_RUNTIME"
+    status: "verified"
+    scope: ["P05_QSPECTRUM"]
+    inventory_bucket: "INV:P05_QSPECTRUM"
+    file_count_current: 423
+    required_reads:
+      - "05.超极智脑_Q-SpecTrum/INDEX.md"
+      - "05.超极智脑_Q-SpecTrum/AGENTS.md"
+      - "05.超极智脑_Q-SpecTrum/智腦協議-BRAIN-PROTOCOL.md"
+      - "05.超极智脑_Q-SpecTrum/run.py"
+      - "05.超极智脑_Q-SpecTrum/api_server.py"
+      - "05.超极智脑_Q-SpecTrum/qspectrum_engine.py"
+      - "05.超极智脑_Q-SpecTrum/BRAIN-KB"
+    validation_refs:
+      - "VAL-05-INTEGRATION"
+      - "VAL-05-STATUS"
+      - "VAL-05-PYTEST"
+      - "VAL-05-E2E"
+      - "VAL-05-API-SMOKE"
+      - "VAL-05-MCP-SMOKE"
+    expected_outputs:
+      - "main runtime/API/role-routing crystal: SUBSYSTEM-CRYSTAL-P05-QSPECTRUM-RUNTIME.md"
+      - "BRAIN-KB/platform DB memory authority"
+      - "six-round runtime/API/MCP sandbox record: SANDBOX-RUN-20260531-P05-QSPECTRUM-RUNTIME.md"
+
+  - id: "B6_P02_TEMPLATE_AND_USER_PACK"
+    status: "verified"
+    scope: ["P02_UNIVERSAL_KB", "USER_PACK"]
+    inventory_bucket: ["INV:P02_UNIVERSAL_KB", "INV:USER_PACK"]
+    file_count_current:
+      P02_UNIVERSAL_KB: 28
+      USER_PACK: 14
+    required_reads:
+      - "02.通用知识库框架_Universal-KB/README.md"
+      - "02.通用知识库框架_Universal-KB/05-agents/AGENTS.md"
+      - "协同通用AI大模型开发交付包/README.md"
+      - "协同通用AI大模型开发交付包/交付包组装规则.md"
+      - "协同通用AI大模型开发交付包/VERIFY-DELIVERY.ps1"
+    validation_refs:
+      - "VAL-02-TEMPLATE-REVIEW"
+      - "VAL-USER-PACK-DELIVERY"
+      - "VAL-USER-PACK-DELIVERY-STRICT"
+    expected_outputs:
+      - "template versus runnable-app boundary crystal: SUBSYSTEM-CRYSTAL-P02-TEMPLATE-AND-USER-PACK.md"
+      - "six-round template/delivery sandbox record: SANDBOX-RUN-20260531-P02-TEMPLATE-AND-USER-PACK.md"
+      - "final delivery four-system crystal"
+
+  - id: "B7_CROSS_SYSTEM_GOLDEN_PATHS"
+    status: "verified"
+    scope: ["CROSS"]
+    required_reads:
+      - "SCENARIO-ACCEPTANCE-MATRIX.md"
+      - "KNOWLEDGE-GRAPH-SEED.yaml"
+      - "ATOMIC-FILE-INVENTORY-SUMMARY.md"
+    validation_refs:
+      - "VAL-ROOT-ROUTE-SMOKE"
+      - "VAL-03-HTTP-SMOKE"
+      - "VAL-04-QCM-RUNTIME-SMOKE"
+      - "VAL-05-API-SMOKE"
+      - "VAL-USER-PACK-DELIVERY-STRICT"
+      - "VAL-END-TO-END"
+      - "VAL-CROSS-INTERFACE"
+    expected_outputs:
+      - "scenario results: SCENARIO-ACCEPTANCE-MATRIX.md section 6"
+      - "cross-system crystal: SUBSYSTEM-CRYSTAL-B7-CROSS-SYSTEM-GOLDEN-PATHS.md"
+      - "six-round sandbox record: SANDBOX-RUN-20260531-B7-CROSS-SYSTEM-GOLDEN-PATHS.md"
+      - "stop-rebuild decision: stop structural expansion unless validation fails or authority docs drift"

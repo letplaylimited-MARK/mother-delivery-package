@@ -2,7 +2,7 @@
 
 > **版本**: v6.3 交付版 (Phase A+B+C + Paper Modules)
 > **生成**: 2026-05-24
-> **交付包**: 145 檔案, 63/63 VERIFY ALL PASS
+> **交付包**: 145 檔案, 63/63 VERIFY ALL PASS；2026-05-31 補跑 config-sync / health / service smoke
 > **前身**: 涌 (Emergence) 研究原型 → QCM-MVP → qcm/ 命名空間包
 
 ---
@@ -13,7 +13,7 @@ QCM-MVP-Emergence 是 Q-SpecTrum 體系的原始研究原型，實現了 22 條�
 
 - **入口**: `02-代码编写/main.py`（標準湧入口，R22=0.8664 湧現）
 - **完整入口**: `02-代码编写/main_complete.py`（22 公式全集成管線）
-- **驗證**: `02-代码编写/test_qcm_all.py`（25/25 ALL PASS）+ 5 模組測試（38/38 ALL PASS）
+- **驗證**: `02-代码编写/test_qcm_all.py`（25/25 ALL PASS）+ 5 模組測試（38/38 ALL PASS）+ `test_config_sync.py`（4/4）+ `health_check.py`（6/6 READY）
 
 ---
 
@@ -132,6 +132,12 @@ test_summoning.py (pytest):
 Total:
   63/63 ALL PASS ✅
 
+test_config_sync.py:
+  4/4 PASS ✅
+
+health_check.py:
+  6/6 checks passed, Status READY ✅
+
 main.py:
   R22=0.8664 湧現觸發 (threshold 0.85) ✅
 
@@ -139,6 +145,9 @@ main_complete.py:
   R22=0.8658 湧現觸發 ✅
   6/10 公式組活躍 (epr/dw/mdist/rcs/deadlock/kgrowth)
   知識增長 4.94x (目標 4.22x)
+
+service smoke:
+  /health, /status, /simulate HTTP 200 ✅
 ```
 
 ---
@@ -178,12 +187,12 @@ python -m qcm.main --mode research --log-level DEBUG
 ## 7. 已知事項
 
 - **F14-F15/ F16-F18/ F21/ F22**: 默認關閉 (feature flag)，需 >2 角色或高 R 環境
-- **Cap-D Merkle**: `crypto.py` 實現 AES-256-GCM，未接入主管線
-- **Cap-G Self-Heal**: `self_healer.py` 實現快照恢復，未接入主管線
+- **Cap-D Merkle**: `crypto.py` 實現 AES-256-GCM，已接入 `qcm/pipeline.py`，默認關閉，需 `--cap-crypto`
+- **Cap-G Self-Heal**: `self_healer.py` 實現快照恢復，已接入 `qcm/pipeline.py`，默認關閉，需 `--cap-healer`
 - **Cap-A Semantic**: `semantic_matcher.py` 使用 `embedding.py` 可選真實嵌入
 - **SDK 測試**: 幽靈通道 SDK (01-幽靈通道SDK/) 維持 v1.0 狀態，獨立測試
 - **main.py vs main_complete.py**: main.py 是標準湧入口 (v6.0 權重)，main_complete.py 是 22 公式研究管線
-- **qcm/ 包**: Phase A 命名空間包，非破壞性追加；需 `sys.path.insert(0, '02-代码编写')` 或安裝為包
+- **qcm/ 包**: Phase A 命名空間包，非破壞性追加；當前已支援在專案根目錄直接執行 `python -m qcm.main`
 - **qcm/pipeline.py**: 同步 main_complete.py 演算法，但經驗證 R22=0.8658 湧現一致
 
 ---
@@ -196,7 +205,7 @@ python -m qcm.main --mode research --log-level DEBUG
 | 檔案 | 143 (交付清淨) | 303 |
 | 公式 | 22 (L1-L5) + 5 論文模組 (§3.2/§4/§7/§8/§9) | 核心 + SDK |
 | 入口 | main.py / qcm.main (三模式) | 3 SDK |
-| 測試 | 25 + 38 = 63/63 ALL PASS | VERIFY 303/303 + SDK 162/162 |
+| 測試 | 25 + 38 = 63/63 ALL PASS；另有 config-sync 4 + health 6 | VERIFY 303/303 + SDK 162/162 |
 | 狀態 | 維護中 + Phase A+B+C + Paper Modules 完成 | 凍結 (不可修改) |
 
 ---

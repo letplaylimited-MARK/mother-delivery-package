@@ -1,7 +1,7 @@
 # 功能体系
 
 > 用途：说明项目具体能做什么、用户如何使用、AI 能力边界在哪里。
-> 生成时间：2026-05-28，基于母交付包七子系统实际能力盘点。
+> 生成时间：2026-05-31，基于母交付包七子系统与 QCM Skill 能力包的当前验证结果。
 
 ## 1. 功能总览
 
@@ -16,7 +16,7 @@
 | Q-SpecTrum 平台 | 15 角色统一调度、Web UI、API、知识库闭环 | 自然语言对话 | Web 聊天 + REST API + 任务追踪 | 已完成 |
 | Skill/MCP 能力配置 | 新能力选型、评估、安装、集成验证 | 能力需求描述 | 技能需求清单 + 能力卡 + 配置方案 | 已完成 |
 | 全链路审计 | 跨子系统数据流/业务流/运行流对齐检查 | 项目目录 | 审计报告 + 断裂点矩阵 + 修复建议 | 已完成 |
-| 验证证据链 | 自动化验证 18 个检查项（测试/安装/集成/一致性） | 项目目录 | qa_runner.py validate 报告 | 已完成 |
+| 验证证据链 | 自动化验证 30 个注册项（测试/安装/集成/一致性/运行烟测） | 项目目录 | qa_runner.py validate 报告 | 已完成 |
 | 反漂移控制 | 防止需求/规格/语义漂移和反复重构 | PRD/SPEC 变更请求 | 漂移评估 + 阶段门守门决策 | 已完成 |
 | 用户交付包组装 | 从母包抽取项目成果，生成可交付的四体系文档 | 母包 + 项目事实 | 价值/功能/结构/运作四体系文档 | 模板已建 |
 
@@ -78,7 +78,7 @@
 |---|---|
 | 账号/权限 | 本地项目无账号系统；Git 使用 SSH/HTTPS 认证；AI 模型服务由用户自行管理 API Key |
 | 配置项 | `qcm/config.py`（QCM 参数）、`05/brain_core/config.py`（平台参数）、各子系统 `requirements.txt` 或 `pyproject.toml` |
-| 外部依赖 | Python 3.13+、Git、ChromaDB（向量检索）、Flask（Web 服务）、通用 AI 大模型 API（用户自备） |
+| 外部依赖 | Python 3.10+、Git、ChromaDB（向量检索）、Flask（Web 服务）、通用 AI 大模型 API（用户自备） |
 
 ## 5. 异常与失败处理
 
@@ -87,6 +87,6 @@
 | 循环导入 | `ImportError: cannot import name` | 04 子系统 calculator/detector 已使用模块级默认值 + config 注释标注，避免循环 |
 | 中文路径乱码 | PowerShell 输出显示乱码 | `_auto_run_script` 中添加 UTF-8 编码设置 |
 | MANIFEST hash 不匹配 | VERIFY.ps1 报告 failed files | 重新生成 MANIFEST.yaml（排除 `.pytest_cache`/`__pycache__`） |
-| venv 依赖缺失 | `ModuleNotFoundError` | 创建 Python venv 并安装所需包（`pip install cryptography flask numpy chromadb pytest`） |
+| venv 依赖缺失 | `ModuleNotFoundError` | 进入对应子系统后创建 Python venv，并优先执行 `pip install -r requirements.txt` |
 | Submodule 指针偏移 | `git diff` 显示 submodule 脏 | 在子模块内 commit+push，再在根目录更新指针 commit |
 | 幻觉完成 | AI 声称已完成但无证据 | E0-E4 证据等级体系，E0 必须标注"推测/待验证"；沙盘结论必须进入 TEST/AUD |

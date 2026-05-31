@@ -1,6 +1,6 @@
 # QCM-MVP-Emergence 使用者手冊
 
-> **版本**: v6.3 | **更新**: 2026-05-24 | **測試**: 63/63 ALL PASS ✅ | **湧現**: R22=0.8664
+> **版本**: v6.3 | **更新**: 2026-05-31 審計補充 | **測試**: 63/63 核心 + 4 config-sync + 6 health ✅ | **湧現**: R22=0.8664
 
 ## 概述
 
@@ -33,19 +33,19 @@ python "02-代码编写/main.py"
 可自訂輪次、啟用加密/自癒等能力擴充。
 
 ```bash
-python qcm/main.py --mode production --rounds 30
+python qcm/main.py --mode production --max-rounds 30 --output ./output
 ```
 
 **可用選項**:
 
 | 參數 | 說明 | 預設值 |
 |------|------|--------|
-| `--rounds N` | 執行 N 輪 | 25 |
+| `--max-rounds N` | 執行 N 輪 | 50 |
 | `--seed N` | 隨機種子 | 42 |
-| `--plugins` | 啟用特定插件 | 全部 |
+| `--plugins` | 啟用特定插件 | 依 config 預設 |
 | `--cap-crypto` | 啟用加密能力 | False |
 | `--cap-healer` | 啟用自癒能力 | False |
-| `--output FILE` | 輸出結果到檔案 | None |
+| `--output DIR` | 輸出 JSON 結果到目錄 | output |
 
 ### 模式三：服務模式（service）
 
@@ -58,13 +58,13 @@ python qcm/main.py --mode service --port 8080
 **API 使用範例**:
 ```bash
 # 健康檢查
-curl http://localhost:8000/health
+curl http://localhost:8080/health
 
 # 執行一輪
-curl -X POST http://localhost:8000/step
+curl -X POST http://localhost:8080/step
 
 # 檢視歷史
-curl http://localhost:8000/history
+curl http://localhost:8080/history
 ```
 
 ---

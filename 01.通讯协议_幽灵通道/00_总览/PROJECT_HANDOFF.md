@@ -185,9 +185,12 @@ python -m pytest 03_SDK.../ghost-channel-sdk/python/tests -q
 
 # Enterprise SDK (76 tests, ~4s):
 python -m pytest 03_SDK.../GhostHub_SDK/tests -q
+
+# TypeScript SDK (22 tests, Node 22+):
+npm test
 ```
 
-Current test status: **162/162 passing** across all 3 SDKs.
+Current test status: **184/184 passing** across Python SDKs and the TypeScript SDK.
 
 ### 4.3 Quick Start (Minimal Example)
 
@@ -249,7 +252,7 @@ The lightweight SDK was originally named `ghost_channel`, which collided with th
 
 ### 5.3 Why Zero Dependencies for GhostHub_SDK Core?
 
-`GhostHub_SDK/pyproject.toml` has `dependencies = []`. Heavy packages (FastAPI, paho-mqtt, pydantic) are installed via extras. Rationale: the core SDK (config, IntentionBank) needs zero external deps. Users in constrained environments install only what they need.
+`GhostHub_SDK/pyproject.toml` currently installs the API/protocol dependencies directly (`fastapi`, `pydantic`, `uvicorn`, `paho-mqtt`, `websocket-client`) and also keeps extras for grouped installs. Earlier zero-dependency core packaging is no longer the current package shape.
 
 ### 5.4 Why Flat Layout for GhostHub_SDK?
 
@@ -283,9 +286,9 @@ The `.pyd` files are Cython-compiled Python C extensions for Windows x64. They p
 
 ### Known Limitations
 
-1. **Bandwidth reduction at 61.3%** (target: 80%+). The PoC shows convergence — production environments with more frequent sync should reach 80%. zstd compression would guarantee it.
+1. **PoC bandwidth report is historical**: the original PoC recorded 61.3% against an 80% target, while the current lightweight SDK stress run reached ~99% average bandwidth reduction. Keep both figures separated by evidence source.
 2. **No CI/CD pipeline in this package** — CI workflows are maintained separately.
-3. **3 CLI tests flaky** in ghost-channel-sdk (subprocess environment issue). Not regression-related.
+3. **TypeScript SDK requires Node 22+** because the package runs `.ts` tests through Node type stripping (`node --experimental-strip-types --test`).
 4. **Windows-only .pyd** — Enterprise Cython modules are Windows x64 only. Cross-platform support would require compiling on each target OS.
 5. **Python 3.14 tested** — may need compatibility verification on Python 3.10-3.13.
 
@@ -300,6 +303,7 @@ The `.pyd` files are Cython-compiled Python C extensions for Windows x64. They p
 python -m pytest 03_SDK.../ghost_channel/tests -q      # 18 tests
 python -m pytest 03_SDK.../ghost-channel-sdk/python/tests -q  # 68 tests
 python -m pytest 03_SDK.../GhostHub_SDK/tests -q       # 76 tests
+npm test                                                # 22 TypeScript tests
 
 # Verify integrity
 powershell -File VERIFY.ps1
@@ -321,7 +325,8 @@ docker-compose -f 04_企业部署/04_商业部署包/docker/docker-compose.yml u
 | Open-source SDK tests | 18/18 PASS |
 | Lightweight SDK tests | 68/68 PASS |
 | Enterprise SDK tests | 76/76 PASS |
-| Total SDK tests | 162/162 PASS |
+| TypeScript SDK tests | 22/22 PASS |
+| Total SDK tests | 184/184 PASS |
 | C:\Users\ hardcoded paths | 0 (all cleaned) |
 | GhostHub_Complete/Ultimate refs | 0 (all cleaned) |
 | Duplicate files | 0 (LICENSE intentional) |

@@ -4,6 +4,10 @@ import sys, os, json, time, logging
 sys.stdout.reconfigure(encoding='utf-8')
 sys.stderr.reconfigure(encoding='utf-8')
 
+QCM_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if QCM_ROOT not in sys.path:
+    sys.path.insert(0, QCM_ROOT)
+
 from qcm.config import QCMConfig, load_config
 from qcm.pipeline import PipelineEngine
 

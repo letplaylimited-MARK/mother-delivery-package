@@ -41,7 +41,7 @@ flowchart TB
 | 沙盘到验证 | 复杂方案 | `04` QCM + `00/08` 角色沙盘 | 风险、方案、测试计划 | QCM 测试、沙盘文档存在 | 沙盘结果与验证结果需统一绑定 |
 | 平台运行 | 开发/查询/协作任务 | `05` Q-SpecTrum | Web/API/MCP/DB/角色输出 | `run.py`, `api_server.py`, `qspectrum_mcp_server.py`, `verify-integration.py` | `requirements.txt` 与 `pyproject.toml` 依赖叙述需统一 |
 | 通讯同步 | 多智能体/多系统状态 | `01` Ghost Channel | Delta、VectorClock、Audit、部署 | VERIFY、SDK、schema、Docker 存在 | 与 `05` 的正式调用边界需能力登记 |
-| 最终交付 | 已完成项目成果 | 子包四体系 | 最终用户/其他 AI | 子包 README、组装规则与 `VERIFY-DELIVERY.ps1` 存在；模板模式已可验证 | 缺具体项目实例内容；严格交付模式尚未通过 |
+| 最终交付 | 已完成项目成果 | 子包四体系 | 最终用户/其他 AI | 子包 README、组装规则与 `VERIFY-DELIVERY.ps1` 存在；模板模式与 Strict 模式当前均 0 failures / 0 warnings | 缺具体项目实例业务 smoke/test；Strict 是结构/交接门，不等于业务运行门 |
 
 ## 3. 子系统齿轮
 
@@ -268,14 +268,13 @@ MISSION-MEMORY.md
 
 运行流：
 
-- `powershell -ExecutionPolicy Bypass -File .\VERIFY-DELIVERY.ps1`：模板/基础检查，当前通过但会提示项目级缺口。
-- `powershell -ExecutionPolicy Bypass -File .\VERIFY-DELIVERY.ps1 -Strict`：最终项目交付检查，当前会故意失败，因为项目实例级上下文、交接、追踪、验证报告和项目验证入口尚未填入。
+- `powershell -ExecutionPolicy Bypass -File .\VERIFY-DELIVERY.ps1`：模板/基础检查，当前通过。
+- `powershell -ExecutionPolicy Bypass -File .\VERIFY-DELIVERY.ps1 -Strict`：最终项目交付检查，当前通过，0 failures / 0 warnings。
 
 缺口：
 
-- 缺项目实例级 `AI_PROJECT_CONTEXT.md`、`CHANGELOG.md`、`HANDOFF.md`、`TRACEABILITY-MATRIX.md`、`VALIDATION_REPORT.md`。
-- 缺项目自己的验证入口，例如 `scripts/verify.ps1`、`tests/`、`package.json` 或 `pyproject.toml`。
-- 严格模式当前失败是正确行为：它防止开发者把模板骨架误当成最终用户交付包。
+- 后续新项目内容变更后，仍需保持项目实例级 `AI_PROJECT_CONTEXT.md`、`CHANGELOG.md`、`HANDOFF.md`、`TRACEABILITY-MATRIX.md`、`VALIDATION_REPORT.md` 同步。
+- 严格模式当前是最终交付门：它防止开发者把模板骨架误当成最终用户交付包。
 
 审计补充：
 

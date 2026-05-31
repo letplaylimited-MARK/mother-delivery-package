@@ -2,7 +2,7 @@
 
 **Project**: QCM-MVP-Emergence (Quantum Consensus Mechanism)
 **Version**: v6.3
-**Last Updated**: 2026-05-24
+**Last Updated**: 2026-05-31
 **Framework**: RECONSTRUCTION_FRAMEWORK.md
 
 ---
@@ -14,6 +14,34 @@
 3. 每次结束必须更新CHANGELOG.md
 4. 知识图谱/知识结晶/长期记忆必须与CHANGELOG对齐
 5. 每次执行任务前必须运行health_check.py
+
+---
+
+## v6.3-audit (运行审计补充) - 2026-05-31
+
+**修复**:
+- `02-代码编写/test_qcm_all.py` 增补项目根路径，支持从 P04 根目录直接执行。
+- `02-代码编写/main_complete.py` 增补项目根路径，修复 `qcm.config` 直接导入断点。
+- `qcm/main.py` 增补项目根路径，支持 `python qcm/main.py` 与 `python -m qcm.main` 两种入口。
+- `qa_runner.py` 将 `VAL-QCM-CONFIG-SYNC` 接入自动验证。
+- `qcm-universal-ai-system-v3.0.skill` 内部验证器升级为 V3.0 路径/版本口径。
+
+**补跑验证**:
+```
+test_qcm_all.py: 25/25 ✅
+paper pytest: 38/38 ✅
+test_config_sync.py: 4/4 ✅
+health_check.py: 6/6 READY ✅
+qcm.main research: R22=0.8658 ✅
+qcm.main production: JSON output written ✅
+qcm.main service: /health /status /simulate HTTP 200 ✅
+qcm-v3.0 skill validator: 0 issues, 100.0% ✅
+qcm-v3.0 skill tests: 173 passed ✅
+```
+
+**文档对齐**:
+- 旧参数 `--rounds` 改为真实 CLI 参数 `--max-rounds`。
+- Cap-D/Cap-G 口径统一为“已接入 pipeline、默认关闭、需显式 flag 启用”。
 
 ---
 

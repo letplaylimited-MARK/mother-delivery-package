@@ -56,7 +56,7 @@ Verification → `VERIFY.ps1`, `MANIFEST.yaml`
 |--------|-------|
 | Total files | 299 (all SHA256 verified) |
 | SDKs | 3 (ghost_channel + ghost_channel_sdk + ghost_hub_sdk) |
-| SDK tests | 162/162 passing (18 + 68 + 76) |
+| SDK tests | 184/184 passing (Python 18 + 68 + 76; TypeScript 22) |
 | License | MIT © Q-SpecTrum Project |
 | Dependency chain | ghost-channel → ghost-channel-sdk → ghost-hub-sdk |
 

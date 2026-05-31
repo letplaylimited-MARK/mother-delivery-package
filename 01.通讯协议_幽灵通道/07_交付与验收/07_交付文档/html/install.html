@@ -115,7 +115,7 @@
                 <pre><code>pip install ghost-channel-sdk</code></pre>
             </div>
             <p class="success">✓ 安装成功验证</p>
-            <pre><code>python -c "from ghost_channel import GhostChannelSDK; print('OK')"</code></pre>
+            <pre><code>python -c "from ghost_channel_sdk import GhostChannelSDK; print('OK')"</code></pre>
             
             <h3>方式二：本地安装（开发模式）</h3>
             <div class="install-block">
@@ -174,7 +174,7 @@ docker run -it ghostchannel/sdk:latest python stress_test_100_concurrent.py</cod
                 <h4>Python SDK 验证</h4>
                 <pre><code>python -c "
 import asyncio
-from ghost_channel import GhostChannelSDK, GhostChannelConfig
+from ghost_channel_sdk import GhostChannelSDK, GhostChannelConfig
 
 async def test():
     sdk = GhostChannelSDK(GhostChannelConfig())

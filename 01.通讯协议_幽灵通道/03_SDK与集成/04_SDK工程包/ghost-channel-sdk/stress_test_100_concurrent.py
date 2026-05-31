@@ -19,8 +19,8 @@ from dataclasses import dataclass, asdict
 from typing import List, Dict, Any
 
 sys.path.insert(0, "python")
-from ghost_channel import GhostChannelSDK, GhostChannelConfig
-from ghost_channel.types import SyncResult, ErrorObject
+from ghost_channel_sdk import GhostChannelSDK, GhostChannelConfig
+from ghost_channel_sdk.types import SyncResult, ErrorObject
 
 
 @dataclass

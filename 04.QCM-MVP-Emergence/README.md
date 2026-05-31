@@ -3,7 +3,7 @@
 
 **版本**: v6.3 (交付版，含 5 论文模块)  
 **日期**: 2026-05-24  
-**状态**: ✅ 63/63 ALL PASS, 38 新测试, R22=0.8664
+**状态**: ✅ 63/63 核心测试 ALL PASS, 4 config-sync, 6 health, R22=0.8664（2026-05-31 审计补充）
 
 ---
 
@@ -98,10 +98,10 @@ QCM-MVP-Emergence/
 |------|------|------|
 | A | Delta 增量同步 | ✅ 管线集成 |
 | B | 因果排序（VectorClock） | ✅ 管线集成 |
-| C | 加密传输（AES-256-GCM） | ✅ Cap-D 可用 |
-| D | 完整性验证（Merkle） | ✅ Cap-D |
+| C | 加密传输（AES-256-GCM） | ✅ Cap-D 可用，默认关闭，`--cap-crypto` 启用 |
+| D | 完整性验证（Merkle） | ✅ Cap-D，可由 pipeline flag 启用 |
 | E | 审计追踪（AuditLog） | ✅ 管线集成 |
-| F | 自愈恢复（Snapshot） | ✅ Cap-G 可用 |
+| F | 自愈恢复（Snapshot） | ✅ Cap-G 可用，默认关闭，`--cap-healer` 启用 |
 | G | 语义匹配 | ✅ Cap-A 可用 |
 | H | 涌现检测 | ✅ 管线集成 |
 | I | 飞轮优化 | ✅ 管线集成 |
@@ -119,11 +119,16 @@ python "02-代码编写/main.py"
 python "02-代码编写/main_complete.py"
 
 # qcm/ 命名空间包三模式入口
-python qcm/main.py
+python -m qcm.main --mode research --seed 42 --max-rounds 22
+python -m qcm.main --mode production --seed 42 --max-rounds 3 --output ./output
 
-# 运行全部 63 项测试
+# 运行全部 63 项核心发布测试
 python "02-代码编写/test_qcm_all.py"
 pytest "02-代码编写/test_roles.py" "02-代码编写/test_collaboration.py" "02-代码编写/test_sandbox.py" "02-代码编写/test_flywheel.py" "02-代码编写/test_summoning.py" -v
+
+# 运行额外守卫
+python "02-代码编写/test_config_sync.py"
+python health_check.py
 ```
 
 ### 测试结果
@@ -137,6 +142,8 @@ pytest "02-代码编写/test_roles.py" "02-代码编写/test_collaboration.py" "
 | test_flywheel.py | 11/11 | ✅ ALL PASS |
 | test_summoning.py | 6/6 | ✅ ALL PASS |
 | **总计** | **63/63** | ✅ **ALL PASS** |
+| test_config_sync.py | 4/4 | ✅ 配置常数同步守卫 |
+| health_check.py | 6/6 | ✅ READY |
 
 ---
 
@@ -157,7 +164,7 @@ pytest "02-代码编写/test_roles.py" "02-代码编写/test_collaboration.py" "
 | 指标 | 当前值 |
 |------|--------|
 | Python 源码文件 | 63 (qcm/ 31 + 02-代码编写/ 32) |
-| 测试通过率 | 63/63 (100%) |
+| 测试通过率 | 63/63 核心发布测试 + 4 config-sync + 6 health |
 | 涌现轮次 | R22 (seed=42) |
 | 涌现 R 值 | 0.8664 |
 | 确认模块数 | 10 qcm/ 子包 + 5 论文模块 |
@@ -179,7 +186,7 @@ pytest "02-代码编写/test_roles.py" "02-代码编写/test_collaboration.py" "
 ### 已知限制
 - **湧現演示固定種子**: `seed=42` 確保湧現在 R22 觸發；更換種子可能影響湧現輪次
 - **Feature Flag 公式**: F14-F15（沙盤）、F16-F18（飛輪）、F21（神經路由）、F22（Pareto）預設關閉，需 >2 角色或高 R 環境才會自動啟用
-- **Cap-D/Cap-G 未接入主管線**: CryptoEngine（加密）和 SelfHealer（自癒）獨立在 `qcm/capabilities/` 中實作，預設不啟用
+- **Cap-D/Cap-G 默認不啟用**: CryptoEngine（加密）和 SelfHealer（自癒）已接入 `qcm/pipeline.py`，但需透過 `--cap-crypto` / `--cap-healer` 或 config flag 顯式啟用
 - **論文模組需 modules=True**: `QCMConfig` 中 `modules` 必須設為 `True`（預設值）才會載入 §3.2/§4/§7/§8/§9 五個論文模組
 - **角色數量**: 預設 2 角色演示（Secretary, Researcher），`RoleFactory` 支援 2-8 角色
 

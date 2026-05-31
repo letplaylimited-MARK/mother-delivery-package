@@ -1,6 +1,6 @@
 # 使用場景
 
-> **版本**: v6.3 | **更新**: 2026-05-24 | **測試**: 63/63 ALL PASS ✅ | **湧現**: R22=0.8664
+> **版本**: v6.3 | **更新**: 2026-05-31 審計補充 | **測試**: 63/63 核心 + 4 config-sync + 6 health ✅ | **湧現**: R22=0.8664
 
 ## 場景一：湧現理論驗證（研究用途）
 
@@ -83,7 +83,7 @@ converged = has_converged(recent_improvements, threshold=0.01)
 python qcm/main.py --mode service --port 8080
 
 # 或單輪執行
-python qcm/main.py --mode production --rounds 5
+python qcm/main.py --mode production --max-rounds 5 --output ./output
 ```
 
 **API 端點**:
@@ -148,7 +148,7 @@ python "02-代码编写/main.py"
 | §7 沙盒 | `test_sandbox.py` | 8 | 隔離層、SRS、CBP 調度 |
 | §8 飛輪 | `test_flywheel.py` | 11 | 狀態更新、收斂、能量、Lyapunov |
 | §9 召喚 | `test_summoning.py` | 6 | TF-IDF、技能匹配、距離計算 |
-| **合計** | **63/63 ALL PASS** | **38** | **test_qcm_all.py 25 + pytest 38** |
+| **合計** | **63/63 ALL PASS** | **38** | **test_qcm_all.py 25 + pytest 38；另有 config-sync 4 項與 health 6 項作為運行守衛** |
 
 ```bash
 pytest "02-代码编写/test_roles.py" -v

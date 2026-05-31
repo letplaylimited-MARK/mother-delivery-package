@@ -4,7 +4,9 @@ Tests all 22 formulas + 10 atomic capabilities + main entry points
 """
 import sys, os, math
 CODE = os.path.dirname(os.path.abspath(__file__))
+QCM_ROOT = os.path.dirname(CODE)
 sys.path.insert(0, CODE)
+sys.path.insert(0, QCM_ROOT)
 os.chdir(CODE)
 
 PASS, FAIL = 0, 0
@@ -133,8 +135,6 @@ finally:
 # ── qcm/ namespace package ──
 print("\n--- qcm/ namespace package (Phase A) ---")
 try:
-    QCM_DIR = os.path.dirname(CODE)  # parent of 02-代码编写
-    sys.path.insert(0, QCM_DIR)
     from qcm import plugin_registry, QCMConfig, PluginRegistry, PipelineEngine
     test("qcm: imports", True)
     cfg = QCMConfig({"max_rounds": 5, "seed": 42, "silent": True})

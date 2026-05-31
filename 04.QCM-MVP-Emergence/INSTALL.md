@@ -1,6 +1,6 @@
 # QCM-MVP-Emergence 安裝指南
 
-> **版本**: v6.3 | **更新**: 2026-05-24 | **測試**: 63/63 ALL PASS ✅ | **湧現**: R22=0.8664
+> **版本**: v6.3 | **更新**: 2026-05-31 審計補充 | **測試**: 63/63 核心 + 4 config-sync + 6 health ✅ | **湧現**: R22=0.8664
 
 ## 系統需求
 
@@ -60,7 +60,13 @@ python "02-代码编写/test_qcm_all.py"
 pytest "02-代码编写/test_roles.py" "02-代码编写/test_collaboration.py" "02-代码编写/test_sandbox.py" "02-代码编写/test_flywheel.py" "02-代码编写/test_summoning.py" -v
 # 預期: 38 passed
 
-# 總計: 63/63 ALL PASS ✅
+# 執行配置同步與健康守衛
+python "02-代码编写/test_config_sync.py"
+# 預期: 4 passed
+python health_check.py
+# 預期: 6/6 checks passed, Status READY
+
+# 核心發布測試總計: 63/63 ALL PASS ✅
 ```
 
 ## 快速驗證
@@ -92,5 +98,7 @@ QCM-MVP-Emergence/
 | `ModuleNotFoundError: numpy` | 缺少核心依賴 | `pip install numpy` |
 | `ModuleNotFoundError: yaml` | 缺少 PyYAML | `pip install pyyaml` |
 | `ImportError: qcm.*` | 工作目錄錯誤 | 在 `QCM-MVP-Emergence/` 根目錄執行 |
+| `--rounds` 無法識別 | 舊版文檔命令 | 使用 `--max-rounds` |
+| API 無法啟動 | 缺少 FastAPI | `pip install fastapi uvicorn pydantic` |
 | R 值卡在 0.5-0.6 | 缺少必要組件 | 確認 `numpy` 已安裝 |
 | 編碼錯誤 (GBK) | Windows 終端 | 在 PowerShell 中執行，或設定 `$env:PYTHONUTF8=1` |

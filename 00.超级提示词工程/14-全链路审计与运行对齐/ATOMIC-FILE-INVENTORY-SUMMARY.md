@@ -1,6 +1,6 @@
 # Atomic File Inventory Summary
 
-> Generated at: 2026-05-31T19:50:24  
+> Generated at: 2026-05-31T22:09:53  
 > Inventory: `ATOMIC-FILE-INVENTORY.jsonl`  
 > Scope: excludes `.git`, `__pycache__`, `.pytest_cache`, `node_modules`, `dist`, `build`, `coverage`.
 
@@ -9,7 +9,7 @@
 | Metric | Value |
 |---|---:|
 | Files inventoried | 1150 |
-| Bytes inventoried | 18854179 |
+| Bytes inventoried | 18936396 |
 | Text lines counted | 235467 |
 | QCM skill internal files | 43 |
 

@@ -1,5 +1,5 @@
 schema_version: '0.1'
-generated_at: '2026-05-31T19:50:24'
+generated_at: '2026-05-31T22:09:53'
 purpose: Seed graph connecting projects, capabilities, artifacts, validations, memory
   sources, inventory buckets, and QCM skill package.
 inventory_ref: 00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY.jsonl

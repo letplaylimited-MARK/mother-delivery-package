@@ -6,17 +6,17 @@
 
 本仓库采用 **Git Monorepo** 结构，根目录管理母包级文档和 `00.超级提示词工程`，`03` 和 `05` 作为 Git Submodule 引入。
 
-| # | 子系统 | 文件数 | 说明 | GitHub |
-|---|--------|--------|------|--------|
-| 00 | 超级提示词工程 | 52 | 跨项目 AI 协同的提示词操作系统 | 随根仓库 |
-| 01 | 通讯协议 / 幽灵通道 | 295 | Ghost Channel v1.0 协议、SDK、企业部署 | 随根仓库 |
-| 02 | 通用知识库框架 (Universal-KB) | 21 | V1 知识管理模板 | 随根仓库 |
-| 03 | 数据库管理 / 文件整理 AI 应用 | 172+ | V2 可运行应用 (Flask + MCP + FAISS) — submodule | [knowledge-base-manager](https://github.com/letplaylimited-MARK/knowledge-base-manager) |
-| 04 | QCM-MVP-Emergence | 146 | 共鸣公式、22 公式、涌现验证 (63 tests) | 随根仓库 |
-| 05 | 超极智脑 / Q-SpecTrum | 431+ | 主平台：15 角色、Web UI、API、DB、知识库 — submodule | [Q-Spectrum](https://github.com/letplaylimited-MARK/Q-Spectrum) |
-| — | 协同通用 AI 大模型开发交付包 | 13 | 用户交付包骨架（价值/功能/结构/运作四体系） | 随根仓库 |
+| # | 子系统 | 当前审计文件数 | 说明 | GitHub |
+|---|--------|--------:|------|--------|
+| 00 | 超级提示词工程 | 74 | 跨项目 AI 协同的提示词操作系统与审计控制平面 | 随根仓库 |
+| 01 | 通讯协议 / 幽灵通道 | 296 | Ghost Channel v1.0 协议、SDK、企业部署 | 随根仓库 |
+| 02 | 通用知识库框架 (Universal-KB) | 28 | 通用知识库模板；完整可运行知识库应用以 03 为准 | 随根仓库 |
+| 03 | 数据库管理 / 文件整理 AI 应用 | 153 | V2 可运行应用 (Flask + MCP + 文件整理 + 向量检索) — submodule | [knowledge-base-manager](https://github.com/letplaylimited-MARK/knowledge-base-manager) |
+| 04 | QCM-MVP-Emergence | 148 | 共鸣公式、22 公式、涌现验证、角色/沙盘/飞轮 | 随根仓库 |
+| 05 | 超极智脑 / Q-SpecTrum | 423 | 主平台：15 角色、Web UI、API、MCP、DB、知识库 — submodule | [Q-Spectrum](https://github.com/letplaylimited-MARK/Q-Spectrum) |
+| — | 协同通用 AI 大模型开发交付包 | 14 | 用户交付包骨架（价值/功能/结构/运作四体系） | 随根仓库 |
 
-> **统计口径**：00/01/02/04/协同的文件数为 `git ls-files` 跟踪数；03/05 为独立 submodule，数字标注 `+` 表示含 submodule 内部展开，根仓库仅跟踪指针文件。根仓库总跟踪 542 文件（含 submodule 指针），全量展开约 1082 文件。
+> **统计口径**：以上采用 `AI_PROJECT_CONTEXT.md` 与 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 的当前审计口径；排除 `.git`、`__pycache__`、`.pytest_cache`、`node_modules`、`dist/build/coverage` 等运行缓存。当前全量展开为 1150 文件，03/05 为独立 submodule，根仓库跟踪其指针。
 
 ## 快速开始
 
@@ -31,7 +31,7 @@ git submodule update --init --recursive
 
 ## 验证
 
-根目录提供 `qa_runner.py` 统一验证工具（18 项验证规则，含 5 项 MANUAL）：
+根目录提供 `qa_runner.py` 统一验证工具。当前验证注册表为 31 项，最近一次审计结果为 31/31 自动 PASS，0 FAIL / 0 WARN / 0 SKIP，0 manual-current：
 
 ```bash
 python qa_runner.py validate    # 运行全量验证

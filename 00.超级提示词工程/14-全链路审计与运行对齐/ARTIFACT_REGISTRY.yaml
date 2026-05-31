@@ -163,6 +163,13 @@ artifacts:
     role: "First real mother-package self-bootstrap project instance: inferred intent answers, self-bootstrap route gap repair, GOAL/REQ/SPEC/TASK/TEST traceability, and Phase-1 validation evidence."
     read_priority: "P0 before continuing mother-package self-development"
 
+  - id: "ART-00-FINAL-FRESH-CLONE-ACCEPTANCE"
+    type: "doc"
+    path: "00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260601-FINAL-FRESH-CLONE-AI-DEVELOPER-ACCEPTANCE.md"
+    owner_project: "P00_SUPER_PROMPT"
+    role: "Final fresh GitHub clone acceptance run proving new AI/developer cold-start, submodule readiness, route probes, transient failure handling, subsystem validation, P05 API/MCP/E2E, and full 31/31 validation."
+    read_priority: "P0 before claiming final audit-review readiness"
+
   - id: "ART-00-FIRST-DIALOG-DECONSTRUCTION"
     type: "doc"
     path: "00.超级提示词工程/15-超级系统提示词工程/FIRST-DIALOG-COLD-START-DECONSTRUCTION.md"

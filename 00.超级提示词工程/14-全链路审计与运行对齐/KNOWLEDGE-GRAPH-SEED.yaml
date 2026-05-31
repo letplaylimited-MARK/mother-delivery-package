@@ -1,5 +1,5 @@
 schema_version: '0.1'
-generated_at: '2026-06-01T00:21:00'
+generated_at: '2026-06-01T01:19:47'
 purpose: Seed graph connecting projects, capabilities, artifacts, validations, memory
   sources, inventory buckets, and QCM skill package.
 inventory_ref: 00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY.jsonl
@@ -201,6 +201,11 @@ nodes:
   type: Artifact
   owner: P00_SUPER_PROMPT
   path: 00.超级提示词工程/14-全链路审计与运行对齐/SELF-BOOTSTRAP-PROJECT-SPEC-AND-RUN.md
+  artifact_type: doc
+- id: ART-00-FINAL-FRESH-CLONE-ACCEPTANCE
+  type: Artifact
+  owner: P00_SUPER_PROMPT
+  path: 00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260601-FINAL-FRESH-CLONE-AI-DEVELOPER-ACCEPTANCE.md
   artifact_type: doc
 - id: ART-00-FIRST-DIALOG-DECONSTRUCTION
   type: Artifact
@@ -583,7 +588,7 @@ nodes:
 - id: INV:P00_SUPER_PROMPT
   type: InventoryBucket
   subsystem: P00_SUPER_PROMPT
-  file_count: 79
+  file_count: 80
 - id: INV:P01_GHOST_CHANNEL
   type: InventoryBucket
   subsystem: P01_GHOST_CHANNEL
@@ -994,6 +999,12 @@ edges:
   type: owns
 - from: ART-00-SELF-BOOTSTRAP-SPEC-RUN
   to: FILE:00.超级提示词工程/14-全链路审计与运行对齐/SELF-BOOTSTRAP-PROJECT-SPEC-AND-RUN.md
+  type: points_to
+- from: P00_SUPER_PROMPT
+  to: ART-00-FINAL-FRESH-CLONE-ACCEPTANCE
+  type: owns
+- from: ART-00-FINAL-FRESH-CLONE-ACCEPTANCE
+  to: FILE:00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260601-FINAL-FRESH-CLONE-AI-DEVELOPER-ACCEPTANCE.md
   type: points_to
 - from: P00_SUPER_PROMPT
   to: ART-00-FIRST-DIALOG-DECONSTRUCTION

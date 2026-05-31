@@ -166,6 +166,26 @@ user intent
 
 It does not yet claim that a full external business project has been generated. It also does not claim that 03 or 05 code was modified. Those are later phases and require separate edit eligibility.
 
+## 6.1 Final Fresh-Clone Acceptance
+
+The follow-up final acceptance run used a new GitHub clone with recursive submodules and no prior local checkout state. It verified the first-dialog path as a real developer/general-AI startup, not just a local owner-workspace route probe.
+
+```yaml
+final_acceptance_20260601:
+  artifact: "00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260601-FINAL-FRESH-CLONE-AI-DEVELOPER-ACCEPTANCE.md"
+  source_commit: "014b3c126e4f2f73ba4a82e29f1d01cdd0e80103"
+  clone_mode: "fresh GitHub clone with recursive submodules"
+  route_probes:
+    SELF_BOOTSTRAP_PROJECT: "DIRECT / confidence 0.86 / ROOT -> 00 -> 03/04/05 -> USER_PACK"
+    CROSS_SYSTEM_GOLDEN_PATH: "DIRECT / confidence 0.82 / ROOT -> 00 -> 03/04/05 -> USER_PACK"
+  validation:
+    first_root_run: "6 PASS / 1 FAIL at VAL-CROSS-INTERFACE p03_http; recorded as transient"
+    p03_rerun: "3/3 PASS"
+    root_rerun: "7/7 PASS"
+    full_validate: "31/31 PASS, 0 FAIL/WARN/SKIP, automatic 31/31"
+  conclusion: "A new AI/developer dialogue can now start from GitHub, initialize the repo, route the work, and continue collaborative AI project development using current command evidence."
+```
+
 ## 7. Next Real Phase
 
 The next phase should be a restrained self-bootstrap development cycle:

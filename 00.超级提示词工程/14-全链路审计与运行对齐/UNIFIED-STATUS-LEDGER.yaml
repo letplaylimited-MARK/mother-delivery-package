@@ -844,6 +844,9 @@ status_objects:
     - path: 00.超级提示词工程/14-全链路审计与运行对齐/SUBSYSTEM-CRYSTAL-B7-CROSS-SYSTEM-GOLDEN-PATHS.md
       role: current_crystal
       locator: next real project instance should exercise GS-07
+    - path: 00.超级提示词工程/14-全链路审计与运行对齐/SANDBOX-RUN-20260601-FINAL-FRESH-CLONE-AI-DEVELOPER-ACCEPTANCE.md
+      role: final_acceptance_run
+      locator: fresh GitHub clone, route probes, transient failure handling, and full 31/31 validation evidence
     source_type: user
   routing:
     guide_secretary_handoff_id: null
@@ -869,6 +872,7 @@ status_objects:
     parent_id: GOAL-20260526-MOTHER-PACK-COLLABORATION
     related_ids:
     - ART-00-SELF-BOOTSTRAP-SPEC-RUN
+    - ART-00-FINAL-FRESH-CLONE-ACCEPTANCE
     - VAL-ROOT-ROUTE-SMOKE
     - VAL-00-AUDIT-ASSETS
     - VAL-00-CROSS-DOC-CONSISTENCY
@@ -892,6 +896,9 @@ status_objects:
     - kind: file
       ref: 00.超级提示词工程/14-全链路审计与运行对齐/SELF-BOOTSTRAP-PROJECT-SPEC-AND-RUN.md
       summary: GOAL/REQ/SPEC/TASK/TEST and stop lines for the first real self-bootstrap project instance.
+    - kind: command
+      ref: git clone --recurse-submodules https://github.com/letplaylimited-MARK/mother-delivery-package.git
+      summary: Final fresh-clone acceptance used recursive submodules, route probes, subsystem scopes, and full qa_runner validate 31/31 PASS.
   validation:
     validation_refs:
     - VAL-ROOT-ROUTE-SMOKE
@@ -904,6 +911,7 @@ status_objects:
     - SELF_BOOTSTRAP_PROJECT route probe returns DIRECT cross_subsystem.
     - ROOT route smoke includes the self-bootstrap scenario.
     - No Phase-1 edits touch 03/05 code.
+    - Final fresh clone can run full qa_runner validate with 31/31 PASS after transient-scope rerun discipline.
     current_status: verified_current
   memory:
     read_from:

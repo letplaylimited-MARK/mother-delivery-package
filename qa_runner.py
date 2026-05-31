@@ -1202,7 +1202,7 @@ def _auto_file_count() -> dict:
             by_subsystem[top] = by_subsystem.get(top, 0) + 1
     # Note: submodule dirs (03, 05) may show different counts locally vs in-tree
     status = "PASS" if total >= 1050 else "WARN"
-    detail_parts = [f"total={total} (current inventory baseline=1155, submodule differences normal)"]
+    detail_parts = [f"total={total} (current inventory baseline=1156, submodule differences normal)"]
     for k in sorted(by_subsystem):
         detail_parts.append(f"{k[:20]}={by_subsystem[k]}")
     return {

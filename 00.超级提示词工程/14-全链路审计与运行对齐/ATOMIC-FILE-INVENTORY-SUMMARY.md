@@ -1,6 +1,6 @@
 # Atomic File Inventory Summary
 
-> Generated at: 2026-06-01T00:21:00
+> Generated at: 2026-06-01T01:19:47
 > Inventory: `ATOMIC-FILE-INVENTORY.jsonl`
 > Scope: excludes `.git`, `__pycache__`, `.pytest_cache`, `node_modules`, `dist`, `build`, `coverage`.
 
@@ -8,16 +8,16 @@
 
 | Metric | Value |
 |---|---:|
-| Files inventoried | 1155 |
-| Bytes inventoried | 20573478 |
-| Text lines counted | 236513 |
+| Files inventoried | 1156 |
+| Bytes inventoried | 22541479 |
+| Text lines counted | 236719 |
 | QCM skill internal files | 43 |
 
 ## By Subsystem
 
 | 项 | 数量 |
 |---|---:|
-| `P00_SUPER_PROMPT` | 79 |
+| `P00_SUPER_PROMPT` | 80 |
 | `P01_GHOST_CHANNEL` | 296 |
 | `P02_UNIVERSAL_KB` | 28 |
 | `P03_WORKBUDDY_KB` | 153 |
@@ -35,14 +35,14 @@
 | `code` | 347 |
 | `config` | 11 |
 | `data` | 160 |
-| `doc` | 595 |
+| `doc` | 596 |
 | `other` | 39 |
 
 ## By Priority
 
 | 项 | 数量 |
 |---|---:|
-| `P0` | 42 |
+| `P0` | 43 |
 | `P1` | 569 |
 | `P2` | 544 |
 

@@ -8,7 +8,7 @@
 
 | # | 子系统 | 当前审计文件数 | 说明 | GitHub |
 |---|--------|--------:|------|--------|
-| 00 | 超级提示词工程 | 74 | 跨项目 AI 协同的提示词操作系统与审计控制平面 | 随根仓库 |
+| 00 | 超级提示词工程 | 75 | 跨项目 AI 协同的提示词操作系统与审计控制平面 | 随根仓库 |
 | 01 | 通讯协议 / 幽灵通道 | 296 | Ghost Channel v1.0 协议、SDK、企业部署 | 随根仓库 |
 | 02 | 通用知识库框架 (Universal-KB) | 28 | 通用知识库模板；完整可运行知识库应用以 03 为准 | 随根仓库 |
 | 03 | 数据库管理 / 文件整理 AI 应用 | 153 | V2 可运行应用 (Flask + MCP + 文件整理 + 向量检索) — submodule | [knowledge-base-manager](https://github.com/letplaylimited-MARK/knowledge-base-manager) |
@@ -16,7 +16,7 @@
 | 05 | 超极智脑 / Q-SpecTrum | 423 | 主平台：15 角色、Web UI、API、MCP、DB、知识库 — submodule | [Q-Spectrum](https://github.com/letplaylimited-MARK/Q-Spectrum) |
 | — | 协同通用 AI 大模型开发交付包 | 14 | 用户交付包骨架（价值/功能/结构/运作四体系） | 随根仓库 |
 
-> **统计口径**：以上采用 `AI_PROJECT_CONTEXT.md` 与 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 的当前审计口径；排除 `.git`、`__pycache__`、`.pytest_cache`、`node_modules`、`dist/build/coverage` 等运行缓存。当前全量展开为 1150 文件，03/05 为独立 submodule，根仓库跟踪其指针。
+> **统计口径**：以上采用 `AI_PROJECT_CONTEXT.md` 与 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 的当前审计口径；排除 `.git`、`__pycache__`、`.pytest_cache`、`node_modules`、`dist/build/coverage` 等运行缓存。当前全量展开为 1151 文件，03/05 为独立 submodule，根仓库跟踪其指针。
 
 ## 快速开始
 
@@ -57,7 +57,7 @@ powershell -ExecutionPolicy Bypass -File .\VERIFY-DELIVERY.ps1 -Strict # 严格�
 | `AI_PROJECT_CONTEXT.md` | **全局导航地图** — 目录结构、子系统说明、跨系统关系、启动命令、CI/CD、开发迭代记录 |
 | `LICENSE` | MIT 开源许可证 |
 | `MISSION-MEMORY.md` | 母包使命、边界、AI 唤醒锚点 |
-| `MOTHER-PACK-ACTIVATION-GUIDE.md` | **唯一权威 AI 启动协议** |
+| `MOTHER-PACK-ACTIVATION-GUIDE.md` | **唯一权威 AI 启动协议**，覆盖 System Prompt 与普通聊天框两种启动 |
 | `开发者母交付包使用说明.md` | 面向 zip 包接收者的完整使用指引（交付流程、子系统定位、验证步骤） |
 | `qa_runner.py` | 全量验证工具（validate / status / consistency / route） |
 | `qcm-universal-ai-system-v3.0.skill` | QCM 质量评估框架（ZIP，45 角色 / 9 阶段 / 24 维） |
@@ -68,7 +68,7 @@ powershell -ExecutionPolicy Bypass -File .\VERIFY-DELIVERY.ps1 -Strict # 严格�
 
 **人类开发者**：本文 → `AI_PROJECT_CONTEXT.md` → 对应子系统 README
 
-**AI 协作者**：`MOTHER-PACK-ACTIVATION-GUIDE.md` → `MISSION-MEMORY.md` → `AI_PROJECT_CONTEXT.md` → 按任务路由进入子系统
+**AI 协作者**：若无 System Prompt 输入框，先发送 `00.超级提示词工程/15-超级系统提示词工程/FIRST-DIALOG-BOOTSTRAP-PROMPT.md` 的首条消息；然后按 `MOTHER-PACK-ACTIVATION-GUIDE.md` → `MISSION-MEMORY.md` → `AI_PROJECT_CONTEXT.md` → 任务路由进入子系统。
 
 ## 技术栈
 

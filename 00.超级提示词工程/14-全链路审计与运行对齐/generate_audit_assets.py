@@ -185,8 +185,8 @@ def write_summary(records: list[dict], skill_records: list[dict]) -> None:
 
     content = f"""# Atomic File Inventory Summary
 
-> Generated at: {now}  
-> Inventory: `ATOMIC-FILE-INVENTORY.jsonl`  
+> Generated at: {now}
+> Inventory: `ATOMIC-FILE-INVENTORY.jsonl`
 > Scope: excludes `.git`, `__pycache__`, `.pytest_cache`, `node_modules`, `dist`, `build`, `coverage`.
 
 ## Totals

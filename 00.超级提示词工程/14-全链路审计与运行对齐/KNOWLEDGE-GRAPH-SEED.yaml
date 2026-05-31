@@ -1,5 +1,5 @@
 schema_version: '0.1'
-generated_at: '2026-05-31T22:09:53'
+generated_at: '2026-05-31T22:37:40'
 purpose: Seed graph connecting projects, capabilities, artifacts, validations, memory
   sources, inventory buckets, and QCM skill package.
 inventory_ref: 00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY.jsonl
@@ -563,7 +563,7 @@ nodes:
 - id: INV:P00_SUPER_PROMPT
   type: InventoryBucket
   subsystem: P00_SUPER_PROMPT
-  file_count: 74
+  file_count: 75
 - id: INV:P01_GHOST_CHANNEL
   type: InventoryBucket
   subsystem: P01_GHOST_CHANNEL

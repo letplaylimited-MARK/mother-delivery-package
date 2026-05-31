@@ -10,10 +10,13 @@
 
 ### 你需要什么
 
-- 母交付包文件夹(已解压)
-- 一个支持自定义系统提示词(System Prompt)的AI对话窗口
+- 母交付包文件夹(已解压), 或 GitHub 仓库地址
+- 一个 AI 对话窗口: 支持 System Prompt 最好; 只支持普通聊天也可以
+- 新环境必须使用 `git clone --recurse-submodules` 或 `git submodule update --init --recursive`
 
-### Step 1: 放置系统提示词
+### Step 1: 选择启动模式
+
+#### 模式 A: System Prompt 模式
 
 打开 `00.超级提示词工程/15-超级系统提示词工程/SUPER-SYSTEM-PROMPT-v3.0-AWAKENING.md`
 将其**全部内容**复制到AI的**系统提示词(System Prompt)**输入框。
@@ -23,11 +26,21 @@
 - 15模块+7子系统的常驻系统拓扑地图
 - 12条反幻觉铁律(MUST NOT)
 
+#### 模式 B: 普通聊天框模式
+
+如果新的 AI 工具没有 System Prompt 输入框, 打开:
+
+`00.超级提示词工程/15-超级系统提示词工程/FIRST-DIALOG-BOOTSTRAP-PROMPT.md`
+
+将其中 **"可复制首条消息"** 代码块完整发送给新 AI。该消息会要求新 AI 完成 clone、submodule、读取、验证、路由和 `cold_start_report`。
+
 ### Step 2: 启动对话
 
-发送第一条消息(逐字):
+模式 A 发送第一条消息(逐字):
 
 > 请读取根目录的 MOTHER-PACK-ACTIVATION-GUIDE.md 并完成唤醒激活
+
+模式 B 已在 `FIRST-DIALOG-BOOTSTRAP-PROMPT.md` 中包含首条消息, 不需要再追加其他任务。
 
 AI会自动遵循下文AI激活序列。
 
@@ -46,6 +59,8 @@ awakening_check:
   stop_lines: []
 ```
 
+普通聊天框模式下, AI 必须先输出 `cold_start_report`, 再进入 `awakening_check` 或任务路由。
+
 看到这个YAML → 激活成功。现在可以正常进行项目开发协作。
 
 ### 常见问题
@@ -56,6 +71,8 @@ awakening_check:
 | AI输出缺失文件清单 | 压缩包不完整 | 重新获取完整压缩包, 或根据清单手动补充 |
 | AI输出了awakening_check但缺少字段 | SSP版本不匹配 | 确认使用的是v3.0 AWAKENING版SSP |
 | AI没有主动输出awakening_check | 第一步消息不对 | 重新发送: "请读取MOTHER-PACK-ACTIVATION-GUIDE.md并完成唤醒激活" |
+| AI工具没有System Prompt输入框 | 启动模式不匹配 | 使用 `FIRST-DIALOG-BOOTSTRAP-PROMPT.md` 的可复制首条消息 |
+| 新 clone 后 03/05 目录为空或缺文件 | submodule 未初始化 | 运行 `git submodule update --init --recursive` |
 | AI开发过程中出现路径幻觉 | SSP的L10反幻觉规则未被遵循 | 发送"请重新执行L1系统检查, 输出当前根目录Test-Path结果" |
 
 ---

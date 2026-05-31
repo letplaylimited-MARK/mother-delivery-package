@@ -46,7 +46,7 @@ Q-SpecTrum 智脑平台
 
 | 目录 | 当前状态 | 定位 | 关键入口 |
 |---|---:|---|---|
-| `00.超级提示词工程` | 74 文件 | 跨项目 AI 协同的提示词操作系统与审计控制平面：总控启动、引导秘书、使命记忆唤醒、SpecForge、Skill Gate、源提示词吸收、全链路审计、机器可读注册表、统一状态对象、知识结晶、沙盘记录 | `README.md`, `01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md`, `12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md`, `14-全链路审计与运行对齐/VALIDATION_REGISTRY.yaml`, `14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md`, `14-全链路审计与运行对齐/DEEP-AUDIT-BATCH-EXECUTION-PLAN.yaml` |
+| `00.超级提示词工程` | 75 文件 | 跨项目 AI 协同的提示词操作系统与审计控制平面：总控启动、引导秘书、使命记忆唤醒、SpecForge、Skill Gate、源提示词吸收、全链路审计、机器可读注册表、统一状态对象、知识结晶、沙盘记录、首次对话冷启动 | `README.md`, `01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md`, `12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md`, `15-超级系统提示词工程/FIRST-DIALOG-BOOTSTRAP-PROMPT.md`, `14-全链路审计与运行对齐/VALIDATION_REGISTRY.yaml`, `14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` |
 | `01.通讯协议_幽灵通道` | 296 文件 | Ghost Channel v1.0 协议、SDK、部署与商业交付包 | `README.md`, `INDEX.md`, `00_总览/PROJECT_HANDOFF.md`, `VERIFY.ps1` |
 | `02.通用知识库框架_Universal-KB` | 28 文件 | Universal-KB 通用知识库模板；完整可运行知识库应用以 03 为准 | `README.md`, `INDEX.md`, `04-memory/memoryos.py`, `05-agents/AGENTS.md` |
 | `03.数据库管理_文件夹整理AI应用` | 153 文件 | V2 知识库应用：Flask + MCP + 文件整理 + 向量检索（子工作区） | `README.md`, `AGENTS.md`, `app.py`, `mcp_server.py`, `verify_install.py` |
@@ -54,7 +54,7 @@ Q-SpecTrum 智脑平台
 | `05.超极智脑_Q-SpecTrum` | 423 文件 | 主平台：15 角色、Web UI、API、MCP、DB、知识库、验证门（子工作区） | `README.md`, `INDEX.md`, `AGENTS.md`, `智腦協議-BRAIN-PROTOCOL.md`, `run.py`, `api_server.py`, `qspectrum_mcp_server.py` |
 | `协同通用AI大模型开发交付包` | 14 文件 | 开发者完成具体项目后交给最终用户的交付包骨架，承载价值/功能/结构/运作四体系，并提供普通/Strict 两种交付验证模式 | `README.md`, `AI_PROJECT_CONTEXT.md`, `HANDOFF.md`, `VALIDATION_REPORT.md`, `TRACEABILITY-MATRIX.md`, `VERIFY-DELIVERY.ps1` |
 
-统计口径：以上采用 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 当前审计口径，排除 `.git`、`__pycache__`、`.pytest_cache`、`node_modules`、`dist/build/coverage` 等运行缓存；当前全量展开为 1150 文件。
+统计口径：以上采用 `00.超级提示词工程/14-全链路审计与运行对齐/ATOMIC-FILE-INVENTORY-SUMMARY.md` 当前审计口径，排除 `.git`、`__pycache__`、`.pytest_cache`、`node_modules`、`dist/build/coverage` 等运行缓存；当前全量展开为 1151 文件。
 
 ## 2. 子系统理解
 
@@ -235,30 +235,31 @@ Q-SpecTrum
 
 ## 5. 建议的未来 AI 协作流程
 
-> **权威启动协议**: 标准AI唤醒序列以根目录 `MOTHER-PACK-ACTIVATION-GUIDE.md` 的"AI 激活序列"章节为准。以下为扩展参考。
+> **权威启动协议**: 标准AI唤醒序列以根目录 `MOTHER-PACK-ACTIVATION-GUIDE.md` 的"AI 激活序列"章节为准。普通聊天框冷启动先使用 `00.超级提示词工程/15-超级系统提示词工程/FIRST-DIALOG-BOOTSTRAP-PROMPT.md`。以下为扩展参考。
 
 每次新模型进入根目录，先读 `MOTHER-PACK-ACTIVATION-GUIDE.md` 完成标准唤醒激活，再按任务进入子系统。若任务涉及交付链路，必须先判断是在维护母交付包，还是在组装某个具体项目的用户交付包：
 
-1. 使命唤醒：读 `MISSION-MEMORY.md`，确认母包使命、模型原生边界、母包/子包边界和长期记忆写入原则。
-2. 全局理解：读 `AI_PROJECT_CONTEXT.md`。
-3. 协同启动：读 `00.超级提示词工程/README.md` 和 `00.超级提示词工程/01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md`。
-4. 模型边界：读 `00.超级提示词工程/11-模型原生协作协议/MODEL-NATIVE-COLLABORATION-PROTOCOL.md`，确认母包只提供项目上下文和证据链。
-5. 唤醒握手：用 `00.超级提示词工程/12-引导秘书逻辑/MISSION-MEMORY-AWAKENING-PROTOCOL.md` 输出 `awakening_check`。
-6. 入口判断：用 `00.超级提示词工程/12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md` 先输出意图、置信度、路由、最小文件清单和验证计划。
-7. 任务路由：用 `00.超级提示词工程/02-路由矩阵/SUBSYSTEM-ROUTING-MATRIX.md` 判断目标子系统，并回写 `route_feedback`。
-8. 若任务是 PRD/SPEC、复杂功能、验收标准、需求变更或交付前规格冻结：进入 `00.超级提示词工程/06-原子化开发治理/SPECFORGE-PRD-SPEC-GATE.md`，把模糊需求锻造成可验证规格。
-9. 若任务是 Skill、MCP、插件、LSP、开源库、脚本或工作流选型/配置/集成：进入 `00.超级提示词工程/10-通用AI协作生态/SKILL-CONFIGURATION-GATE.md`，先判断母包已有能力，再做候选评估、能力卡、配置和集成测试。
-10. 若任务是使命、长期记忆、唤醒、身份逻辑、元智核：进入 `MISSION-MEMORY.md`、`00.超级提示词工程/12-引导秘书逻辑/MISSION-MEMORY-AWAKENING-PROTOCOL.md` 和 `00.超级提示词工程/13-源提示词吸收与演化/META-INTELLIGENCE-CORE-SUPER-PROMPT-DECONSTRUCTION.md`。
-11. 若任务是完整阅读、全链路审计、齿轮咬合、数据/业务/运行/记忆/交付工作流对齐：进入 `00.超级提示词工程/14-全链路审计与运行对齐/`，先建立事实基线，再标注缺口。
+1. 冷启动模式判断：若无 System Prompt 输入框，发送 `00.超级提示词工程/15-超级系统提示词工程/FIRST-DIALOG-BOOTSTRAP-PROMPT.md` 的首条消息。
+2. 使命唤醒：读 `MISSION-MEMORY.md`，确认母包使命、模型原生边界、母包/子包边界和长期记忆写入原则。
+3. 全局理解：读 `AI_PROJECT_CONTEXT.md`。
+4. 协同启动：读 `00.超级提示词工程/README.md`、`00.超级提示词工程/15-超级系统提示词工程/SUPER-SYSTEM-PROMPT-v3.0-AWAKENING.md` 和 `00.超级提示词工程/01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md`。
+5. 模型边界：读 `00.超级提示词工程/11-模型原生协作协议/MODEL-NATIVE-COLLABORATION-PROTOCOL.md`，确认母包只提供项目上下文和证据链。
+6. 唤醒握手：用 `00.超级提示词工程/12-引导秘书逻辑/MISSION-MEMORY-AWAKENING-PROTOCOL.md` 输出 `awakening_check`。
+7. 入口判断：用 `00.超级提示词工程/12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md` 先输出意图、置信度、路由、最小文件清单和验证计划。
+8. 任务路由：用 `00.超级提示词工程/02-路由矩阵/SUBSYSTEM-ROUTING-MATRIX.md` 判断目标子系统，并回写 `route_feedback`。
+9. 若任务是 PRD/SPEC、复杂功能、验收标准、需求变更或交付前规格冻结：进入 `00.超级提示词工程/06-原子化开发治理/SPECFORGE-PRD-SPEC-GATE.md`，把模糊需求锻造成可验证规格。
+10. 若任务是 Skill、MCP、插件、LSP、开源库、脚本或工作流选型/配置/集成：进入 `00.超级提示词工程/10-通用AI协作生态/SKILL-CONFIGURATION-GATE.md`，先判断母包已有能力，再做候选评估、能力卡、配置和集成测试。
+11. 若任务是使命、长期记忆、唤醒、身份逻辑、元智核：进入 `MISSION-MEMORY.md`、`00.超级提示词工程/12-引导秘书逻辑/MISSION-MEMORY-AWAKENING-PROTOCOL.md` 和 `00.超级提示词工程/13-源提示词吸收与演化/META-INTELLIGENCE-CORE-SUPER-PROMPT-DECONSTRUCTION.md`。
+12. 若任务是完整阅读、全链路审计、齿轮咬合、数据/业务/运行/记忆/交付工作流对齐：进入 `00.超级提示词工程/14-全链路审计与运行对齐/`，先建立事实基线，再标注缺口。
     - 对跨文件夹任务，必须用 `UNIFIED-STATUS-OBJECT-SPEC.md` 生成或更新 `UNIFIED-STATUS-LEDGER.yaml` 中的状态对象。
     - 若任务涉及断裂点、路由反馈、暂停/阻塞状态或记忆源冲突，必须读取 `BREAKPOINT-REPAIR-MATRIX.md` 与 `MEMORY-SOURCE-INDEX.yaml`。
-12. 若任务是吸收历史超级提示词、使用经验或失败案例：进入 `00.超级提示词工程/13-源提示词吸收与演化/`，先批判性转译，不把旧提示词原样提升为系统规则。
-13. 若任务是平台开发：进入 `05.超极智脑_Q-SpecTrum`，读 `INDEX.md`、`AGENTS.md`、`智腦協議-BRAIN-PROTOCOL.md`，跑 `python verify-integration.py`。
-14. 若任务是知识库/文件整理/MCP：进入 `03.数据库管理_文件夹整理AI应用`，读 `AGENTS.md`，跑 `python verify_install.py`。
-15. 若任务是协议/SDK/部署：进入 `01.通讯协议_幽灵通道`，读 `00_总览/PROJECT_HANDOFF.md` 和对应 SDK README。
-16. 若任务是 QCM 理论/公式/涌现：进入 `04.QCM-MVP-Emergence`，读 `PROJECT_HANDOFF-QCM.md`、`22_FORMULA_SYSTEM.md`、`qcm/pipeline.py`。
-17. 修改前先确认子仓库 git 状态；不要把 `01/04` 的嵌入式副本误当成 `05` 的主运行时。
-18. 若任务是最终交付：进入 `协同通用AI大模型开发交付包/`，先补齐价值体系、功能体系、结构体系、运作体系，再运行 `VERIFY-DELIVERY.ps1`；模板态可用普通模式，正式交付必须用 `-Strict` 模式通过后再压缩交付。
+13. 若任务是吸收历史超级提示词、使用经验或失败案例：进入 `00.超级提示词工程/13-源提示词吸收与演化/`，先批判性转译，不把旧提示词原样提升为系统规则。
+14. 若任务是平台开发：进入 `05.超极智脑_Q-SpecTrum`，读 `INDEX.md`、`AGENTS.md`、`智腦協議-BRAIN-PROTOCOL.md`，跑 `python verify-integration.py`。
+15. 若任务是知识库/文件整理/MCP：进入 `03.数据库管理_文件夹整理AI应用`，读 `AGENTS.md`，跑 `python verify_install.py`。
+16. 若任务是协议/SDK/部署：进入 `01.通讯协议_幽灵通道`，读 `00_总览/PROJECT_HANDOFF.md` 和对应 SDK README。
+17. 若任务是 QCM 理论/公式/涌现：进入 `04.QCM-MVP-Emergence`，读 `PROJECT_HANDOFF-QCM.md`、`22_FORMULA_SYSTEM.md`、`qcm/pipeline.py`。
+18. 修改前先确认子仓库 git 状态；不要把 `01/04` 的嵌入式副本误当成 `05` 的主运行时。
+19. 若任务是最终交付：进入 `协同通用AI大模型开发交付包/`，先补齐价值体系、功能体系、结构体系、运作体系，再运行 `VERIFY-DELIVERY.ps1`；模板态可用普通模式，正式交付必须用 `-Strict` 模式通过后再压缩交付。
 
 ## 6. 当前已知风险/待清理点
 

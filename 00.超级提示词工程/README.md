@@ -74,7 +74,7 @@
     ├── SKILL-CONFIGURATION-EXPERT-V3-SUPER-PROMPT-DECONSTRUCTION.md
     ├── SUPER-PROMPT-ATOMIC-RESEARCH-REVIEW.md
     └── META-INTELLIGENCE-CORE-SUPER-PROMPT-DECONSTRUCTION.md
-└── 14-全链路审计与运行对齐/
+├── 14-全链路审计与运行对齐/
     ├── FULL-STACK-WORKFLOW-AUDIT-PROTOCOL.md
     ├── MOTHER-CHILD-WORKFLOW-MAP.md
     ├── AUDIT-COVERAGE-REGISTRY.md
@@ -88,33 +88,40 @@
     ├── MEMORY-SOURCE-INDEX.yaml
     ├── UNIFIED-STATUS-OBJECT-SPEC.md
     └── UNIFIED-STATUS-LEDGER.yaml
+└── 15-超级系统提示词工程/
+    ├── SUPER-SYSTEM-PROMPT-v3.0-AWAKENING.md
+    ├── FIRST-DIALOG-BOOTSTRAP-PROMPT.md
+    └── README.md
 ```
 
 ## 3. 使用顺序
 
 新 AI 或新会话进入时，按这个顺序：
 
-1. 先读根目录 `MISSION-MEMORY.md`，确认母包使命、身份边界和唤醒握手。
-2. 再读根目录 `AI_PROJECT_CONTEXT.md`。
-3. 再读本目录 `README.md`。
-4. 执行 `01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md` 的启动逻辑。
-5. 读取 `11-模型原生协作协议/MODEL-NATIVE-COLLABORATION-PROTOCOL.md`，确认母包不覆盖模型自身系统逻辑。
-6. 用 `12-引导秘书逻辑/MISSION-MEMORY-AWAKENING-PROTOCOL.md` 完成使命唤醒和自然语言触发判断。
-7. 用 `12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md` 完成意图识别、置信度、澄清、路由和交接包判断。
-8. 用 `02-路由矩阵/SUBSYSTEM-ROUTING-MATRIX.md` 判断任务归属，并回写 `route_feedback`。
-9. 用 `03-上下文包模板/AI-CONTEXT-PACK-TEMPLATE.md` 组装任务上下文，并绑定 `uso_id`、`ledger_ref`、`validation_refs`。
-10. 按 `04-协同工作流/CROSS-PROJECT-WORKFLOW.md` 执行。
-11. 用 `05-评估与迭代/PROMPT-EVALUATION-RUBRIC.md` 检查输出质量。
-12. 若是持续开发、复杂需求或交付任务，加载 `06-原子化开发治理/ATOMIC-AI-DEVELOPMENT-OPERATING-SYSTEM.md`。
-13. 若任务涉及新项目、PRD、SPEC、复杂功能、验收标准或需求变更，加载 `06-原子化开发治理/SPECFORGE-PRD-SPEC-GATE.md`。
-14. 若出现需求漂移、规格漂移、任务堆叠、反复重构，加载 `07-反混乱与漂移控制/ANTI-DRIFT-PROTOCOL.md`。
-15. 若涉及架构、跨系统、长期路线图或发布门，加载 `08-AI角色团队沙盘/AI-ROLE-TEAM-SANDBOX.md`。
-16. 若目标是完善母交付包整体协同，加载 `09-母包集成蓝图/MOTHER-PACK-AI-COLLABORATION-BLUEPRINT.md`。
-17. 若要接入新的模型、智能体、Skill、MCP、插件、LSP、工作流或外部系统，加载 `10-通用AI协作生态/AI-CAPABILITY-INTEGRATION-CONTRACT.md`。
-18. 若要从项目需求推导技能、寻找开源能力、评估候选、生成安装配置和集成测试，加载 `10-通用AI协作生态/SKILL-CONFIGURATION-GATE.md`。
-19. 若要吸收历史超级提示词、使用经验或失败案例，加载 `13-源提示词吸收与演化/SOURCE-PROMPT-INGESTION-PROTOCOL.md`，先做批判性转译，再决定是否进入运行协议。
-20. 若要复核 QCM、SpecForge、技能配置专家、元智核之间的机制串联，加载 `13-源提示词吸收与演化/SUPER-PROMPT-ATOMIC-RESEARCH-REVIEW.md` 和 `13-源提示词吸收与演化/META-INTELLIGENCE-CORE-SUPER-PROMPT-DECONSTRUCTION.md`。
-21. 若要审计每个文件夹的数据工作流、业务工作流、运行工作流、记忆工作流和交付工作流，加载 `14-全链路审计与运行对齐/FULL-STACK-WORKFLOW-AUDIT-PROTOCOL.md`，并同步维护 `MOTHER-CHILD-WORKFLOW-MAP.md`、`AUDIT-COVERAGE-REGISTRY.md`、`WORKFLOW-AUDIT-ISSUE-LOG.md`、`BREAKPOINT-REPAIR-MATRIX.md`、四个注册表、`MEMORY-SOURCE-PRIORITY.md`、`MEMORY-SOURCE-INDEX.yaml`、`UNIFIED-STATUS-OBJECT-SPEC.md` 和 `UNIFIED-STATUS-LEDGER.yaml`。
+0. 若新 AI 没有 System Prompt 输入框，先发送 `15-超级系统提示词工程/FIRST-DIALOG-BOOTSTRAP-PROMPT.md` 的首条消息。
+1. 先读根目录 `MOTHER-PACK-ACTIVATION-GUIDE.md`，确认唯一权威启动协议。
+2. 再读根目录 `MISSION-MEMORY.md`，确认母包使命、身份边界和唤醒握手。
+3. 再读根目录 `AI_PROJECT_CONTEXT.md`。
+4. 再读本目录 `README.md`。
+5. 读取 `15-超级系统提示词工程/SUPER-SYSTEM-PROMPT-v3.0-AWAKENING.md`，确认 SSP 启动约束。
+6. 执行 `01-总控提示词/MASTER-ORCHESTRATOR-PROMPT.md` 的启动逻辑。
+7. 读取 `11-模型原生协作协议/MODEL-NATIVE-COLLABORATION-PROTOCOL.md`，确认母包不覆盖模型自身系统逻辑。
+8. 用 `12-引导秘书逻辑/MISSION-MEMORY-AWAKENING-PROTOCOL.md` 完成使命唤醒和自然语言触发判断。
+9. 用 `12-引导秘书逻辑/GUIDE-SECRETARY-PROTOCOL.md` 完成意图识别、置信度、澄清、路由和交接包判断。
+10. 用 `02-路由矩阵/SUBSYSTEM-ROUTING-MATRIX.md` 判断任务归属，并回写 `route_feedback`。
+11. 用 `03-上下文包模板/AI-CONTEXT-PACK-TEMPLATE.md` 组装任务上下文，并绑定 `uso_id`、`ledger_ref`、`validation_refs`。
+12. 按 `04-协同工作流/CROSS-PROJECT-WORKFLOW.md` 执行。
+13. 用 `05-评估与迭代/PROMPT-EVALUATION-RUBRIC.md` 检查输出质量。
+14. 若是持续开发、复杂需求或交付任务，加载 `06-原子化开发治理/ATOMIC-AI-DEVELOPMENT-OPERATING-SYSTEM.md`。
+15. 若任务涉及新项目、PRD、SPEC、复杂功能、验收标准或需求变更，加载 `06-原子化开发治理/SPECFORGE-PRD-SPEC-GATE.md`。
+16. 若出现需求漂移、规格漂移、任务堆叠、反复重构，加载 `07-反混乱与漂移控制/ANTI-DRIFT-PROTOCOL.md`。
+17. 若涉及架构、跨系统、长期路线图或发布门，加载 `08-AI角色团队沙盘/AI-ROLE-TEAM-SANDBOX.md`。
+18. 若目标是完善母交付包整体协同，加载 `09-母包集成蓝图/MOTHER-PACK-AI-COLLABORATION-BLUEPRINT.md`。
+19. 若要接入新的模型、智能体、Skill、MCP、插件、LSP、工作流或外部系统，加载 `10-通用AI协作生态/AI-CAPABILITY-INTEGRATION-CONTRACT.md`。
+20. 若要从项目需求推导技能、寻找开源能力、评估候选、生成安装配置和集成测试，加载 `10-通用AI协作生态/SKILL-CONFIGURATION-GATE.md`。
+21. 若要吸收历史超级提示词、使用经验或失败案例，加载 `13-源提示词吸收与演化/SOURCE-PROMPT-INGESTION-PROTOCOL.md`，先做批判性转译，再决定是否进入运行协议。
+22. 若要复核 QCM、SpecForge、技能配置专家、元智核之间的机制串联，加载 `13-源提示词吸收与演化/SUPER-PROMPT-ATOMIC-RESEARCH-REVIEW.md` 和 `13-源提示词吸收与演化/META-INTELLIGENCE-CORE-SUPER-PROMPT-DECONSTRUCTION.md`。
+23. 若要审计每个文件夹的数据工作流、业务工作流、运行工作流、记忆工作流和交付工作流，加载 `14-全链路审计与运行对齐/FULL-STACK-WORKFLOW-AUDIT-PROTOCOL.md`，并同步维护 `MOTHER-CHILD-WORKFLOW-MAP.md`、`AUDIT-COVERAGE-REGISTRY.md`、`WORKFLOW-AUDIT-ISSUE-LOG.md`、`BREAKPOINT-REPAIR-MATRIX.md`、四个注册表、`MEMORY-SOURCE-PRIORITY.md`、`MEMORY-SOURCE-INDEX.yaml`、`UNIFIED-STATUS-OBJECT-SPEC.md` 和 `UNIFIED-STATUS-LEDGER.yaml`。
 
 ## 4. 设计原则
 

@@ -1099,9 +1099,18 @@ def _auto_p03_http_smoke(cwd: Path | None) -> dict:
             }
 
         query = urllib.parse.quote("知识库")
+        index_rebuilt = False
         with urllib.request.urlopen(f"{base}/api/search?q={query}", timeout=30) as resp:
             search_payload = json.loads(resp.read().decode("utf-8"))
         results = search_payload.get("results", [])
+        if not results:
+            req = urllib.request.Request(f"{base}/api/index", method="POST")
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                index_payload = json.loads(resp.read().decode("utf-8"))
+            index_rebuilt = True
+            with urllib.request.urlopen(f"{base}/api/search?q={query}", timeout=30) as resp:
+                search_payload = json.loads(resp.read().decode("utf-8"))
+            results = search_payload.get("results", [])
         required_memory_keys = {"config", "short_term_count", "mid_term_count", "long_term_knowledge"}
         status = "PASS" if required_memory_keys.issubset(memory_payload) and len(results) > 0 else "FAIL"
         first_path = results[0].get("path", "") if results else ""
@@ -1111,7 +1120,7 @@ def _auto_p03_http_smoke(cwd: Path | None) -> dict:
             "status": status,
             "detail": (
                 f"port={port}; memory_keys={','.join(sorted(memory_payload.keys()))}; "
-                f"search_results={len(results)}; first_path={first_path}"
+                f"search_results={len(results)}; index_rebuilt={index_rebuilt}; first_path={first_path}"
             ),
             "auto": True,
         }

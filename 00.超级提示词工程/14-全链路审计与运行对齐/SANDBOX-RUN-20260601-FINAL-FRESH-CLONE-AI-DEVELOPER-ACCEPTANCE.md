@@ -143,6 +143,17 @@ gap:
   repair_rule: "Regenerate audit assets after adding this file, then align README and AI_PROJECT_CONTEXT with the generated inventory summary."
 ```
 
+Post-push verification repeated the cold-clone ROOT transient at `VAL-CROSS-INTERFACE -> p03_http`. The root cause is that ROOT can call the P03 HTTP smoke before a fresh clone has rebuilt the P03 search index. P03 itself is healthy, but the aggregate gate must be cold-clone robust.
+
+```yaml
+followup_hardening:
+  id: "FINAL-GAP-P03-HTTP-COLD-INDEX"
+  type: "cold_clone_validation_warmup"
+  status: "repaired_in_current_followup"
+  repair: "The P03 HTTP smoke now calls POST /api/index and retries /api/search when the first search returns zero results."
+  purpose: "Keep ROOT validation valid from a brand-new GitHub clone without requiring a prior P03 scoped run."
+```
+
 ## 6. Acceptance Conclusion
 
 ```yaml

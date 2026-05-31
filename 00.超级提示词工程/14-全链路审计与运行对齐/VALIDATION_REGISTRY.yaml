@@ -99,7 +99,7 @@ validations:
     command: "Start python app.py --no-bootstrap --daemon on a free localhost port; call /memory and /api/search?q=知识库."
     expected: "HTTP app becomes ready; /memory returns memory summary keys; /api/search returns a non-empty result set."
     current_status: "verified_current"
-    evidence: "Current B7 smoke starts the Flask app on a free port, verifies /memory keys config,long_term_knowledge,long_term_strategies,mid_term_count,short_term_count,user_profile, and verifies /api/search?q=知识库 returns 10 results with first path 05-知识沉淀\\README.md."
+    evidence: "Current B7 smoke starts the Flask app on a free port, verifies /memory keys config,long_term_knowledge,long_term_strategies,mid_term_count,short_term_count,user_profile, and verifies /api/search?q=知识库 returns results. In a cold clone, the smoke self-warms by POST /api/index and retries search if the first search returns zero results."
 
   - id: "VAL-04-QCM-ALL"
     scope: "P04_QCM"
@@ -218,7 +218,7 @@ validations:
     command: "python qa_runner.py validate  # includes VAL-CROSS-INTERFACE meta gate"
     expected: "Meta gate passes route smoke, P03 HTTP search/memory, QCM config sync, P05 API/MCP smoke, and USER_PACK strict verification."
     current_status: "verified_current"
-    evidence: "Final fresh GitHub clone acceptance run on 2026-06-01 first exposed a transient p03_http failure in ROOT, then passed P03 3/3, ROOT 7/7, and full qa_runner validate 31/31. This meta gate links core intents to validation_refs and USO IDs, verifies P03 /memory and /api/search, checks QCM config constants, verifies P05 API and MCP bridges, and reruns USER_PACK strict."
+    evidence: "Final fresh GitHub clone acceptance run on 2026-06-01 exposed a cold-clone p03_http warmup gap; qa_runner now rebuilds the P03 search index and retries when the first search returns zero results. Current ROOT and full qa_runner validate pass 31/31. This meta gate links core intents to validation_refs and USO IDs, verifies P03 /memory and /api/search, checks QCM config constants, verifies P05 API and MCP bridges, and reruns USER_PACK strict."
 
   - id: "VAL-QCM-CONFIG-SYNC"
     scope: "P04_QCM"

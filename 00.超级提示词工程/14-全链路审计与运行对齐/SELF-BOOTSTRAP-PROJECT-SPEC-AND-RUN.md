@@ -183,6 +183,7 @@ final_acceptance_20260601:
     p03_rerun: "3/3 PASS"
     root_rerun: "7/7 PASS"
     full_validate: "31/31 PASS, 0 FAIL/WARN/SKIP, automatic 31/31"
+    followup_hardening: "P03 HTTP smoke now rebuilds the search index and retries search when a cold clone has zero initial search results."
   conclusion: "A new AI/developer dialogue can now start from GitHub, initialize the repo, route the work, and continue collaborative AI project development using current command evidence."
 ```
 
